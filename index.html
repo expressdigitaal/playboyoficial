@@ -58,6 +58,63 @@
       @keyframes scroll-right { from { transform: translateX(-50%); } to { transform: translateX(0); } }
       .animate-scroll { animation: scroll-left 25s linear infinite; }
       .animate-scroll-reverse { animation: scroll-right 30s linear infinite; }
+      
+      /* Popup de notificações de compra */
+      .purchase-notification {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #006600, #004400);
+        color: white;
+        padding: 6px 10px;
+        border-radius: 6px;
+        box-shadow: 0 2px 10px rgba(0,100,0,0.4);
+        z-index: 1000;
+        transform: translateX(300px);
+        transition: transform 0.4s ease;
+        max-width: 180px;
+        font-size: 11px;
+        border-left: 3px solid #00aa00;
+        font-weight: bold;
+        line-height: 1.2;
+      }
+      
+      .purchase-notification.show {
+        transform: translateX(0);
+      }
+      
+      .purchase-notification .name {
+        font-weight: bold;
+        color: #fff;
+      }
+      
+      .purchase-notification .package {
+        color: #e6ffe6;
+        font-size: 12px;
+      }
+      
+      .purchase-notification .time {
+        color: #ccffcc;
+        font-size: 11px;
+        margin-top: 4px;
+      }
+      
+      @media (max-width: 640px) {
+        .purchase-notification {
+          bottom: 10px;
+          right: 10px;
+          left: 10px;
+          max-width: 160px;
+          transform: translateY(60px);
+          font-size: 10px;
+          padding: 5px 8px;
+          line-height: 1.1;
+        }
+        
+        .purchase-notification.show {
+          transform: translateY(0);
+        }
+      }
     </style>
 
     <!-- CHECKOUT: scripts do provedor (Stripe/Mercado Pago/etc) -->
@@ -380,6 +437,118 @@
         alert("CHECKOUT PLACEHOLDER: implemente aqui seu fluxo para " + plan);
       }
       window.startCheckout = startCheckout;
+
+      // Popup de notificações de compra
+      const names = ['João', 'Carlos', 'Pedro', 'Rafael', 'Lucas', 'Diego', 'Gabriel', 'Thiago', 'André', 'Felipe', 'Bruno', 'Rodrigo', 'Marcos', 'Alexandre', 'Vinícius', 'Eduardo', 'Fernando', 'Ricardo', 'Paulo', 'Antônio', 'José', 'Roberto', 'Daniel', 'Miguel', 'Henrique', 'Leonardo', 'Gustavo', 'Fábio', 'Sérgio', 'Márcio', 'César', 'Vitor'];
+      
+      const packages = [
+        { name: 'Pacote Sedução', price: 'R$ 10,00' },
+        { name: 'Pacote Premium', price: 'R$ 19,90' }
+      ];
+      
+      function showPurchaseNotification() {
+        console.log('Mostrando notificação de compra...');
+        
+        // Remove notificação anterior se existir
+        const existing = document.querySelector('.purchase-notification');
+        if (existing) {
+          existing.remove();
+        }
+        
+        // Seleciona nome e pacote aleatórios
+        const randomName = names[Math.floor(Math.random() * names.length)];
+        const randomPackage = packages[Math.floor(Math.random() * packages.length)];
+        
+        // Cria o popup
+        const notification = document.createElement('div');
+        notification.className = 'purchase-notification';
+        notification.innerHTML = '<div class="name">' + randomName + '</div><div class="package">acabou de comprar o ' + randomPackage.name + '</div><div class="time">há poucos segundos</div>';
+        
+        // Adiciona ao body
+        document.body.appendChild(notification);
+        
+        // Mostra o popup
+        setTimeout(function() {
+          notification.classList.add('show');
+        }, 100);
+        
+        // Remove após 4 segundos
+        setTimeout(function() {
+          notification.classList.remove('show');
+          setTimeout(function() {
+            if (notification.parentNode) {
+              notification.remove();
+            }
+          }, 500);
+        }, 4000);
+      }
+      
+      // Debug
+      console.log('Script de notificações iniciado');
+      
+      // Inicia as notificações imediatamente
+      showPurchaseNotification();
+      
+      // Loop a cada 20 segundos
+      setInterval(showPurchaseNotification, 20000);
+    </script>
+    
+    <!-- Script adicional para garantir execução -->
+    <script>
+      // Aguarda o DOM estar pronto
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM carregado, iniciando notificações...');
+        
+        const names = ['João', 'Carlos', 'Pedro', 'Rafael', 'Lucas', 'Diego', 'Gabriel', 'Thiago', 'André', 'Felipe', 'Bruno', 'Rodrigo', 'Marcos', 'Alexandre', 'Vinícius', 'Eduardo', 'Fernando', 'Ricardo', 'Paulo', 'Antônio', 'José', 'Roberto', 'Daniel', 'Miguel', 'Henrique', 'Leonardo', 'Gustavo', 'Fábio', 'Sérgio', 'Márcio', 'César', 'Vitor'];
+        
+        const packages = [
+          { name: 'Pacote Sedução', price: 'R$ 10,00' },
+          { name: 'Pacote Premium', price: 'R$ 19,90' }
+        ];
+        
+        function showNotification() {
+          console.log('Criando notificação...');
+          
+          // Remove notificação anterior
+          const existing = document.querySelector('.purchase-notification');
+          if (existing) {
+            existing.remove();
+          }
+          
+          // Seleciona aleatoriamente
+          const randomName = names[Math.floor(Math.random() * names.length)];
+          const randomPackage = packages[Math.floor(Math.random() * packages.length)];
+          
+          // Cria elemento
+          const notification = document.createElement('div');
+          notification.className = 'purchase-notification';
+          notification.innerHTML = '<div class="name">' + randomName + '</div><div class="package">acabou de comprar o ' + randomPackage.name + '</div><div class="time">há poucos segundos</div>';
+          
+          // Adiciona ao body
+          document.body.appendChild(notification);
+          
+          // Mostra com delay
+          setTimeout(function() {
+            notification.classList.add('show');
+          }, 100);
+          
+          // Remove após 4 segundos
+          setTimeout(function() {
+            notification.classList.remove('show');
+            setTimeout(function() {
+              if (notification.parentNode) {
+                notification.remove();
+              }
+            }, 500);
+          }, 4000);
+        }
+        
+        // Inicia imediatamente
+        showNotification();
+        
+        // Loop a cada 20 segundos
+        setInterval(showNotification, 20000);
+      });
     </script>
   </body>
 </html>
