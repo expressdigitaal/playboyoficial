@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<script>
+  window.pixelId = "68ed1b5307b5df967386fc88";
+  var a = document.createElement("script");
+  a.setAttribute("async", "");
+  a.setAttribute("defer", "");
+  a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+  document.head.appendChild(a);
+</script>
+<script
+  src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+  data-utmify-prevent-xcod-sck
+  data-utmify-prevent-subids
+  async
+  defer
+></script>
+
+
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Playboy – Ensaios Exclusivos</title>
+    <meta name="description" content="+ de 500 ensaios exclusivos. Escolhe, compra e curte. Playboy – pacotes digitais premium." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ["Inter", "ui-sans-serif", "system-ui"] },
+            colors: {
+              brand: { red: "#E50914", redDark: "#B20710" },
+            },
+            boxShadow: { glow: "0 0 40px rgba(229,9,20,0.35)" },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      :root { color-scheme: dark; }
+      html, body { background: #0b0b0b; }
+      .reveal { opacity: 0; transform: translateY(16px); }
+      .revealed { opacity: 1; transform: translateY(0); transition: opacity .8s ease, transform .8s ease; }
+      /* Carrossel: mostra 3 por vez (2 no mobile) e rola infinito */
+      .carousel { overflow: hidden; }
+      .carousel-track { display: flex; gap: .75rem; }
+      .carousel-item { flex: 0 0 33.3333%; }
+      @media (max-width: 640px) { .carousel-item { flex-basis: 50%; } }
+      @keyframes scroll-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+      @keyframes scroll-right { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+      .animate-scroll { animation: scroll-left 30s linear infinite; }
+      .animate-scroll-reverse { animation: scroll-right 34s linear infinite; }
+    </style>
+
+    <!-- CHECKOUT: scripts do provedor (Stripe/Mercado Pago/etc) -->
+  </head>
+  <body class="bg-black text-white antialiased selection:bg-brand-red selection:text-white">
+    <!-- Header -->
+    <header class="sticky top-0 z-40 backdrop-blur bg-black/70 border-b border-white/10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <a href="#" class="flex items-center gap-3 group">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" class="text-white/90 group-hover:text-white transition-colors"><path d="M7.5 3c.7 2.2 2.3 4 4.5 5 2.2-1 3.8-2.8 4.5-5 1.4 3.8.6 7.2-2.4 10.1l2.9 6.4-2.5.5-2.1-4.8c-.3.1-.6.1-.9.1s-.6 0-.9-.1l-2.1 4.8-2.5-.5 2.9-6.4C6.9 10.2 6.1 6.8 7.5 3z"/></svg>
+          <span class="font-extrabold tracking-widest text-xl">PLAYBOY</span>
+        </a>
+        <a href="#pacotes" class="inline-flex items-center gap-2 rounded-md bg-brand-red hover:bg-brand-redDark active:scale-[.98] px-4 py-2 text-sm font-bold uppercase tracking-wider shadow-glow transition">
+          LIBERAR PACOTE
+        </a>
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="relative overflow-hidden">
+      <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(229,9,20,.18),transparent_55%)] pointer-events-none"></div>
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 text-center">
+        <h1 class="reveal text-3xl sm:text-5xl md:text-6xl font-black leading-tight">
+          + DE <span class="text-brand-red">500</span> ENSAIOS EXCLUSIVOS, DIRETO NO TEU DISPOSITIVO.<br class="hidden sm:block" />
+          ESCOLHE, COMPRA E CURTE.
+        </h1>
+        <p class="reveal mt-6 text-white/70 max-w-2xl mx-auto">
+          Conteúdo premium. Sem enrolação. Libera o acesso e aproveita agora.
+        </p>
+        <div class="reveal mt-10 flex flex-wrap items-center justify-center gap-3">
+          <a href="#pacotes" class="rounded-md bg-brand-red hover:bg-brand-redDark px-6 py-3 font-bold uppercase tracking-wide shadow-glow transition">LIBERAR PACOTE</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- “Quem comprou, aprovou” (com 3 fotos lado a lado) -->
+ <section class="border-t border-white/10">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+    <div class="reveal text-center mb-10">
+      <h2 class="text-2xl sm:text-4xl font-extrabold">Quem comprou, aprovou</h2>
+      <p class="mt-3 text-white/60">Reviews reais. Zero blá-blá-blá.</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="reveal rounded-lg border border-white/10 bg-white/5 p-2">
+        <div class="h-56 sm:h-64 md:h-72 w-full flex items-center justify-center bg-black/20 rounded">
+          <img
+            src="https://nostalgianaveia.online/wp-content/webp-express/webp-images/uploads/2025/09/WhatsApp-Image-2025-05-16-at-18.08.39.jpeg.webp"
+            alt="Cliente 1"
+            class="max-h-full max-w-full object-contain"
+            loading="lazy"
+          />
+        </div>
+      </div>
+
+      <div class="reveal rounded-lg border border-white/10 bg-white/5 p-2">
+        <div class="h-56 sm:h-64 md:h-72 w-full flex items-center justify-center bg-black/20 rounded">
+          <img
+            src="https://nostalgianaveia.online/wp-content/webp-express/webp-images/uploads/2025/09/IMG_2700.jpg.webp"
+            alt="Cliente 2"
+            class="max-h-full max-w-full object-contain"
+            loading="lazy"
+          />
+        </div>
+      </div>
+
+      <div class="reveal rounded-lg border border-white/10 bg-white/5 p-2">
+        <div class="h-56 sm:h-64 md:h-72 w-full flex items-center justify-center bg-black/20 rounded">
+          <img
+            src="https://nostalgianaveia.online/wp-content/webp-express/webp-images/uploads/2025/09/IMG_2699.jpg.webp"
+            alt="Cliente 3"
+            class="max-h-full max-w-full object-contain"
+            loading="lazy"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+    <!-- Galeria (6 fotos - 3x2) -->
+    <section class="border-t border-white/10">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+        <div class="reveal text-center mb-10">
+          <h2 class="text-2xl sm:text-4xl font-extrabold">O que tu vai receber</h2>
+          <p class="mt-3 text-white/60">Capas, previews borrados, bastidores quentes.</p>
+        </div>
+
+        <!-- Carrossel - Linha superior -->
+        <div class="reveal carousel">
+          <div class="carousel-track animate-scroll">
+            <!-- 5 itens (duplicados para loop suave) -->
+            <div class="carousel-item">
+              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
+                <img src="https://i.ibb.co/zTGS1g1s/48-1.jpg" alt="Preview 1" class="h-full w-full object-cover blur-sm scale-110" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
+                <img src="https://i.ibb.co/cS8bzYSV/47.jpg" alt="Preview 2" class="h-full w-full object-cover blur-sm scale-110" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
+                <img src="https://i.ibb.co/6K31t6x/56.jpg" alt="Preview 3" class="h-full w-full object-cover blur-sm scale-110" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
+                <img src="https://i.ibb.co/spPTPwx1/16-1.jpg" alt="Preview 4" class="h-full w-full object-cover blur-sm scale-110" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
+                <img src="https://i.ibb.co/931Kkmn8/Carla-Perez-12.jpg" alt="Preview 5" class="h-full w-full object-cover blur-sm scale-110" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+              </div>
+            </div>
+
+            <!-- Duplicados -->
+            <div class="carousel-item" aria-hidden="true">
+              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
+                <img src="https://i.ibb.co/HTn0VgWd/Feiticeira-20.jpg" alt="Preview 1 duplicado" class="h-full w-full object-cover blur-sm scale-110" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+              </div>
+            </div>
+            <div class="carousel-item" aria-hidden="true">
+              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
+                <img src="https://i.ibb.co/cS8bzYSV/47.jpg" alt="Preview 2 duplicado" class="h-full w-full object-cover blur-sm scale-110" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+              </div>
+            </div>
+            <div class="carousel-item" aria-hidden="true">
+              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
+                <img src="https://i.ibb.co/6K31t6x/56.jpg" alt="Preview 3 duplicado" class="h-full w-full object-cover blur-sm scale-110" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+              </div>
+            </div>
+            <div class="carousel-item" aria-hidden="true">
+              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
+                <img src="https://i.ibb.co/spPTPwx1/16-1.jpg" alt="Preview 4 duplicado" class="h-full w-full object-cover blur-sm scale-110" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+              </div>
+            </div>
+            <div class="carousel-item" aria-hidden="true">
+              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
+                <img src="https://i.ibb.co/931Kkmn8/Carla-Perez-12.jpg" alt="Preview 5 duplicado" class="h-full w-full object-cover blur-sm scale-110" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Espaço entre as linhas -->
+        <div class="h-4"></div>
+
+        <!-- Carrossel - Linha inferior (direção inversa) -->
+        <div class="reveal carousel">
+          <div class="carousel-track animate-scroll-reverse">
+            <div class="carousel-item">
+              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
+                <img src="https://i.ibb.co/HTn0VgWd/Feiticeira-20.jpg" " alt="Preview 6" class="h-full w-full object-cover blur-sm scale-110" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
+                <img src="https://i.ibb.co/spPTPwx1/16-1.jpg" alt="Preview 4 (variação)" class="h-full w-full object-cover blur-sm scale-110" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
+                <img src="https://i.ibb.co/931Kkmn8/Carla-Perez-12.jpg" alt="Preview 5 (variação)" class="h-full w-full object-cover blur-sm scale-110" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
+                <img src="https://i.ibb.co/6K31t6x/56.jpg" alt="Preview 3 (variação)" class="h-full w-full object-cover blur-sm scale-110" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
+                <img src="https://i.ibb.co/cS8bzYSV/47.jpg" alt="Preview 2 (variação)" class="h-full w-full object-cover blur-sm scale-110" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+              </div>
+            </div>
+
+            <!-- Duplicados -->
+            <div class="carousel-item" aria-hidden="true">
+              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
+                <img src="https://i.ibb.co/67NKknQR/Tatiana-Issa-12.jpg" alt="Preview 6 duplicado" class="h-full w-full object-cover blur-sm scale-110" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+              </div>
+            </div>
+            <div class="carousel-item" aria-hidden="true">
+              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
+                <img src="https://i.ibb.co/HTn0VgWd/Feiticeira-20.jpg" " alt="Preview 4 duplicado" class="h-full w-full object-cover blur-sm scale-110" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+              </div>
+            </div>
+            <div class="carousel-item" aria-hidden="true">
+              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
+                <img src="https://i.ibb.co/wrcnzyPg/Scan-090831-0049.jpg" alt="Preview 5 duplicado" class="h-full w-full object-cover blur-sm scale-110" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+              </div>
+            </div>
+            <div class="carousel-item" aria-hidden="true">
+              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
+                <img src="https://i.ibb.co/6K31t6x/56.jpg" alt="Preview 3 duplicado" class="h-full w-full object-cover blur-sm scale-110" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+              </div>
+            </div>
+            <div class="carousel-item" aria-hidden="true">
+              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
+                <img src="https://i.ibb.co/cS8bzYSV/47.jpg" alt="Preview 2 duplicado" class="h-full w-full object-cover blur-sm scale-110" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Teaser (opcional) -->
+    
+
+    <!-- Pacotes (no final) -->
+    <section id="pacotes" class="border-t border-white/10">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+        <div class="reveal text-center mb-10">
+          <h2 class="text-2xl sm:text-4xl font-extrabold">Escolhe teu pacote</h2>
+          <p class="mt-3 text-white/60">Acesso imediato, download seguro, atualizações frequentes.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+          <!-- Pacote 1 -->
+          <div class="reveal rounded-xl border border-white/10 bg-white/5 p-6 sm:p-8 hover:bg-white/[.07] transition">
+            <div class="flex items-baseline justify-between">
+              <h3 class="text-xl font-bold">Pacote Sedução</h3>
+              <span class="text-brand-red text-2xl font-extrabold">R$10,90</span>
+            </div>
+            <p class="mt-3 text-white/70">Acesso imediato a +200 ensaios sensuais e exclusivos.</p>
+            <ul class="mt-6 space-y-2 text-white/80">
+              <li class="flex items-center gap-2"><span class="text-brand-red">◆</span> Mais de 200 ensaios exclusivos</li>
+              <li class="flex items-center gap-2"><span class="text-brand-red">◆</span> Alta qualidade, imagens raras</li>
+              <li class="flex items-center gap-2"><span class="text-brand-red">◆</span> Acesso imediato após pagamento</li>
+              <li class="flex items-center gap-2"><span class="text-brand-red">◆</span> 7 Dias de garantia</li>
+            </ul>
+            <a
+  href="https://seguro.nostalgiavelha.online/r/HZMVIXCQLL"
+  target="_blank"
+  rel="noopener noreferrer"
+  class="mt-6 inline-flex w-full items-center justify-center rounded-md bg-brand-red hover:bg-brand-redDark px-6 py-3 font-bold uppercase tracking-wide shadow-glow transition">
+  LIBERAR PACOTE
+</a>
+          </div>
+
+          <!-- Pacote 2 -->
+          <div class="reveal relative rounded-xl border border-white/10 bg-gradient-to-b from-white/[.07] to-white/[.03] p-6 sm:p-8 ring-1 ring-white/10">
+            <div class="absolute -top-3 left-6 text-[11px] px-2 py-1 rounded bg-brand-red text-white font-extrabold tracking-wider">MAIS POPULAR</div>
+            <div class="flex items-baseline justify-between">
+              <h3 class="text-xl font-bold">Pacote Premiun</h3>
+              <span class="text-brand-red text-2xl font-extrabold">R$19,90</span>
+            </div>
+            <p class="mt-3 text-white/70"> 500+ Edições da Revista Playboy Brasil (1975-2015).</p>
+            <ul class="mt-6 space-y-2 text-white/80">
+              <li class="flex items-center gap-2"><span class="text-brand-red">◆</span> Tudo do Pacote Sedução – os +200 ensaios inclusos</li>
+              <li class="flex items-center gap-2"><span class="text-brand-red">◆</span> Alta qualidade, imagens raras</li>
+              <li class="flex items-center gap-2"><span class="text-brand-red">◆</span> Acesso imediato após pagamento</li>
+              
+              <li class="flex items-center gap-2"><span class="text-brand-red">◆</span> Bastidores nunca vistos com as maiores musas do Brasil</li>
+              <li class="flex items-center gap-2"><span class="text-brand-red">◆</span> Conteúdo Bônus Recorrente</li>
+              <li class="flex items-center gap-2"><span class="text-brand-red">◆</span> 7 Dias de Garantia</li>
+            </ul>
+          <a
+  href="https://seguro.nostalgiavelha.online/r/56PZO8772T"
+  target="_blank"
+  rel="noopener noreferrer"
+  class="mt-6 inline-flex w-full items-center justify-center rounded-md bg-brand-red hover:bg-brand-redDark px-6 py-3 font-bold uppercase tracking-wide shadow-glow transition">
+  LIBERAR PACOTE
+</a>
+            
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="border-t border-white/10">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+        <div class="reveal text-center mb-10">
+          <h2 class="text-2xl sm:text-4xl font-extrabold">Perguntas Frequentes</h2>
+        </div>
+
+        <div class="reveal grid gap-4 sm:gap-5">
+          <div class="rounded-lg border border-white/10 bg-white/5 p-5">
+            <h3 class="font-semibold text-lg">Como vou receber o acesso à coleção?</h3>
+            <p class="mt-2 text-white/70">Após o pagamento, você receberá imediatamente um e-mail com o link privado para baixar e acessar todos os arquivos.</p>
+          </div>
+
+          <div class="rounded-lg border border-white/10 bg-white/5 p-5">
+            <h3 class="font-semibold text-lg">O pagamento é seguro?</h3>
+            <p class="mt-2 text-white/70">Sim, utilizamos sistemas de pagamento criptografados e 100% seguros. Seus dados pessoais nunca serão compartilhados.</p>
+          </div>
+
+          <div class="rounded-lg border border-white/10 bg-white/5 p-5">
+            <h3 class="font-semibold text-lg">Por quanto tempo o acesso ficará disponível?</h3>
+            <p class="mt-2 text-white/70">O acesso é ilimitado e vitalício. Você poderá baixar e consultar os arquivos sempre que quiser.</p>
+          </div>
+
+          <div class="rounded-lg border border-white/10 bg-white/5 p-5">
+            <h3 class="font-semibold text-lg">O que acontece se eu não ficar satisfeito?</h3>
+            <p class="mt-2 text-white/70">Sem problema: você tem 7 dias de garantia total. Reembolsamos sem fazer perguntas.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/10 bg-black">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div class="reveal flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          <div>
+            <p class="text-white/80 font-semibold">Aviso: conteúdo adulto.</p>
+            <p class="text-white/50 text-sm">Acesso apenas para maiores de 18 anos.</p>
+          </div>
+          <nav class="flex flex-wrap items-center gap-4 text-white/70">
+            <a href="#" class="hover:text-white transition">Suporte</a>
+            <a href="#" class="hover:text-white transition">Termos</a>
+            <a href="#" class="hover:text-white transition">Política</a>
+          </nav>
+          <div class="flex items-center gap-4 text-white/70">
+            <a href="#" aria-label="Instagram" class="hover:text-white transition">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2.2A2.8 2.8 0 1 0 12 16.8 2.8 2.8 0 0 0 12 9.2zM18 6.7a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>
+            </a>
+            <a href="#" aria-label="Twitter/X" class="hover:text-white transition">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h4.6l4.2 6.2L16.8 3H21l-7.5 9.8L21 21h-4.7l-5-7.2L6.7 21H3l7.8-9.9L3 3z"/></svg>
+            </a>
+            <a href="#" aria-label="TikTok" class="hover:text-white transition">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12.5 3h3.2c.2 1.6 1.4 3.2 3 3.8.7.3 1.4.4 2.2.4V11c-1.7-.1-3.3-.7-4.7-1.7v5.8c0 3.6-2.9 6.5-6.5 6.5S3.2 18.7 3.2 15.1s2.9-6.5 6.5-6.5c.4 0 .9 0 1.3.1v3.4c-.4-.1-.8-.1-1.3-.1-1.8 0-3.2 1.5-3.2 3.2s1.5 3.2 3.2 3.2 3.2-1.5 3.2-3.2V3z"/></svg>
+            </a>
+          </div>
+        </div>
+        
+      </div>
+    </footer>
+
+    <!-- CHECKOUT: container opcional -->
+    <section id="checkout-slot" class="hidden"></section>
+
+    <script>
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) if (e.isIntersecting) { e.target.classList.add('revealed'); io.unobserve(e.target); }
+      }, { threshold: 0.15 });
+      document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      async function startCheckout(plan) {
+        console.log("Iniciar checkout para:", plan);
+        alert("CHECKOUT PLACEHOLDER: implemente aqui seu fluxo para " + plan);
+      }
+      window.startCheckout = startCheckout;
+    </script>
+  </body>
+</html>
