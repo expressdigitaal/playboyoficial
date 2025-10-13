@@ -51,13 +51,13 @@
       .revealed { opacity: 1; transform: translateY(0); transition: opacity .8s ease, transform .8s ease; }
       /* Carrossel: mostra 3 por vez (2 no mobile) e rola infinito */
       .carousel { overflow: hidden; }
-      .carousel-track { display: flex; gap: .75rem; }
-      .carousel-item { flex: 0 0 33.3333%; }
-      @media (max-width: 640px) { .carousel-item { flex-basis: 50%; } }
+      .carousel-track { display: flex; gap: .75rem; width: 200%; }
+      .carousel-item { flex: 0 0 20%; }
+      @media (max-width: 640px) { .carousel-item { flex-basis: 33.333%; } }
       @keyframes scroll-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
       @keyframes scroll-right { from { transform: translateX(-50%); } to { transform: translateX(0); } }
-      .animate-scroll { animation: scroll-left 30s linear infinite; }
-      .animate-scroll-reverse { animation: scroll-right 34s linear infinite; }
+      .animate-scroll { animation: scroll-left 25s linear infinite; }
+      .animate-scroll-reverse { animation: scroll-right 30s linear infinite; }
     </style>
 
     <!-- CHECKOUT: scripts do provedor (Stripe/Mercado Pago/etc) -->
@@ -147,69 +147,36 @@
           <p class="mt-3 text-white/60">Capas, previews borrados, bastidores quentes.</p>
         </div>
 
-        <!-- Carrossel - Linha superior -->
+        <!-- Carrossel - Linha superior (fotos 1-5) -->
         <div class="reveal carousel">
           <div class="carousel-track animate-scroll">
-            <!-- 5 itens (duplicados para loop suave) -->
             <div class="carousel-item">
               <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
-                <img src="https://i.postimg.cc/jL5LvnvW/56.jpg" alt="Preview 1" class="h-full w-full object-cover blur-sm scale-110" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-              </div>
-            </div>
-            <div class="carousel-item">
-              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
-                <img src="https://i.postimg.cc/rzymFRB7/16-1.jpg" alt="Preview 2" class="h-full w-full object-cover blur-sm scale-110" />
+                <img src="1.jpg" alt="Preview 1" class="h-full w-full object-cover blur-sm scale-110" />
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
               </div>
             </div>
             <div class="carousel-item">
               <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
-                <img src="https://i.postimg.cc/G9MpBhrh/47.jpg" alt="Preview 3" class="h-full w-full object-cover blur-sm scale-110" />
+                <img src="2.jpg" alt="Preview 2" class="h-full w-full object-cover blur-sm scale-110" />
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
               </div>
             </div>
             <div class="carousel-item">
               <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
-                <img src="https://i.postimg.cc/s1fXDGkt/48-1.jpg" alt="Preview 4" class="h-full w-full object-cover blur-sm scale-110" />
+                <img src="3.jpg" alt="Preview 3" class="h-full w-full object-cover blur-sm scale-110" />
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
               </div>
             </div>
             <div class="carousel-item">
               <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
-                <img src="https://i.ibb.co/931Kkmn8/Carla-Perez-12.jpg" alt="Preview 5" class="h-full w-full object-cover blur-sm scale-110" />
+                <img src="4.jpg" alt="Preview 4" class="h-full w-full object-cover blur-sm scale-110" />
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
               </div>
             </div>
-
-            <!-- Duplicados -->
-            <div class="carousel-item" aria-hidden="true">
+            <div class="carousel-item">
               <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
-                <img src="https://i.ibb.co/HTn0VgWd/Feiticeira-20.jpg" alt="Preview 1 duplicado" class="h-full w-full object-cover blur-sm scale-110" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-              </div>
-            </div>
-            <div class="carousel-item" aria-hidden="true">
-              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
-                <img src="https://i.ibb.co/cS8bzYSV/47.jpg" alt="Preview 2 duplicado" class="h-full w-full object-cover blur-sm scale-110" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-              </div>
-            </div>
-            <div class="carousel-item" aria-hidden="true">
-              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
-                <img src="https://i.ibb.co/6K31t6x/56.jpg" alt="Preview 3 duplicado" class="h-full w-full object-cover blur-sm scale-110" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-              </div>
-            </div>
-            <div class="carousel-item" aria-hidden="true">
-              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
-                <img src="https://i.ibb.co/spPTPwx1/16-1.jpg" alt="Preview 4 duplicado" class="h-full w-full object-cover blur-sm scale-110" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-              </div>
-            </div>
-            <div class="carousel-item" aria-hidden="true">
-              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
-                <img src="https://i.ibb.co/931Kkmn8/Carla-Perez-12.jpg" alt="Preview 5 duplicado" class="h-full w-full object-cover blur-sm scale-110" />
+                <img src="5.jpg" alt="Preview 5" class="h-full w-full object-cover blur-sm scale-110" />
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
               </div>
             </div>
@@ -219,68 +186,36 @@
         <!-- Espaço entre as linhas -->
         <div class="h-4"></div>
 
-        <!-- Carrossel - Linha inferior (direção inversa) -->
+        <!-- Carrossel - Linha inferior (fotos 6-10) -->
         <div class="reveal carousel">
           <div class="carousel-track animate-scroll-reverse">
             <div class="carousel-item">
               <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
-                <img src="https://i.ibb.co/HTn0VgWd/Feiticeira-20.jpg" " alt="Preview 6" class="h-full w-full object-cover blur-sm scale-110" />
+                <img src="6.jpg" alt="Preview 6" class="h-full w-full object-cover blur-sm scale-110" />
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
               </div>
             </div>
             <div class="carousel-item">
               <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
-                <img src="https://i.ibb.co/spPTPwx1/16-1.jpg" alt="Preview 4 (variação)" class="h-full w-full object-cover blur-sm scale-110" />
+                <img src="7.jpg" alt="Preview 7" class="h-full w-full object-cover blur-sm scale-110" />
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
               </div>
             </div>
             <div class="carousel-item">
               <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
-                <img src="https://i.ibb.co/931Kkmn8/Carla-Perez-12.jpg" alt="Preview 5 (variação)" class="h-full w-full object-cover blur-sm scale-110" />
+                <img src="8.jpg" alt="Preview 8" class="h-full w-full object-cover blur-sm scale-110" />
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
               </div>
             </div>
             <div class="carousel-item">
               <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
-                <img src="https://i.ibb.co/6K31t6x/56.jpg" alt="Preview 3 (variação)" class="h-full w-full object-cover blur-sm scale-110" />
+                <img src="9.jpg" alt="Preview 9" class="h-full w-full object-cover blur-sm scale-110" />
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
               </div>
             </div>
             <div class="carousel-item">
               <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
-                <img src="https://i.ibb.co/cS8bzYSV/47.jpg" alt="Preview 2 (variação)" class="h-full w-full object-cover blur-sm scale-110" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-              </div>
-            </div>
-
-            <!-- Duplicados -->
-            <div class="carousel-item" aria-hidden="true">
-              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
-                <img src="https://i.ibb.co/67NKknQR/Tatiana-Issa-12.jpg" alt="Preview 6 duplicado" class="h-full w-full object-cover blur-sm scale-110" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-              </div>
-            </div>
-            <div class="carousel-item" aria-hidden="true">
-              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
-                <img src="https://i.ibb.co/HTn0VgWd/Feiticeira-20.jpg" " alt="Preview 4 duplicado" class="h-full w-full object-cover blur-sm scale-110" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-              </div>
-            </div>
-            <div class="carousel-item" aria-hidden="true">
-              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
-                <img src="https://i.ibb.co/wrcnzyPg/Scan-090831-0049.jpg" alt="Preview 5 duplicado" class="h-full w-full object-cover blur-sm scale-110" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-              </div>
-            </div>
-            <div class="carousel-item" aria-hidden="true">
-              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
-                <img src="https://i.ibb.co/6K31t6x/56.jpg" alt="Preview 3 duplicado" class="h-full w-full object-cover blur-sm scale-110" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-              </div>
-            </div>
-            <div class="carousel-item" aria-hidden="true">
-              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
-                <img src="https://i.ibb.co/cS8bzYSV/47.jpg" alt="Preview 2 duplicado" class="h-full w-full object-cover blur-sm scale-110" />
+                <img src="10.jpg" alt="Preview 10" class="h-full w-full object-cover blur-sm scale-110" />
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
               </div>
             </div>
