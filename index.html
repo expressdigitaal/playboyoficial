@@ -383,18 +383,7 @@
     document.querySelectorAll('.reveal, #pacotes').forEach(el=>io.observe(el));
   </script>
 
-  <!-- 🎯 Contador regressivo -->
-  <script>
-    let tempo = 5 * 60; // 5 minutos
-    const contador = document.getElementById("contador");
-    setInterval(() => {
-      let m = Math.floor(tempo / 60);
-      let s = tempo % 60;
-      contador.textContent = `⚡ Oferta expira em ${m}:${s < 10 ? '0'+s : s}`;
-      tempo--;
-      if (tempo <= 0) tempo = 5 * 60;
-    }, 1000);
-  </script>
+
 
   <!-- 🎯 Pessoas visualizando agora -->
   <script>
