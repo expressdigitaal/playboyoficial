@@ -567,5 +567,37 @@
         setInterval(showNotification, 20000);
       });
     </script>
+  <!-- Meta Pixel Code -->
+<script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '728458327023332');
+  fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=728458327023332&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+<button onclick="fbq('track', 'InitiateCheckout', {
+  content_name: 'Combo R$10',
+  value: 10.00,
+  currency: 'BRL'
+}); window.location.href='https://pay.cakto.com.br/pcytvby_607625';">
+  Comprar Combo R$10
+</button>
+<button onclick="fbq('track', 'InitiateCheckout', {
+  content_name: 'Combo R$19,90',
+  value: 19.90,
+  currency: 'BRL'
+}); window.location.href='https://pay.cakto.com.br/c2a2g68_607613';">
+  Comprar Combo R$19,90
+</button>
+  
   </body>
 </html>
