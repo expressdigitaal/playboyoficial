@@ -178,26 +178,35 @@
     <script>
         let packageChart, locationChart;
         let trackingData = [];
+        let dashboardInitialized = false;
 
         // Inicializa o dashboard
         function initDashboard() {
+            if (dashboardInitialized) {
+                console.log('⚠️ Dashboard já foi inicializado');
+                return;
+            }
+            
+            dashboardInitialized = true;
+            console.log('🚀 Inicializando dashboard...');
+            
             loadTrackingData();
             createCharts();
             updateStats();
             updateVisitorsList();
             
-            // Atualiza a cada 10 segundos (reduzido para melhor performance)
+            // Atualiza a cada 30 segundos (aumentado para evitar sobrecarga)
             setInterval(() => {
                 loadTrackingData();
                 updateStats();
                 updateVisitorsList();
                 updateLocationList();
                 
-                // Só atualiza gráficos a cada 30 segundos para evitar sobrecarga
-                if (Math.random() < 0.3) { // 30% de chance de atualizar gráficos
+                // Só atualiza gráficos ocasionalmente
+                if (Math.random() < 0.1) { // 10% de chance de atualizar gráficos
                     createPackageChart();
                 }
-            }, 10000);
+            }, 30000);
         }
 
         // Carrega dados do sistema de tracking
@@ -309,7 +318,10 @@
             const visitorsList = document.getElementById('visitorsList');
             const visitors = getUniqueVisitors();
             
-            visitorsList.innerHTML = visitors.map(sessionId => {
+            // Limita a 20 visitantes para evitar sobrecarga
+            const limitedVisitors = visitors.slice(0, 20);
+            
+            visitorsList.innerHTML = limitedVisitors.map(sessionId => {
                 const visitorData = trackingData.filter(entry => entry.sessionId === sessionId);
                 const location = visitorData.find(entry => entry.type === 'geolocation' || entry.type === 'ip_location');
                 const clicks = visitorData.filter(entry => entry.type === 'button_click');
@@ -417,6 +429,11 @@
                 packageStats[packageName] = (packageStats[packageName] || 0) + 1;
             });
 
+            // Só recria se não existir ou se houver dados novos
+            if (packageChart && Object.keys(packageStats).length === 0) {
+                return;
+            }
+
             if (packageChart) packageChart.destroy();
             
             packageChart = new Chart(ctx, {
@@ -461,7 +478,9 @@
             const totalVisitors = Object.values(locations).reduce((sum, count) => sum + count, 0);
 
             if (sortedLocations.length === 0) {
-                locationList.innerHTML = '<p class="text-gray-400 text-center py-4">Nenhum dado de localização disponível</p>';
+                if (locationList.innerHTML !== '<p class="text-gray-400 text-center py-4">Nenhum dado de localização disponível</p>') {
+                    locationList.innerHTML = '<p class="text-gray-400 text-center py-4">Nenhum dado de localização disponível</p>';
+                }
                 return;
             }
 
