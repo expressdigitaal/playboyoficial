@@ -113,15 +113,8 @@
             </div>
         </div>
 
-        <!-- Gráficos -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            <!-- Gráfico de Cliques por Pacote -->
-            <div class="card rounded-lg p-6">
-                <h3 class="text-lg font-semibold mb-4">Cliques por Pacote</h3>
-                <canvas id="packageChart" width="400" height="200"></canvas>
-            </div>
-
-            <!-- Lista de Visitantes por Estado -->
+        <!-- Lista de Visitantes por Estado -->
+        <div class="max-w-4xl mx-auto mb-8">
             <div class="card rounded-lg p-6">
                 <h3 class="text-lg font-semibold mb-4">Visitantes por Estado</h3>
                 <div id="locationList" class="space-y-3">
@@ -188,7 +181,6 @@
             updateStats();
             updateVisitorsList();
             updateLocationList();
-            createCharts();
         }
 
         // Carrega dados do sistema de tracking
@@ -382,42 +374,7 @@
             return 'Desktop';
         }
 
-        // Cria gráficos - VERSÃO SIMPLIFICADA
-        function createCharts() {
-            try {
-                createPackageChart();
-            } catch (error) {
-                console.error('Erro ao criar gráficos:', error);
-            }
-        }
-
-        // Gráfico de cliques por pacote - VERSÃO ESTÁTICA
-        function createPackageChart() {
-            const ctx = document.getElementById('packageChart').getContext('2d');
-            
-            if (packageChart) packageChart.destroy();
-            
-            packageChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Pacote Premium', 'Pacote Sedução'],
-                    datasets: [{
-                        data: [8, 4],
-                        backgroundColor: ['#e50914', '#ff6b6b'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            labels: { color: 'white' }
-                        }
-                    }
-                }
-            });
-        }
+        // Gráficos removidos - apenas lista de estados
 
         // Lista de visitantes por estado - VERSÃO ESTÁTICA
         function updateLocationList() {
@@ -462,11 +419,6 @@
             updateStats();
             updateVisitorsList();
             updateLocationList();
-            
-            // Só recria gráficos se necessário
-            if (trackingData.length > 0) {
-                createPackageChart();
-            }
             
             // Mostra notificação
             const button = event.target;
