@@ -120,13 +120,7 @@
         </div>
 
         <!-- Charts Section -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            <!-- Visitas por Hora -->
-            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
-                <h3 class="text-lg font-semibold mb-4">Visitas por Hora (Últimas 24h)</h3>
-                <canvas id="visitsChart" width="400" height="200"></canvas>
-            </div>
-
+        <div class="grid grid-cols-1 gap-6 mb-8">
             <!-- Cliques por Pacote -->
             <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
                 <h3 class="text-lg font-semibold mb-4">Distribuição de Cliques</h3>
@@ -178,42 +172,9 @@
             document.getElementById('conversionRate').textContent = conversionRate + '%';
 
             // Atualizar gráficos
-            updateVisitsChart();
             updateClicksChart();
         }
 
-        // Gráfico de visitas por hora
-        let visitsChart;
-        function initVisitsChart() {
-            const ctx = document.getElementById('visitsChart').getContext('2d');
-            visitsChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: Array.from({length: 24}, (_, i) => i + ':00'),
-                    datasets: [{
-                        label: 'Visitas',
-                        data: dashboardData.visitsByHour,
-                        borderColor: '#10b981',
-                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            labels: { color: '#ffffff' }
-                        }
-                    },
-                    scales: {
-                        x: { ticks: { color: '#9ca3af' }, grid: { color: '#374151' } },
-                        y: { ticks: { color: '#9ca3af' }, grid: { color: '#374151' } }
-                    }
-                }
-            });
-        }
 
         // Gráfico de cliques por pacote
         let clicksChart;
@@ -241,12 +202,6 @@
             });
         }
 
-        function updateVisitsChart() {
-            if (visitsChart) {
-                visitsChart.data.datasets[0].data = dashboardData.visitsByHour;
-                visitsChart.update();
-            }
-        }
 
         function updateClicksChart() {
             if (clicksChart) {
@@ -336,7 +291,6 @@
             updateTimestamp();
             setInterval(updateTimestamp, 1000);
             
-            initVisitsChart();
             initClicksChart();
             updateDashboard();
             
