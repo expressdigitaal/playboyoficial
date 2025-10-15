@@ -391,5 +391,63 @@
     });
   </script>
 
+
+  <script>
+  // URL da página de desconto
+  const backRedirectURL = "https://playboyoficial.onrender.com/desconto-final"; // 🔥 altere aqui se quiser outro link
+
+  (function() {
+    let hasRedirected = false;
+    const redirectUser = () => {
+      if (!hasRedirected) {
+        hasRedirected = true;
+        window.location.href = backRedirectURL;
+      }
+    };
+
+    // ✅ Detecta tentativa de voltar na navegação
+    history.pushState(null, null, location.href);
+    window.onpopstate = function() {
+      history.pushState(null, null, location.href);
+      redirectUser();
+    };
+
+    // ✅ Detecta fechamento da aba / janela
+    window.addEventListener("beforeunload", function(e) {
+      if (!hasRedirected) {
+        redirectUser();
+      }
+    });
+
+    // ✅ Detecta perda de foco (ex: trocar de aba ou deslizar pra cima no mobile)
+    document.addEventListener("visibilitychange", function() {
+      if (document.hidden && !hasRedirected) {
+        redirectUser();
+      }
+    });
+
+    // ✅ Detecta gesto de voltar (mobile)
+    document.addEventListener("touchstart", function(e) {
+      if (e.touches.length > 1) return;
+      this._touchStartX = e.touches[0].clientX;
+    });
+    document.addEventListener("touchend", function(e) {
+      if (typeof this._touchStartX === "undefined") return;
+      const touchEndX = e.changedTouches[0].clientX;
+      if (this._touchStartX - touchEndX > 120 || touchEndX - this._touchStartX > 120) {
+        redirectUser();
+      }
+      this._touchStartX = undefined;
+    });
+
+    // ✅ iOS fix — intercepta gesto nativo de voltar
+    window.addEventListener("pagehide", function() {
+      redirectUser();
+    });
+  })();
+</script>
+
+
+  
 </body>
 </html>
