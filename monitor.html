@@ -184,12 +184,17 @@
             updateStats();
             updateVisitorsList();
             
-            // Atualiza a cada 5 segundos
+            // Atualiza a cada 10 segundos (reduzido para melhor performance)
             setInterval(() => {
                 loadTrackingData();
                 updateStats();
                 updateVisitorsList();
-            }, 5000);
+                
+                // Só atualiza gráficos a cada 30 segundos para evitar sobrecarga
+                if (Math.random() < 0.3) { // 30% de chance de atualizar gráficos
+                    createCharts();
+                }
+            }, 10000);
         }
 
         // Carrega dados do sistema de tracking
@@ -375,8 +380,21 @@
 
         // Cria gráficos
         function createCharts() {
-            createPackageChart();
-            createLocationChart();
+            try {
+                createPackageChart();
+                createLocationChart();
+            } catch (error) {
+                console.error('Erro ao criar gráficos:', error);
+                // Se der erro, tenta novamente após 1 segundo
+                setTimeout(() => {
+                    try {
+                        createPackageChart();
+                        createLocationChart();
+                    } catch (e) {
+                        console.error('Erro persistente nos gráficos:', e);
+                    }
+                }, 1000);
+            }
         }
 
         // Gráfico de cliques por pacote
@@ -421,20 +439,25 @@
             
             trackingData.forEach(entry => {
                 if (entry.type === 'geolocation' || entry.type === 'ip_location') {
-                    const state = entry.data.state;
+                    const state = entry.data.state || 'Não identificado';
                     locations[state] = (locations[state] || 0) + 1;
                 }
             });
+
+            // Limita a 10 estados mais visitados para evitar sobrecarga
+            const sortedLocations = Object.entries(locations)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 10);
 
             if (locationChart) locationChart.destroy();
             
             locationChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: Object.keys(locations),
+                    labels: sortedLocations.map(([state]) => state),
                     datasets: [{
                         label: 'Visitantes',
-                        data: Object.values(locations),
+                        data: sortedLocations.map(([,count]) => count),
                         backgroundColor: '#e50914',
                         borderColor: '#b20710',
                         borderWidth: 1
@@ -451,13 +474,23 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            ticks: { color: 'white' },
+                            ticks: { 
+                                color: 'white',
+                                maxTicksLimit: 5
+                            },
                             grid: { color: 'rgba(255,255,255,0.1)' }
                         },
                         x: {
-                            ticks: { color: 'white' },
+                            ticks: { 
+                                color: 'white',
+                                maxRotation: 45,
+                                minRotation: 0
+                            },
                             grid: { color: 'rgba(255,255,255,0.1)' }
                         }
+                    },
+                    animation: {
+                        duration: 0 // Desabilita animação para melhor performance
                     }
                 }
             });
@@ -468,7 +501,11 @@
             loadTrackingData();
             updateStats();
             updateVisitorsList();
-            createCharts();
+            
+            // Só recria gráficos se necessário
+            if (trackingData.length > 0) {
+                createCharts();
+            }
             
             // Mostra notificação
             const button = event.target;
