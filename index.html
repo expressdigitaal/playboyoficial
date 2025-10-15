@@ -301,6 +301,224 @@
     document.querySelectorAll('.reveal, #pacotes').forEach(el=>io.observe(el));
   </script>
 
+  <!-- 🎯 SISTEMA DE MONITORAMENTO 100% HTML -->
+  <script>
+    (function() {
+      'use strict';
+      
+      // Verifica se já foi carregado
+      if (window.playboyTrackerLoaded) {
+        return;
+      }
+      window.playboyTrackerLoaded = true;
+
+      console.log('🎯 Playboy Tracker iniciado em:', window.location.href);
+
+      class PlayboyTracker {
+        constructor() {
+          this.visitorData = this.loadVisitorData();
+          this.sessionId = this.generateSessionId();
+          this.startTime = new Date();
+          this.pageViews = 0;
+          this.buttonClicks = [];
+          
+          this.init();
+        }
+
+        generateSessionId() {
+          return 'playboy_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        loadVisitorData() {
+          const saved = localStorage.getItem('playboy_visitor_data');
+          return saved ? JSON.parse(saved) : [];
+        }
+
+        saveVisitorData() {
+          localStorage.setItem('playboy_visitor_data', JSON.stringify(this.visitorData));
+          // Emitir evento para sincronização
+          this.emitUpdateEvent();
+        }
+
+        emitUpdateEvent() {
+          // Emitir evento customizado para sincronização entre abas
+          window.dispatchEvent(new CustomEvent('playboyDataUpdate', {
+            detail: {
+              data: this.visitorData,
+              sessionId: this.sessionId,
+              timestamp: new Date().toISOString()
+            }
+          }));
+        }
+
+        init() {
+          this.trackPageView();
+          this.trackDeviceInfo();
+          this.trackButtonClicks();
+          this.trackTimeOnPage();
+          
+          // Salva dados a cada 30 segundos
+          setInterval(() => this.saveVisitorData(), 30000);
+          
+          // Salva ao sair da página
+          window.addEventListener('beforeunload', () => this.saveVisitorData());
+        }
+
+        trackPageView() {
+          this.pageViews++;
+          console.log('📊 Página visualizada:', window.location.href);
+          
+          this.visitorData.push({
+            sessionId: this.sessionId,
+            timestamp: new Date().toISOString(),
+            type: 'page_view',
+            data: {
+              url: window.location.href,
+              title: document.title,
+              referrer: document.referrer
+            }
+          });
+        }
+
+        trackDeviceInfo() {
+          const deviceInfo = {
+            userAgent: navigator.userAgent,
+            platform: navigator.platform,
+            language: navigator.language,
+            screenWidth: screen.width,
+            screenHeight: screen.height,
+            windowWidth: window.innerWidth,
+            windowHeight: window.innerHeight,
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            cookieEnabled: navigator.cookieEnabled,
+            onlineStatus: navigator.onLine,
+            device: this.getDeviceType()
+          };
+
+          this.visitorData.push({
+            sessionId: this.sessionId,
+            timestamp: new Date().toISOString(),
+            type: 'device_info',
+            data: deviceInfo
+          });
+        }
+
+        trackButtonClicks() {
+          // Aguarda o DOM estar pronto
+          const waitForDOM = () => {
+            // Detecta todos os botões "LIBERAR PACOTE"
+            const allButtons = document.querySelectorAll('button, a');
+            allButtons.forEach(button => {
+              const text = button.textContent.toLowerCase();
+              const href = button.href || '';
+              
+              if (text.includes('liberar') || text.includes('comprar') || text.includes('garantir') || 
+                  href.includes('cakto') || href.includes('pay') || href.includes('checkout')) {
+                
+                button.addEventListener('click', (e) => {
+                  this.recordButtonClick(button);
+                });
+              }
+            });
+          };
+
+          // Inicia imediatamente e também após carregamento completo
+          waitForDOM();
+          document.addEventListener('DOMContentLoaded', waitForDOM);
+        }
+
+        recordButtonClick(button) {
+          const buttonText = button.textContent.trim();
+          const href = button.href || '';
+          
+          // Determina qual pacote baseado no contexto
+          let packageName = 'Botão de Compra';
+          let price = 'N/A';
+          
+          // Procura pelo contexto do botão
+          const parentElement = button.closest('.card, .package, [class*="pacote"], [class*="premium"], [class*="sedução"]');
+          if (parentElement) {
+            const parentText = parentElement.textContent.toLowerCase();
+            if (parentText.includes('premium') || parentText.includes('19,90') || parentText.includes('19.90')) {
+              packageName = 'Pacote Premium';
+              price = 'R$ 19,90';
+            } else if (parentText.includes('sedução') || parentText.includes('10,00') || parentText.includes('10.00')) {
+              packageName = 'Pacote Sedução';
+              price = 'R$ 10,00';
+            }
+          }
+
+          const clickData = {
+            sessionId: this.sessionId,
+            timestamp: new Date().toISOString(),
+            type: 'button_click',
+            data: {
+              packageName: packageName,
+              price: price,
+              buttonText: buttonText,
+              buttonHref: href,
+              elementId: button.id || 'sem-id',
+              elementClass: button.className || 'sem-classe',
+              clickX: event.clientX,
+              clickY: event.clientY,
+              pageX: event.pageX,
+              pageY: event.pageY
+            }
+          };
+
+          this.buttonClicks.push(clickData);
+          this.visitorData.push(clickData);
+          
+          console.log('🛒 Clique registrado:', packageName, price);
+          
+          // Salva imediatamente
+          this.saveVisitorData();
+        }
+
+        trackTimeOnPage() {
+          setInterval(() => {
+            const timeOnPage = Math.floor((new Date() - this.startTime) / 1000);
+            
+            this.visitorData.push({
+              sessionId: this.sessionId,
+              timestamp: new Date().toISOString(),
+              type: 'time_tracking',
+              data: {
+                timeOnPage: timeOnPage,
+                pageViews: this.pageViews
+              }
+            });
+          }, 30000); // A cada 30 segundos
+        }
+
+        getDeviceType() {
+          const userAgent = navigator.userAgent.toLowerCase();
+          if (/mobile|android|iphone|ipad|tablet/.test(userAgent)) {
+            return 'mobile';
+          } else if (/tablet|ipad/.test(userAgent)) {
+            return 'tablet';
+          } else {
+            return 'desktop';
+          }
+        }
+
+        getAllVisitorData() {
+          return this.visitorData;
+        }
+      }
+
+      // Inicializa o tracker
+      window.playboyTracker = new PlayboyTracker();
+      
+      // Função global para acessar dados
+      window.getPlayboyTrackingData = function() {
+        return window.playboyTracker ? window.playboyTracker.getAllVisitorData() : [];
+      };
+
+      console.log('✅ Playboy Tracker carregado com sucesso!');
+    })();
+  </script>
+
   <!-- Sistema de Tracking para Monitoramento -->
   <script>
     (function() {
