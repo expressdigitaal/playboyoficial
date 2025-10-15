@@ -116,57 +116,75 @@
             </div>
         </div>
 
-        <!-- Lista de Visitantes por Estado -->
+        <!-- Seção 1: Pessoas que Clicaram nos Botões -->
+        <div class="card rounded-lg p-6 mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-semibold flex items-center gap-2">
+                    🛒 Pessoas que Clicaram nos Botões
+                </h3>
+                <div class="flex items-center gap-2">
+                    <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                    <span class="text-sm text-green-400" id="clickersCount">0 pessoas</span>
+                </div>
+            </div>
+            
+            <div class="space-y-4" id="clickersList">
+                <!-- Pessoas que clicaram serão inseridas aqui -->
+            </div>
+        </div>
+
+        <!-- Seção 2: Análise de Dispositivos e Pacotes -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Dispositivos -->
+            <div class="card rounded-lg p-6">
+                <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                    📱 Dispositivos (Quantidade de Cliques)
+                </h3>
+                <div id="deviceStats" class="space-y-3">
+                    <!-- Estatísticas de dispositivos -->
+                </div>
+            </div>
+
+            <!-- Pacotes Clicados -->
+            <div class="card rounded-lg p-6">
+                <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                    📦 Pacotes Clicados
+                </h3>
+                <div id="packageStats" class="space-y-3">
+                    <!-- Estatísticas de pacotes -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção 3: Pessoas Apenas Visitando (Sem Ações) -->
+        <div class="card rounded-lg p-6 mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-semibold flex items-center gap-2">
+                    👀 Pessoas Apenas Visitando (Sem Fazer Nada)
+                </h3>
+                <div class="flex items-center gap-2">
+                    <div class="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+                    <span class="text-sm text-blue-400" id="viewersCount">0 pessoas</span>
+                </div>
+            </div>
+            
+            <div class="space-y-4" id="viewersList">
+                <!-- Pessoas apenas visitando serão inseridas aqui -->
+            </div>
+        </div>
+
+        <!-- Seção 4: Visitantes por Estado -->
         <div class="max-w-4xl mx-auto mb-8">
             <div class="card rounded-lg p-6">
-                <h3 class="text-lg font-semibold mb-4">Visitantes por Estado</h3>
+                <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                    🗺️ Visitantes por Estado
+                </h3>
                 <div id="locationList" class="space-y-3">
                     <!-- Lista será preenchida dinamicamente -->
                 </div>
             </div>
         </div>
 
-        <!-- Lista de Visitantes em Tempo Real -->
-        <div class="card rounded-lg p-6">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-lg font-semibold">Visitantes Ativos</h3>
-                <div class="flex items-center gap-2">
-                    <div class="online-indicator"></div>
-                    <span class="text-sm text-green-400" id="activeVisitors">0 visitantes online</span>
-                </div>
-            </div>
-            
-            <div class="space-y-4" id="visitorsList">
-                <!-- Visitantes serão inseridos aqui dinamicamente -->
-            </div>
-        </div>
-
-        <!-- Análise Detalhada -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
-            <!-- Dispositivos -->
-            <div class="card rounded-lg p-6">
-                <h3 class="text-lg font-semibold mb-4">Dispositivos</h3>
-                <div id="deviceStats" class="space-y-3">
-                    <!-- Estatísticas de dispositivos -->
-                </div>
-            </div>
-
-            <!-- Faixa Etária Estimada -->
-            <div class="card rounded-lg p-6">
-                <h3 class="text-lg font-semibold mb-4">Faixa Etária</h3>
-                <div id="ageStats" class="space-y-3">
-                    <!-- Estatísticas de idade -->
-                </div>
-            </div>
-
-            <!-- Localização -->
-            <div class="card rounded-lg p-6">
-                <h3 class="text-lg font-semibold mb-4">Localização</h3>
-                <div id="locationStats" class="space-y-3">
-                    <!-- Estatísticas de localização -->
-                </div>
-            </div>
-        </div>
     </section>
 
     <!-- Scripts -->
@@ -181,14 +199,20 @@
             // Carrega dados iniciais
             loadTrackingData();
             updateStats();
-            updateVisitorsList();
+            updateClickersList();
+            updateViewersList();
+            updateDeviceStats();
+            updatePackageStats();
             updateLocationList();
             
-            // Atualização em tempo real a cada 5 segundos
+            // Atualização em tempo real a cada 10 segundos (mais estável)
             setInterval(() => {
                 const hasChanges = loadTrackingData();
                 updateStats();
-                updateVisitorsList();
+                updateClickersList();
+                updateViewersList();
+                updateDeviceStats();
+                updatePackageStats();
                 updateLocationList();
                 updateTimestamp();
                 
@@ -198,7 +222,7 @@
                 } else {
                     console.log('🔄 Dashboard atualizado em tempo real');
                 }
-            }, 5000);
+            }, 10000);
         }
 
         // Carrega dados do sistema de tracking - VERSÃO TEMPO REAL
@@ -340,31 +364,37 @@
             return Math.round(totalTime / timeEntries.length);
         }
 
-        // Atualiza lista de visitantes - VERSÃO TEMPO REAL
-        function updateVisitorsList() {
-            const visitorsList = document.getElementById('visitorsList');
-            if (!visitorsList) return;
+        // Atualiza lista de pessoas que clicaram nos botões
+        function updateClickersList() {
+            const clickersList = document.getElementById('clickersList');
+            const clickersCount = document.getElementById('clickersCount');
+            if (!clickersList) return;
             
             const visitors = getUniqueVisitors();
-            const limitedVisitors = visitors.slice(0, 10); // Limita a 10 visitantes
+            const clickers = visitors.filter(sessionId => {
+                const visitorData = trackingData.filter(entry => entry.sessionId === sessionId);
+                return visitorData.some(entry => entry.type === 'button_click');
+            });
             
-            if (limitedVisitors.length === 0) {
-                visitorsList.innerHTML = '<p class="text-gray-400 text-center py-4">Nenhum visitante detectado</p>';
+            clickersCount.textContent = `${clickers.length} pessoas`;
+            
+            if (clickers.length === 0) {
+                clickersList.innerHTML = '<p class="text-gray-400 text-center py-4">Nenhuma pessoa clicou nos botões ainda</p>';
                 return;
             }
             
-            visitorsList.innerHTML = limitedVisitors.map(sessionId => {
+            clickersList.innerHTML = clickers.slice(0, 8).map(sessionId => {
                 const visitorData = trackingData.filter(entry => entry.sessionId === sessionId);
                 const device = visitorData.find(entry => entry.type === 'device_info');
                 const clicks = visitorData.filter(entry => entry.type === 'button_click');
                 const latestEntry = visitorData[visitorData.length - 1];
                 
                 return `
-                    <div class="visitor-card rounded-lg p-4">
+                    <div class="visitor-card rounded-lg p-4 border-l-4 border-green-500">
                         <div class="flex items-center justify-between mb-3">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center">
-                                    <span class="text-white font-bold text-sm">V</span>
+                                <div class="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center">
+                                    <span class="text-white font-bold text-sm">C</span>
                                 </div>
                                 <div>
                                     <p class="font-semibold">Visitante ${sessionId.slice(-6)}</p>
@@ -372,20 +402,12 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap-2">
-                                <div class="online-indicator"></div>
-                                <span class="text-sm text-green-400">Online</span>
+                                <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                                <span class="text-sm text-green-400">${clicks.length} cliques</span>
                             </div>
                         </div>
                         
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div>
-                                <p class="text-sm text-gray-400">Localização</p>
-                                <div class="flex items-center gap-2 mt-1">
-                                    <span class="location-badge text-xs px-2 py-1 rounded">${device?.data?.city || 'Não identificada'}</span>
-                                    <span class="text-sm">${device?.data?.state || 'N/A'}</span>
-                                </div>
-                            </div>
-                            
                             <div>
                                 <p class="text-sm text-gray-400">Dispositivo</p>
                                 <div class="flex items-center gap-2 mt-1">
@@ -394,29 +416,191 @@
                             </div>
                             
                             <div>
-                                <p class="text-sm text-gray-400">Ações</p>
+                                <p class="text-sm text-gray-400">Localização</p>
                                 <div class="flex items-center gap-2 mt-1">
-                                    ${clicks.length > 0 ? 
-                                        `<span class="click-highlight text-xs px-2 py-1 rounded">${clicks.length} cliques</span>` : 
-                                        '<span class="text-xs text-gray-500">Nenhuma ação</span>'
-                                    }
+                                    <span class="location-badge text-xs px-2 py-1 rounded">${device?.data?.city || 'Não identificada'}</span>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <p class="text-sm text-gray-400">Último Clique</p>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="text-xs text-green-400">${clicks[clicks.length - 1]?.data?.packageName || 'N/A'}</span>
                                 </div>
                             </div>
                         </div>
                         
-                        ${clicks.length > 0 ? `
-                            <div class="mt-3 pt-3 border-t border-gray-700">
-                                <p class="text-sm text-gray-400 mb-2">Cliques registrados:</p>
-                                <div class="space-y-1">
-                                    ${clicks.map(click => `
-                                        <div class="flex items-center justify-between text-sm">
-                                            <span>${click.data.packageName}</span>
-                                            <span class="text-green-400 font-semibold">${click.data.price}</span>
-                                        </div>
-                                    `).join('')}
+                        <div class="mt-3 pt-3 border-t border-gray-700">
+                            <p class="text-sm text-gray-400 mb-2">Todos os cliques:</p>
+                            <div class="space-y-1">
+                                ${clicks.map(click => `
+                                    <div class="flex items-center justify-between text-sm">
+                                        <span>${click.data.packageName}</span>
+                                        <span class="text-green-400 font-semibold">${click.data.price}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Atualiza lista de pessoas apenas visitando (sem ações)
+        function updateViewersList() {
+            const viewersList = document.getElementById('viewersList');
+            const viewersCount = document.getElementById('viewersCount');
+            if (!viewersList) return;
+            
+            const visitors = getUniqueVisitors();
+            const viewers = visitors.filter(sessionId => {
+                const visitorData = trackingData.filter(entry => entry.sessionId === sessionId);
+                return !visitorData.some(entry => entry.type === 'button_click');
+            });
+            
+            viewersCount.textContent = `${viewers.length} pessoas`;
+            
+            if (viewers.length === 0) {
+                viewersList.innerHTML = '<p class="text-gray-400 text-center py-4">Todas as pessoas estão interagindo com o site</p>';
+                return;
+            }
+            
+            viewersList.innerHTML = viewers.slice(0, 6).map(sessionId => {
+                const visitorData = trackingData.filter(entry => entry.sessionId === sessionId);
+                const device = visitorData.find(entry => entry.type === 'device_info');
+                const latestEntry = visitorData[visitorData.length - 1];
+                
+                return `
+                    <div class="visitor-card rounded-lg p-4 border-l-4 border-blue-500">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                                    <span class="text-white font-bold text-sm">V</span>
+                                </div>
+                                <div>
+                                    <p class="font-semibold">Visitante ${sessionId.slice(-6)}</p>
+                                    <p class="text-sm text-gray-400">${new Date(latestEntry?.timestamp).toLocaleString()}</p>
                                 </div>
                             </div>
-                        ` : ''}
+                            <div class="flex items-center gap-2">
+                                <div class="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+                                <span class="text-sm text-blue-400">Apenas visualizando</span>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-sm text-gray-400">Dispositivo</p>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="device-badge text-xs px-2 py-1 rounded">${getDeviceType(device?.data?.userAgent)}</span>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <p class="text-sm text-gray-400">Localização</p>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="location-badge text-xs px-2 py-1 rounded">${device?.data?.city || 'Não identificada'}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Atualiza estatísticas de dispositivos
+        function updateDeviceStats() {
+            const deviceStats = document.getElementById('deviceStats');
+            if (!deviceStats) return;
+            
+            const deviceClicks = {};
+            const deviceTypes = {};
+            
+            trackingData.forEach(entry => {
+                if (entry.type === 'device_info') {
+                    const deviceType = getDeviceType(entry.data.userAgent);
+                    deviceTypes[deviceType] = (deviceTypes[deviceType] || 0) + 1;
+                }
+                if (entry.type === 'button_click') {
+                    const sessionId = entry.sessionId;
+                    const deviceEntry = trackingData.find(d => d.sessionId === sessionId && d.type === 'device_info');
+                    if (deviceEntry) {
+                        const deviceType = getDeviceType(deviceEntry.data.userAgent);
+                        deviceClicks[deviceType] = (deviceClicks[deviceType] || 0) + 1;
+                    }
+                }
+            });
+            
+            const sortedDevices = Object.entries(deviceTypes)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 5);
+            
+            deviceStats.innerHTML = sortedDevices.map(([device, count]) => {
+                const clicks = deviceClicks[device] || 0;
+                const clickRate = count > 0 ? Math.round((clicks / count) * 100) : 0;
+                
+                return `
+                    <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                                <span class="text-white font-bold text-xs">${device.slice(0, 1)}</span>
+                            </div>
+                            <div>
+                                <p class="font-semibold">${device}</p>
+                                <p class="text-sm text-gray-400">${count} visitantes</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-lg font-bold text-blue-400">${clicks}</p>
+                            <p class="text-sm text-gray-400">${clickRate}% clicaram</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Atualiza estatísticas de pacotes
+        function updatePackageStats() {
+            const packageStats = document.getElementById('packageStats');
+            if (!packageStats) return;
+            
+            const packageClicks = {};
+            
+            trackingData.forEach(entry => {
+                if (entry.type === 'button_click') {
+                    const packageName = entry.data.packageName;
+                    packageClicks[packageName] = (packageClicks[packageName] || 0) + 1;
+                }
+            });
+            
+            const sortedPackages = Object.entries(packageClicks)
+                .sort(([,a], [,b]) => b - a);
+            
+            if (sortedPackages.length === 0) {
+                packageStats.innerHTML = '<p class="text-gray-400 text-center py-4">Nenhum pacote foi clicado ainda</p>';
+                return;
+            }
+            
+            packageStats.innerHTML = sortedPackages.map(([packageName, clicks]) => {
+                const isPremium = packageName.includes('Premium');
+                const color = isPremium ? 'red' : 'green';
+                const icon = isPremium ? '👑' : '💎';
+                
+                return `
+                    <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-${color}-600 rounded-full flex items-center justify-center">
+                                <span class="text-white text-sm">${icon}</span>
+                            </div>
+                            <div>
+                                <p class="font-semibold">${packageName}</p>
+                                <p class="text-sm text-gray-400">${clicks} cliques</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-lg font-bold text-${color}-400">${clicks}</p>
+                            <p class="text-sm text-gray-400">cliques</p>
+                        </div>
                     </div>
                 `;
             }).join('');
@@ -489,7 +673,10 @@
             
             loadTrackingData();
             updateStats();
-            updateVisitorsList();
+            updateClickersList();
+            updateViewersList();
+            updateDeviceStats();
+            updatePackageStats();
             updateLocationList();
             
             // Mostra notificação
