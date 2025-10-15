@@ -195,18 +195,20 @@
             updateStats();
             updateVisitorsList();
             
-            // Atualiza a cada 30 segundos (aumentado para evitar sobrecarga)
+            // DESABILITADO: Atualização automática que estava causando o problema
+            // Comentado para evitar crescimento infinito da página
+            /*
             setInterval(() => {
                 loadTrackingData();
                 updateStats();
                 updateVisitorsList();
                 updateLocationList();
                 
-                // Só atualiza gráficos ocasionalmente
-                if (Math.random() < 0.1) { // 10% de chance de atualizar gráficos
+                if (Math.random() < 0.1) {
                     createPackageChart();
                 }
             }, 30000);
+            */
         }
 
         // Carrega dados do sistema de tracking
@@ -316,10 +318,17 @@
         // Atualiza lista de visitantes
         function updateVisitorsList() {
             const visitorsList = document.getElementById('visitorsList');
+            if (!visitorsList) return; // Proteção contra elemento não encontrado
+            
             const visitors = getUniqueVisitors();
             
-            // Limita a 20 visitantes para evitar sobrecarga
-            const limitedVisitors = visitors.slice(0, 20);
+            // Limita a 10 visitantes para evitar sobrecarga
+            const limitedVisitors = visitors.slice(0, 10);
+            
+            // Verifica se já tem conteúdo para evitar recriar desnecessariamente
+            if (visitorsList.children.length > 0 && limitedVisitors.length === 0) {
+                return;
+            }
             
             visitorsList.innerHTML = limitedVisitors.map(sessionId => {
                 const visitorData = trackingData.filter(entry => entry.sessionId === sessionId);
@@ -461,6 +470,8 @@
         // Lista de visitantes por estado
         function updateLocationList() {
             const locationList = document.getElementById('locationList');
+            if (!locationList) return; // Proteção contra elemento não encontrado
+            
             const locations = {};
             
             trackingData.forEach(entry => {
@@ -473,13 +484,14 @@
             // Ordena por número de visitantes
             const sortedLocations = Object.entries(locations)
                 .sort(([,a], [,b]) => b - a)
-                .slice(0, 10);
+                .slice(0, 5); // Reduzido para 5 estados
 
             const totalVisitors = Object.values(locations).reduce((sum, count) => sum + count, 0);
 
             if (sortedLocations.length === 0) {
-                if (locationList.innerHTML !== '<p class="text-gray-400 text-center py-4">Nenhum dado de localização disponível</p>') {
-                    locationList.innerHTML = '<p class="text-gray-400 text-center py-4">Nenhum dado de localização disponível</p>';
+                const noDataMessage = '<p class="text-gray-400 text-center py-4">Nenhum dado de localização disponível</p>';
+                if (locationList.innerHTML !== noDataMessage) {
+                    locationList.innerHTML = noDataMessage;
                 }
                 return;
             }
@@ -509,6 +521,8 @@
 
         // Atualiza dados
         function refreshData() {
+            console.log('🔄 Atualizando dados manualmente...');
+            
             loadTrackingData();
             updateStats();
             updateVisitorsList();
@@ -532,7 +546,10 @@
         }
 
         // Inicializa quando a página carrega
-        document.addEventListener('DOMContentLoaded', initDashboard);
+        document.addEventListener('DOMContentLoaded', function() {
+            // Aguarda um pouco para garantir que tudo está carregado
+            setTimeout(initDashboard, 100);
+        });
     </script>
 </body>
 </html>
