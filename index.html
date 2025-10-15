@@ -1,603 +1,324 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Playboy – Ensaios Exclusivos</title>
+  <meta name="description" content="+ de 500 ensaios exclusivos. Escolhe, compra e curte. Playboy – pacotes digitais premium." />
 
-<script>
-  window.pixelId = "68ed1b5307b5df967386fc88";
-  console.log("UTMIFY Pixel ID definido:", window.pixelId);
+  <!-- Favicon -->
+  <link rel="icon" type="image/webp" href="https://i.postimg.cc/htF3JFMC/3-adesivo-playboy-adesivo-coelho-da-playboy-para-carro-moto.webp">
+  <link rel="shortcut icon" type="image/webp" href="https://i.postimg.cc/htF3JFMC/3-adesivo-playboy-adesivo-coelho-da-playboy-para-carro-moto.webp">
+  <link rel="apple-touch-icon" href="https://i.postimg.cc/htF3JFMC/3-adesivo-playboy-adesivo-coelho-da-playboy-para-carro-moto.webp">
 
-  var a = document.createElement("script");
-  a.setAttribute("async", "");
-  a.setAttribute("defer", "");
-  a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+  <!-- Fontes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
 
-  a.onload = () => {
-    console.log("✅ Pixel da UTMify carregado com sucesso");
-  };
-
-  a.onerror = () => {
-    console.error("❌ ERRO ao carregar o Pixel da UTMify");
-  };
-
-  document.head.appendChild(a);
-</script>
-
-<script
-  src="https://cdn.utmify.com.br/scripts/utms/latest.js"
-  data-utmify-prevent-xcod-sck
-  data-utmify-prevent-subids
-  async
-  defer
-></script>
-
-
-
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Playboy – Ensaios Exclusivos</title>
-    <meta name="description" content="+ de 500 ensaios exclusivos. Escolhe, compra e curte. Playboy – pacotes digitais premium." />
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/webp" href="https://i.postimg.cc/htF3JFMC/3-adesivo-playboy-adesivo-coelho-da-playboy-para-carro-moto.webp">
-    <link rel="shortcut icon" type="image/webp" href="https://i.postimg.cc/htF3JFMC/3-adesivo-playboy-adesivo-coelho-da-playboy-para-carro-moto.webp">
-    <link rel="apple-touch-icon" href="https://i.postimg.cc/htF3JFMC/3-adesivo-playboy-adesivo-coelho-da-playboy-para-carro-moto.webp">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: { sans: ["Inter", "ui-sans-serif", "system-ui"] },
-            colors: {
-              brand: { red: "#E50914", redDark: "#B20710" },
-            },
-            boxShadow: { glow: "0 0 40px rgba(229,9,20,0.35)" },
-          },
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ["Inter", "ui-sans-serif", "system-ui"] },
+          colors: { brand: { red: "#E50914", redDark: "#B20710" } },
+          boxShadow: { glow: "0 0 40px rgba(229,9,20,0.35)" },
         },
-      };
-    </script>
+      },
+    };
+  </script>
 
-    <style>
-      :root { color-scheme: dark; }
-      html, body { background: #0b0b0b; }
-      .reveal { opacity: 0; transform: translateY(16px); }
-      .revealed { opacity: 1; transform: translateY(0); transition: opacity .8s ease, transform .8s ease; }
-      /* Carrossel: mostra 3 por vez (2 no mobile) e rola infinito */
-      .carousel { overflow: hidden; }
-      .carousel-track { display: flex; gap: .75rem; width: 200%; }
-      .carousel-item { flex: 0 0 20%; }
-      @media (max-width: 640px) { .carousel-item { flex-basis: 33.333%; } }
-      @keyframes scroll-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-      @keyframes scroll-right { from { transform: translateX(-50%); } to { transform: translateX(0); } }
-      .animate-scroll { animation: scroll-left 25s linear infinite; }
-      .animate-scroll-reverse { animation: scroll-right 30s linear infinite; }
-      
-      /* Popup de notificações de compra */
-      .purchase-notification {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background: linear-gradient(135deg, #006600, #004400);
-        color: white;
-        padding: 6px 10px;
-        border-radius: 6px;
-        box-shadow: 0 2px 10px rgba(0,100,0,0.4);
-        z-index: 1000;
-        transform: translateX(300px);
-        transition: transform 0.4s ease;
-        max-width: 180px;
-        font-size: 11px;
-        border-left: 3px solid #00aa00;
-        font-weight: bold;
-        line-height: 1.2;
-      }
-      
-      .purchase-notification.show {
-        transform: translateX(0);
-      }
-      
-      .purchase-notification .name {
-        font-weight: bold;
-        color: #fff;
-      }
-      
-      .purchase-notification .package {
-        color: #e6ffe6;
-        font-size: 12px;
-      }
-      
-      .purchase-notification .time {
-        color: #ccffcc;
-        font-size: 11px;
-        margin-top: 4px;
-      }
-      
-      @media (max-width: 640px) {
-        .purchase-notification {
-          bottom: 10px;
-          right: 10px;
-          left: 10px;
-          max-width: 160px;
-          transform: translateY(60px);
-          font-size: 10px;
-          padding: 5px 8px;
-          line-height: 1.1;
-        }
-        
-        .purchase-notification.show {
-          transform: translateY(0);
-        }
-      }
-    </style>
+  <style>
+    :root { color-scheme: dark; }
+    html, body { background: #0b0b0b; }
+    .reveal { opacity: 0; transform: translateY(16px); }
+    .revealed { opacity: 1; transform: translateY(0); transition: opacity .8s ease, transform .8s ease; }
+    /* Carrossel */
+    .carousel { overflow: hidden; }
+    .carousel-track { display: flex; gap: .75rem; width: 200%; }
+    .carousel-item { flex: 0 0 20%; }
+    @media (max-width: 640px) { .carousel-item { flex-basis: 33.333%; } }
+    @keyframes scroll-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .animate-scroll { animation: scroll-left 25s linear infinite; }
+    /* Popup */
+    .purchase-notification {
+      position: fixed; bottom: 20px; right: 20px;
+      background: linear-gradient(135deg,#006600,#004400);
+      color: white; padding: 6px 10px; border-radius: 6px;
+      box-shadow: 0 2px 10px rgba(0,100,0,0.4);
+      z-index: 1000; transform: translateX(300px);
+      transition: transform 0.4s ease;
+      max-width: 180px; font-size: 11px; font-weight: bold; line-height: 1.2;
+      border-left: 3px solid #00aa00;
+    }
+    .purchase-notification.show { transform: translateX(0); }
+  </style>
 
-    <!-- CHECKOUT: scripts do provedor (Stripe/Mercado Pago/etc) -->
-  </head>
-  <body class="bg-black text-white antialiased selection:bg-brand-red selection:text-white">
-    <!-- Header -->
-    <header class="sticky top-0 z-40 backdrop-blur bg-black/70 border-b border-white/10">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <a href="#" class="flex items-center gap-3 group">
-          <img src="https://i.postimg.cc/htF3JFMC/3-adesivo-playboy-adesivo-coelho-da-playboy-para-carro-moto.webp" alt="Playboy Logo" class="w-7 h-7 object-contain" />
-          <span class="font-extrabold tracking-widest text-xl">PLAYBOY</span>
-        </a>
-        <a href="#pacotes" class="inline-flex items-center gap-2 rounded-md bg-brand-red hover:bg-brand-redDark active:scale-[.98] px-4 py-2 text-sm font-bold uppercase tracking-wider shadow-glow transition">
-          LIBERAR PACOTE
-        </a>
+  <!-- ✅ Pixel UTMify -->
+  <script>
+    window.pixelId = "68ed1b5307b5df967386fc88";
+    var utm = document.createElement("script");
+    utm.src = "https://cdn.utmify.com.br/scripts/pixel/pixel.js";
+    utm.async = true; utm.defer = true;
+    utm.onload = () => console.log("✅ UTMify Pixel ativo");
+    document.head.appendChild(utm);
+
+    var u = document.createElement("script");
+    u.src = "https://cdn.utmify.com.br/scripts/utms/latest.js";
+    u.async = true; u.defer = true;
+    document.head.appendChild(u);
+  </script>
+
+  <!-- ✅ Meta Pixel -->
+  <script>
+    !(function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)})(window,document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init','728458327023332');
+    fbq('track','PageView');
+  </script>
+  <noscript>
+    <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=728458327023332&ev=PageView&noscript=1"/>
+  </noscript>
+</head>
+<body class="bg-black text-white antialiased selection:bg-brand-red selection:text-white">
+  <!-- Header -->
+  <header class="sticky top-0 z-40 backdrop-blur bg-black/70 border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-3 group">
+        <img src="https://i.postimg.cc/htF3JFMC/3-adesivo-playboy-adesivo-coelho-da-playboy-para-carro-moto.webp" class="w-7 h-7 object-contain"/>
+        <span class="font-extrabold tracking-widest text-xl">PLAYBOY</span>
+      </a>
+      <a href="#pacotes" class="inline-flex items-center gap-2 rounded-md bg-brand-red hover:bg-brand-redDark px-4 py-2 text-sm font-bold uppercase tracking-wider shadow-glow transition">
+        LIBERAR PACOTE
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(229,9,20,.18),transparent_55%)]"></div>
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 text-center">
+      <h1 class="reveal text-3xl sm:text-5xl md:text-6xl font-black leading-tight">
+        <span class="text-brand-red">500+ EDIÇÕES RARAS</span><br/>
+        PLAYBOY (1975-2015)<br/>
+        <span class="text-white/80 text-2xl sm:text-3xl">que você <strong>NUNCA</strong> mais verá</span>
+      </h1>
+      <p class="reveal mt-6 text-white/70 max-w-2xl mx-auto text-lg">
+        <strong>Coleção completa digitalizada</strong> - Acesso vitalício + bônus exclusivos + garantia total
+      </p>
+      <div class="reveal mt-10 flex flex-wrap items-center justify-center gap-3">
+        <a href="#pacotes" class="rounded-md bg-brand-red hover:bg-brand-redDark px-6 py-3 font-bold uppercase tracking-wide shadow-glow transition">🔥 GARANTIR MINHA COLEÇÃO AGORA</a>
       </div>
-    </header>
+    </div>
+  </section>
 
-    <!-- Hero -->
-    <section class="relative overflow-hidden">
-      <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(229,9,20,.18),transparent_55%)] pointer-events-none"></div>
-      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 text-center">
-        <h1 class="reveal text-3xl sm:text-5xl md:text-6xl font-black leading-tight">
-          <span class="text-brand-red">500+ EDIÇÕES RARAS</span><br class="hidden sm:block" />
-          PLAYBOY (1975-2015)<br class="hidden sm:block" />
-          <span class="text-white/80 text-2xl sm:text-3xl">que você <strong>NUNCA</strong> mais verá</span>
-        </h1>
-        <p class="reveal mt-6 text-white/70 max-w-2xl mx-auto text-lg">
-          <strong>Coleção completa digitalizada</strong> - Acesso vitalício + bônus exclusivos + garantia total
-        </p>
-        <div class="reveal mt-10 flex flex-wrap items-center justify-center gap-3">
-          <a href="#pacotes" class="rounded-md bg-brand-red hover:bg-brand-redDark px-6 py-3 font-bold uppercase tracking-wide shadow-glow transition">🔥 GARANTIR MINHA COLEÇÃO AGORA</a>
-        </div>
+  <!-- Galeria -->
+  <section class="border-t border-white/10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+      <div class="reveal text-center mb-10">
+        <h2 class="text-2xl sm:text-4xl font-extrabold">O que você vai receber</h2>
+        <p class="mt-3 text-white/60">Capas, previews borrados e bastidores quentes.</p>
       </div>
-    </section>
 
-    <!-- Prova Social FORTE -->
-    <section class="border-t border-white/10">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
-        <div class="reveal text-center mb-10">
-          <h2 class="text-2xl sm:text-4xl font-extrabold">✅ 15.847 colecionadores satisfeitos</h2>
-          <p class="mt-3 text-white/60">Depoimentos reais de quem já adquiriu</p>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          <!-- Depoimento 1 -->
-          <div class="reveal rounded-lg border border-white/10 bg-white/5 p-6">
-            <div class="flex items-center mb-4">
-              <div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
-                <img src="https://i.postimg.cc/VkzWy7dr/Whats-App-Image-2025-09-08-at-14-32-59.jpg" alt="João Silva" class="w-full h-full object-cover" />
-              </div>
-              <div class="ml-3">
-                <div class="font-semibold">João Silva</div>
-                <div class="text-sm text-white/60">São Paulo, SP</div>
-              </div>
-            </div>
-            <div class="flex mb-2">
-              <span class="text-yellow-400">⭐⭐⭐⭐⭐</span>
-            </div>
-            <p class="text-white/80 italic">"Finalmente consegui completar minha coleção! Qualidade incrível, vale cada centavo. Recomendo 100%!"</p>
-          </div>
-
-          <!-- Depoimento 2 -->
-          <div class="reveal rounded-lg border border-white/10 bg-white/5 p-6">
-            <div class="flex items-center mb-4">
-              <div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
-                <img src="https://i.postimg.cc/52pqfwCf/Whats-App-Image-2025-09-08-at-14-32-59-1.jpg" alt="Maria Santos" class="w-full h-full object-cover" />
-              </div>
-              <div class="ml-3">
-                <div class="font-semibold">Maria Santos</div>
-                <div class="text-sm text-white/60">Rio de Janeiro, RJ</div>
-              </div>
-            </div>
-            <div class="flex mb-2">
-              <span class="text-yellow-400">⭐⭐⭐⭐⭐</span>
-            </div>
-            <p class="text-white/80 italic">"Acesso imediato, download rápido. A coleção é completa mesmo! Não me arrependo nem um pouco."</p>
-          </div>
-
-          <!-- Depoimento 3 -->
-          <div class="reveal rounded-lg border border-white/10 bg-white/5 p-6">
-            <div class="flex items-center mb-4">
-              <div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
-                <img src="https://i.postimg.cc/7ZqnvBfC/Whats-App-Image-2025-09-08-at-14-32-59-2.jpg" alt="Carlos Oliveira" class="w-full h-full object-cover" />
-              </div>
-              <div class="ml-3">
-                <div class="font-semibold">Carlos Oliveira</div>
-                <div class="text-sm text-white/60">Belo Horizonte, MG</div>
-              </div>
-            </div>
-            <div class="flex mb-2">
-              <span class="text-yellow-400">⭐⭐⭐⭐⭐</span>
-            </div>
-            <p class="text-white/80 italic">"Coleção histórica completa! Edições raras que não encontro em lugar nenhum. Excelente investimento!"</p>
-          </div>
-        </div>
-        
-        <!-- Selo de qualidade -->
-        <div class="reveal text-center mt-8">
-          <div class="inline-flex items-center gap-2 bg-green-900/20 border border-green-500 rounded-lg px-4 py-2">
-            <span class="text-green-400">✅</span>
-            <span class="text-green-400 font-semibold">Aprovado por 98% dos compradores</span>
-          </div>
+      <div class="reveal carousel">
+        <div class="carousel-track animate-scroll">
+          <div class="carousel-item"><img src="1.jpg" class="rounded-lg blur-sm scale-110" alt=""></div>
+          <div class="carousel-item"><img src="2.jpg" class="rounded-lg blur-sm scale-110" alt=""></div>
+          <div class="carousel-item"><img src="3.jpg" class="rounded-lg blur-sm scale-110" alt=""></div>
+          <div class="carousel-item"><img src="4.jpg" class="rounded-lg blur-sm scale-110" alt=""></div>
+          <div class="carousel-item"><img src="5.jpg" class="rounded-lg blur-sm scale-110" alt=""></div>
+          <div class="carousel-item"><img src="6.jpg" class="rounded-lg blur-sm scale-110" alt=""></div>
         </div>
       </div>
-    </section>
-
-
-    <!-- Galeria (6 fotos - 3x2) -->
-    <section class="border-t border-white/10">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
-        <div class="reveal text-center mb-10">
-          <h2 class="text-2xl sm:text-4xl font-extrabold">O que tu vai receber</h2>
-          <p class="mt-3 text-white/60">Capas, previews borrados, bastidores quentes.</p>
-        </div>
-
-        <!-- Carrossel - Linha superior (fotos 1-5) -->
-        <div class="reveal carousel">
-          <div class="carousel-track animate-scroll">
-            <div class="carousel-item">
-              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
-                <img src="1.jpg" alt="Preview 1" class="h-full w-full object-cover blur-sm scale-110" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-              </div>
-            </div>
-            <div class="carousel-item">
-              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
-                <img src="2.jpg" alt="Preview 2" class="h-full w-full object-cover blur-sm scale-110" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-              </div>
-            </div>
-            <div class="carousel-item">
-              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
-                <img src="3.jpg" alt="Preview 3" class="h-full w-full object-cover blur-sm scale-110" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-              </div>
-            </div>
-            <div class="carousel-item">
-              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
-                <img src="4.jpg" alt="Preview 4" class="h-full w-full object-cover blur-sm scale-110" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-              </div>
-            </div>
-            <div class="carousel-item">
-              <div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-white/5">
-                <img src="5.jpg" alt="Preview 5" class="h-full w-full object-cover blur-sm scale-110" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-
+    </div>
+  </section>
+  <!-- Prova Social -->
+  <section class="border-t border-white/10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+      <div class="reveal text-center mb-10">
+        <h2 class="text-2xl sm:text-4xl font-extrabold">✅ 15.847 colecionadores satisfeitos</h2>
+        <p class="mt-3 text-white/60">Depoimentos reais de quem já adquiriu</p>
       </div>
-    </section>
 
-    <!-- Teaser (opcional) -->
-    
-
-    <!-- Pacotes (no final) -->
-    <section id="pacotes" class="border-t border-white/10">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
-        <div class="reveal text-center mb-10">
-          <h2 class="text-2xl sm:text-4xl font-extrabold">Escolhe teu pacote</h2>
-          <p class="mt-3 text-white/60">Acesso imediato, download seguro, atualizações frequentes.</p>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div class="reveal rounded-lg border border-white/10 bg-white/5 p-6">
+          <div class="flex items-center mb-4">
+            <img src="https://i.postimg.cc/VkzWy7dr/Whats-App-Image-2025-09-08-at-14-32-59.jpg" class="w-12 h-12 rounded-full object-cover" />
+            <div class="ml-3">
+              <div class="font-semibold">João Silva</div>
+              <div class="text-sm text-white/60">São Paulo, SP</div>
+            </div>
+          </div>
+          <span class="text-yellow-400">⭐⭐⭐⭐⭐</span>
+          <p class="text-white/80 italic mt-2">"Consegui completar minha coleção! Qualidade incrível, recomendo 100%!"</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-          <!-- Pacote 1 -->
-          <div class="reveal rounded-xl border border-white/10 bg-white/5 p-6 sm:p-8 hover:bg-white/[.07] transition">
-            <div class="flex items-baseline justify-between">
-              <h3 class="text-xl font-bold">Pacote Sedução</h3>
-              <span class="text-brand-red text-2xl font-extrabold">R$10,00</span>
+        <div class="reveal rounded-lg border border-white/10 bg-white/5 p-6">
+          <div class="flex items-center mb-4">
+            <img src="https://i.postimg.cc/52pqfwCf/Whats-App-Image-2025-09-08-at-14-32-59-1.jpg" class="w-12 h-12 rounded-full object-cover" />
+            <div class="ml-3">
+              <div class="font-semibold">Maria Santos</div>
+              <div class="text-sm text-white/60">Rio de Janeiro, RJ</div>
             </div>
-            <p class="mt-3 text-white/70">Acesso imediato a +200 ensaios sensuais e exclusivos.</p>
-            <ul class="mt-6 space-y-2 text-white/80">
-              <li class="flex items-center gap-2"><span class="text-brand-red">◆</span> Mais de 200 ensaios exclusivos</li>
-              <li class="flex items-center gap-2"><span class="text-brand-red">◆</span> Alta qualidade, imagens raras</li>
-              <li class="flex items-center gap-2"><span class="text-brand-red">◆</span> Acesso imediato após pagamento</li>
-              <li class="flex items-center gap-2"><span class="text-brand-red">◆</span> 7 Dias de garantia</li>
-            </ul>
-            <a
-  href="https://pay.cakto.com.br/pcytvby_607625"
-  target="_blank"
-  rel="noopener noreferrer"
-  class="mt-6 inline-flex w-full items-center justify-center rounded-md bg-brand-red hover:bg-brand-redDark px-6 py-3 font-bold uppercase tracking-wide shadow-glow transition">
-  LIBERAR PACOTE
-</a>
           </div>
-
-          <!-- Pacote 2 -->
-          <div class="reveal relative rounded-xl border border-white/10 bg-gradient-to-b from-white/[.07] to-white/[.03] p-6 sm:p-8 ring-1 ring-white/10">
-            <div class="absolute -top-3 left-6 text-[11px] px-2 py-1 rounded bg-brand-red text-white font-extrabold tracking-wider">MAIS POPULAR</div>
-            <div class="flex items-baseline justify-between">
-              <h3 class="text-xl font-bold">Pacote Premiun</h3>
-              <span class="text-brand-red text-2xl font-extrabold">R$19,90</span>
-            </div>
-            <p class="mt-3 text-white/70"> 500+ Edições da Revista Playboy Brasil (1975-2015).</p>
-            <ul class="mt-6 space-y-2 text-white/80">
-              <li class="flex items-center gap-2"><span class="text-brand-red">◆</span> Tudo do Pacote Sedução – os +200 ensaios inclusos</li>
-              <li class="flex items-center gap-2"><span class="text-brand-red">◆</span> Alta qualidade, imagens raras</li>
-              <li class="flex items-center gap-2"><span class="text-brand-red">◆</span> Acesso imediato após pagamento</li>
-              
-              <li class="flex items-center gap-2"><span class="text-brand-red">◆</span> Bastidores nunca vistos com as maiores musas do Brasil</li>
-              <li class="flex items-center gap-2"><span class="text-brand-red">◆</span> Conteúdo Bônus Recorrente</li>
-              <li class="flex items-center gap-2"><span class="text-brand-red">◆</span> 7 Dias de Garantia</li>
-            </ul>
-          <a
-  href="https://pay.cakto.com.br/c2a2g68_607613"
-  target="_blank"
-  rel="noopener noreferrer"
-  class="mt-6 inline-flex w-full items-center justify-center rounded-md bg-brand-red hover:bg-brand-redDark px-6 py-3 font-bold uppercase tracking-wide shadow-glow transition">
-  LIBERAR PACOTE
-</a>
-            
-          </div>
+          <span class="text-yellow-400">⭐⭐⭐⭐⭐</span>
+          <p class="text-white/80 italic mt-2">"Acesso rápido e tudo completo, fiquei impressionada!"</p>
         </div>
-        
-        <!-- Elementos de confiança -->
-        <div class="reveal mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
-          <div class="flex flex-col items-center">
-            <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mb-3">
-              <span class="text-white text-xl">🔒</span>
+
+        <div class="reveal rounded-lg border border-white/10 bg-white/5 p-6">
+          <div class="flex items-center mb-4">
+            <img src="https://i.postimg.cc/7ZqnvBfC/Whats-App-Image-2025-09-08-at-14-32-59-2.jpg" class="w-12 h-12 rounded-full object-cover" />
+            <div class="ml-3">
+              <div class="font-semibold">Carlos Oliveira</div>
+              <div class="text-sm text-white/60">Belo Horizonte, MG</div>
             </div>
-            <h4 class="font-semibold mb-1">Pagamento Seguro</h4>
-            <p class="text-sm text-white/60">PIX/Cartão/</p>
           </div>
-          
-          <div class="flex flex-col items-center">
-            <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mb-3">
-              <span class="text-white text-xl">🛡️</span>
-            </div>
-            <h4 class="font-semibold mb-1">Garantia Total</h4>
-            <p class="text-sm text-white/60">7 dias para reembolso</p>
-          </div>
-          
-          <div class="flex flex-col items-center">
-            <div class="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center mb-3">
-              <span class="text-white text-xl">⚡</span>
-            </div>
-            <h4 class="font-semibold mb-1">Acesso Imediato</h4>
-            <p class="text-sm text-white/60">Download instantâneo</p>
-          </div>
+          <span class="text-yellow-400">⭐⭐⭐⭐⭐</span>
+          <p class="text-white/80 italic mt-2">"Coleção rara e organizada. Excelente investimento!"</p>
         </div>
       </div>
-    </section>
 
-    <!-- FAQ -->
-    <section id="faq" class="border-t border-white/10">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
-        <div class="reveal text-center mb-10">
-          <h2 class="text-2xl sm:text-4xl font-extrabold">Perguntas Frequentes</h2>
-        </div>
-
-        <div class="reveal grid gap-4 sm:gap-5">
-          <div class="rounded-lg border border-white/10 bg-white/5 p-5">
-            <h3 class="font-semibold text-lg">Como vou receber o acesso à coleção?</h3>
-            <p class="mt-2 text-white/70">Após o pagamento, você receberá imediatamente um e-mail com o link privado para baixar e acessar todos os arquivos.</p>
-          </div>
-
-          <div class="rounded-lg border border-white/10 bg-white/5 p-5">
-            <h3 class="font-semibold text-lg">O pagamento é seguro?</h3>
-            <p class="mt-2 text-white/70">Sim, utilizamos sistemas de pagamento criptografados e 100% seguros. Seus dados pessoais nunca serão compartilhados.</p>
-          </div>
-
-          <div class="rounded-lg border border-white/10 bg-white/5 p-5">
-            <h3 class="font-semibold text-lg">Por quanto tempo o acesso ficará disponível?</h3>
-            <p class="mt-2 text-white/70">O acesso é ilimitado e vitalício. Você poderá baixar e consultar os arquivos sempre que quiser.</p>
-          </div>
-
-          <div class="rounded-lg border border-white/10 bg-white/5 p-5">
-            <h3 class="font-semibold text-lg">O que acontece se eu não ficar satisfeito?</h3>
-            <p class="mt-2 text-white/70">Sem problema: você tem 7 dias de garantia total. Reembolsamos sem fazer perguntas.</p>
-          </div>
+      <div class="reveal text-center mt-8">
+        <div class="inline-flex items-center gap-2 bg-green-900/20 border border-green-500 rounded-lg px-4 py-2">
+          <span class="text-green-400">✅</span>
+          <span class="text-green-400 font-semibold">Aprovado por 98% dos compradores</span>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Footer -->
-    <footer class="border-t border-white/10 bg-black">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div class="reveal flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-          <div>
-            <p class="text-white/80 font-semibold">Aviso: conteúdo adulto.</p>
-            <p class="text-white/50 text-sm">Acesso apenas para maiores de 18 anos.</p>
-          </div>
-          <nav class="flex flex-wrap items-center gap-4 text-white/70">
-            <a href="#" class="hover:text-white transition">Suporte</a>
-            <a href="#" class="hover:text-white transition">Termos</a>
-            <a href="#" class="hover:text-white transition">Política</a>
-          </nav>
-          <div class="flex items-center gap-4 text-white/70">
-            <a href="#" aria-label="Instagram" class="hover:text-white transition">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2.2A2.8 2.8 0 1 0 12 16.8 2.8 2.8 0 0 0 12 9.2zM18 6.7a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>
-            </a>
-            <a href="#" aria-label="Twitter/X" class="hover:text-white transition">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h4.6l4.2 6.2L16.8 3H21l-7.5 9.8L21 21h-4.7l-5-7.2L6.7 21H3l7.8-9.9L3 3z"/></svg>
-            </a>
-            <a href="#" aria-label="TikTok" class="hover:text-white transition">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12.5 3h3.2c.2 1.6 1.4 3.2 3 3.8.7.3 1.4.4 2.2.4V11c-1.7-.1-3.3-.7-4.7-1.7v5.8c0 3.6-2.9 6.5-6.5 6.5S3.2 18.7 3.2 15.1s2.9-6.5 6.5-6.5c.4 0 .9 0 1.3.1v3.4c-.4-.1-.8-.1-1.3-.1-1.8 0-3.2 1.5-3.2 3.2s1.5 3.2 3.2 3.2 3.2-1.5 3.2-3.2V3z"/></svg>
-            </a>
-          </div>
-        </div>
-        
+  <!-- Pacotes -->
+  <section id="pacotes" class="border-t border-white/10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+      <div class="reveal text-center mb-10">
+        <h2 class="text-2xl sm:text-4xl font-extrabold">Escolhe teu pacote</h2>
+        <p class="mt-3 text-white/60">Acesso imediato, download seguro e atualizações.</p>
       </div>
-    </footer>
 
-    <!-- CHECKOUT: container opcional -->
-    <section id="checkout-slot" class="hidden"></section>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Pacote Sedução -->
+        <div class="reveal rounded-xl border border-white/10 bg-white/5 p-6 hover:bg-white/[.07] transition">
+          <div class="flex items-baseline justify-between">
+            <h3 class="text-xl font-bold">Pacote Sedução</h3>
+            <span class="text-brand-red text-2xl font-extrabold">R$10,00</span>
+          </div>
+          <ul class="mt-4 text-white/80 space-y-2">
+            <li>◆ +200 ensaios exclusivos</li>
+            <li>◆ Imagens raras em alta qualidade</li>
+            <li>◆ Acesso imediato após pagamento</li>
+            <li>◆ 7 Dias de garantia</li>
+          </ul>
+          <button onclick="fbq('track', 'InitiateCheckout', {content_name:'Pacote Sedução', value:10.00, currency:'BRL'}); window.location.href='https://pay.cakto.com.br/pcytvby_607625';" class="mt-6 inline-flex w-full items-center justify-center rounded-md bg-brand-red hover:bg-brand-redDark px-6 py-3 font-bold uppercase tracking-wide shadow-glow transition">
+            LIBERAR PACOTE
+          </button>
+        </div>
 
-    <script>
-      const io = new IntersectionObserver((entries) => {
-        for (const e of entries) if (e.isIntersecting) { e.target.classList.add('revealed'); io.unobserve(e.target); }
-      }, { threshold: 0.15 });
-      document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
-      document.getElementById('year').textContent = new Date().getFullYear();
+        <!-- Pacote Premium -->
+        <div class="reveal relative rounded-xl border border-white/10 bg-gradient-to-b from-white/[.07] to-white/[.03] p-6 ring-1 ring-white/10">
+          <div class="absolute -top-3 left-6 text-[11px] px-2 py-1 rounded bg-brand-red text-white font-extrabold tracking-wider">MAIS POPULAR</div>
+          <div class="flex items-baseline justify-between">
+            <h3 class="text-xl font-bold">Pacote Premium</h3>
+            <span class="text-brand-red text-2xl font-extrabold">R$19,90</span>
+          </div>
+          <ul class="mt-4 text-white/80 space-y-2">
+            <li>◆ Inclui tudo do Pacote Sedução</li>
+            <li>◆ 500+ edições raras (1975–2015)</li>
+            <li>◆ Bastidores e bônus exclusivos</li>
+            <li>◆ 7 Dias de garantia total</li>
+          </ul>
+          <button onclick="fbq('track', 'InitiateCheckout', {content_name:'Pacote Premium', value:19.90, currency:'BRL'}); window.location.href='https://pay.cakto.com.br/c2a2g68_607613';" class="mt-6 inline-flex w-full items-center justify-center rounded-md bg-brand-red hover:bg-brand-redDark px-6 py-3 font-bold uppercase tracking-wide shadow-glow transition">
+            LIBERAR PACOTE
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- FAQ -->
+  <section id="faq" class="border-t border-white/10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+      <div class="reveal text-center mb-10">
+        <h2 class="text-2xl sm:text-4xl font-extrabold">Perguntas Frequentes</h2>
+      </div>
 
-      async function startCheckout(plan) {
-        console.log("Iniciar checkout para:", plan);
-        alert("CHECKOUT PLACEHOLDER: implemente aqui seu fluxo para " + plan);
-      }
-      window.startCheckout = startCheckout;
+      <div class="grid gap-5">
+        <div class="rounded-lg border border-white/10 bg-white/5 p-5">
+          <h3 class="font-semibold text-lg">Como recebo o acesso?</h3>
+          <p class="mt-2 text-white/70">Após o pagamento, o link é enviado automaticamente ao seu e-mail.</p>
+        </div>
+        <div class="rounded-lg border border-white/10 bg-white/5 p-5">
+          <h3 class="font-semibold text-lg">O pagamento é seguro?</h3>
+          <p class="mt-2 text-white/70">Sim. O checkout da Cakto usa criptografia e gateways certificados.</p>
+        </div>
+        <div class="rounded-lg border border-white/10 bg-white/5 p-5">
+          <h3 class="font-semibold text-lg">Posso pedir reembolso?</h3>
+          <p class="mt-2 text-white/70">Sim. Você tem 7 dias de garantia incondicional.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-      // Popup de notificações de compra
-      const names = ['João', 'Carlos', 'Pedro', 'Rafael', 'Lucas', 'Diego', 'Gabriel', 'Thiago', 'André', 'Felipe', 'Bruno', 'Rodrigo', 'Marcos', 'Alexandre', 'Vinícius', 'Eduardo', 'Fernando', 'Ricardo', 'Paulo', 'Antônio', 'José', 'Roberto', 'Daniel', 'Miguel', 'Henrique', 'Leonardo', 'Gustavo', 'Fábio', 'Sérgio', 'Márcio', 'César', 'Vitor'];
-      
-      const packages = [
-        { name: 'Pacote Sedução', price: 'R$ 10,00' },
-        { name: 'Pacote Premium', price: 'R$ 19,90' }
-      ];
-      
-      function showPurchaseNotification() {
-        console.log('Mostrando notificação de compra...');
-        
-        // Remove notificação anterior se existir
-        const existing = document.querySelector('.purchase-notification');
-        if (existing) {
-          existing.remove();
-        }
-        
-        // Seleciona nome e pacote aleatórios
-        const randomName = names[Math.floor(Math.random() * names.length)];
-        const randomPackage = packages[Math.floor(Math.random() * packages.length)];
-        
-        // Cria o popup
-        const notification = document.createElement('div');
-        notification.className = 'purchase-notification';
-        notification.innerHTML = '<div class="name">' + randomName + '</div><div class="package">acabou de comprar o ' + randomPackage.name + '</div><div class="time">há poucos segundos</div>';
-        
-        // Adiciona ao body
-        document.body.appendChild(notification);
-        
-        // Mostra o popup
-        setTimeout(function() {
-          notification.classList.add('show');
-        }, 100);
-        
-        // Remove após 4 segundos
-        setTimeout(function() {
-          notification.classList.remove('show');
-          setTimeout(function() {
-            if (notification.parentNode) {
-              notification.remove();
-            }
-          }, 500);
-        }, 4000);
-      }
-      
-      // Debug
-      console.log('Script de notificações iniciado');
-      
-      // Inicia as notificações imediatamente
-      showPurchaseNotification();
-      
-      // Loop a cada 20 segundos
-      setInterval(showPurchaseNotification, 20000);
-    </script>
-    
-    <!-- Script adicional para garantir execução -->
-    <script>
-      // Aguarda o DOM estar pronto
-      document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM carregado, iniciando notificações...');
-        
-        const names = ['João', 'Carlos', 'Pedro', 'Rafael', 'Lucas', 'Diego', 'Gabriel', 'Thiago', 'André', 'Felipe', 'Bruno', 'Rodrigo', 'Marcos', 'Alexandre', 'Vinícius', 'Eduardo', 'Fernando', 'Ricardo', 'Paulo', 'Antônio', 'José', 'Roberto', 'Daniel', 'Miguel', 'Henrique', 'Leonardo', 'Gustavo', 'Fábio', 'Sérgio', 'Márcio', 'César', 'Vitor'];
-        
-        const packages = [
-          { name: 'Pacote Sedução', price: 'R$ 10,00' },
-          { name: 'Pacote Premium', price: 'R$ 19,90' }
-        ];
-        
-        function showNotification() {
-          console.log('Criando notificação...');
-          
-          // Remove notificação anterior
-          const existing = document.querySelector('.purchase-notification');
-          if (existing) {
-            existing.remove();
+  <!-- Footer -->
+  <footer class="border-t border-white/10 bg-black">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+      <div>
+        <p class="text-white/80 font-semibold">Aviso: conteúdo adulto.</p>
+        <p class="text-white/50 text-sm">Acesso apenas para maiores de 18 anos.</p>
+      </div>
+      <nav class="flex flex-wrap items-center gap-4 text-white/70">
+        <a href="#" class="hover:text-white">Suporte</a>
+        <a href="#" class="hover:text-white">Termos</a>
+        <a href="#" class="hover:text-white">Política</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          e.target.classList.add('revealed');
+          io.unobserve(e.target);
+          // ✅ Dispara evento de ViewContent quando o visitante vê os pacotes
+          if(e.target.id === 'pacotes'){
+            console.log('📈 Evento ViewContent disparado');
+            fbq('track', 'ViewContent', {content_name:'Pacotes Playboy', value:0, currency:'BRL'});
           }
-          
-          // Seleciona aleatoriamente
-          const randomName = names[Math.floor(Math.random() * names.length)];
-          const randomPackage = packages[Math.floor(Math.random() * packages.length)];
-          
-          // Cria elemento
-          const notification = document.createElement('div');
-          notification.className = 'purchase-notification';
-          notification.innerHTML = '<div class="name">' + randomName + '</div><div class="package">acabou de comprar o ' + randomPackage.name + '</div><div class="time">há poucos segundos</div>';
-          
-          // Adiciona ao body
-          document.body.appendChild(notification);
-          
-          // Mostra com delay
-          setTimeout(function() {
-            notification.classList.add('show');
-          }, 100);
-          
-          // Remove após 4 segundos
-          setTimeout(function() {
-            notification.classList.remove('show');
-            setTimeout(function() {
-              if (notification.parentNode) {
-                notification.remove();
-              }
-            }, 500);
-          }, 4000);
         }
-        
-        // Inicia imediatamente
-        showNotification();
-        
-        // Loop a cada 20 segundos
-        setInterval(showNotification, 20000);
       });
-    </script>
-  <!-- Meta Pixel Code -->
-<script>
-  !function(f,b,e,v,n,t,s)
-  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-  n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];
-  s.parentNode.insertBefore(t,s)}(window, document,'script',
-  'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', '728458327023332');
-  fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-  src="https://www.facebook.com/tr?id=728458327023332&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel Code -->
-<button onclick="fbq('track', 'InitiateCheckout', {
-  content_name: 'Combo R$10',
-  value: 10.00,
-  currency: 'BRL'
-}); window.location.href='https://pay.cakto.com.br/pcytvby_607625';">
-  Comprar Combo R$10
-</button>
-<button onclick="fbq('track', 'InitiateCheckout', {
-  content_name: 'Combo R$19,90',
-  value: 19.90,
-  currency: 'BRL'
-}); window.location.href='https://pay.cakto.com.br/c2a2g68_607613';">
-  Comprar Combo R$19,90
-</button>
-  
-  </body>
+    },{threshold:0.15});
+    document.querySelectorAll('.reveal, #pacotes').forEach(el=>io.observe(el));
+  </script>
+
+  <!-- Notificações automáticas -->
+  <script>
+    const nomes=['João','Carlos','Pedro','Rafael','Lucas','Diego','Gabriel','Thiago','André','Felipe','Bruno','Rodrigo','Marcos','Alexandre','Vinícius','Eduardo','Fernando','Ricardo','Paulo','Antônio','José','Roberto','Daniel','Miguel','Henrique','Leonardo','Gustavo','Fábio','Sérgio','Márcio','César','Vitor'];
+    const pacotes=[{name:'Pacote Sedução',price:'R$10,00'},{name:'Pacote Premium',price:'R$19,90'}];
+    function mostrarNotificacao(){
+      const existente=document.querySelector('.purchase-notification');
+      if(existente) existente.remove();
+      const nome=nomes[Math.floor(Math.random()*nomes.length)];
+      const pacote=pacotes[Math.floor(Math.random()*pacotes.length)];
+      const n=document.createElement('div');
+      n.className='purchase-notification';
+      n.innerHTML=`<div class="name">${nome}</div><div class="package">acabou de comprar o ${pacote.name}</div><div class="time">há poucos segundos</div>`;
+      document.body.appendChild(n);
+      setTimeout(()=>n.classList.add('show'),100);
+      setTimeout(()=>{n.classList.remove('show'); setTimeout(()=>n.remove(),500);},4000);
+    }
+    document.addEventListener('DOMContentLoaded',()=>{
+      mostrarNotificacao();
+      setInterval(mostrarNotificacao,20000);
+    });
+  </script>
+</body>
 </html>
