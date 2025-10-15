@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Última Chance – Playboy Coleção Completa por R$7,90</title>
+  <meta name="description" content="Você recusou a oferta anterior. Última chance para liberar a coleção completa da Playboy com 90% de desconto por R$7,90. Tempo limitado." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/webp" href="https://i.postimg.cc/htF3JFMC/3-adesivo-playboy-adesivo-coelho-da-playboy-para-carro-moto.webp">
+
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    html, body { margin:0; padding:0; background:#0b0b0b; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:#fff; }
+    a { color: inherit; text-decoration: none; }
+
+    /* Barra fixa de urgência */
+    .topbar {
+      position: fixed; top:0; left:0; right:0; z-index: 9999;
+      background:#E50914; color:#fff; display:flex; align-items:center; justify-content:center; gap:10px;
+      padding:10px 16px; box-shadow:0 0 24px rgba(229,9,20,.45);
+      font-weight:800; letter-spacing:.3px; text-transform:uppercase;
+    }
+    .topbar .timer {
+      background: rgba(0,0,0,.22);
+      padding:4px 10px; border-radius:6px; font-weight:900;
+    }
+    .wrap { max-width: 1040px; margin: 0 auto; padding: 92px 16px 48px; }
+
+    /* Hero */
+    .hero {
+      text-align:center; padding: 24px 8px 8px;
+      background: radial-gradient(ellipse at top, rgba(229,9,20,.14), transparent 60%);
+    }
+    .badge {
+      display:inline-block; background:#221; border:1px solid rgba(255,255,255,.1); color:#ffcacd;
+      padding:6px 10px; border-radius:8px; font-size:12px; letter-spacing:.6px; text-transform:uppercase;
+    }
+    h1 {
+      margin:14px 0 10px; font-size: clamp(28px, 4.5vw, 48px); line-height:1.15; font-weight:900;
+    }
+    .sub {
+      color:rgba(255,255,255,.72); max-width:760px; margin:10px auto 0; font-size: clamp(15px, 2.2vw, 18px);
+    }
+
+    /* Preço e CTA */
+    .pricing {
+      margin-top:22px; display:flex; align-items:center; justify-content:center; gap:16px; flex-wrap:wrap;
+    }
+    .old { color:#bbb; text-decoration: line-through; font-weight:800; font-size: clamp(16px,2.5vw,18px); }
+    .now { color:#ff4d57; font-weight:900; font-size: clamp(22px,5vw,28px); }
+    .cta {
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      background: linear-gradient(90deg, #E50914, #B20710); color:#fff;
+      padding:14px 22px; border-radius:14px; font-weight:900; letter-spacing:.5px; text-transform:uppercase;
+      box-shadow:0 8px 30px rgba(229,9,20,.35); border:0; cursor:pointer;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .cta:hover { transform: translateY(-1px); box-shadow:0 10px 38px rgba(229,9,20,.45); }
+    .cta:active { transform: translateY(0); }
+
+    /* micro trust */
+    .trust { color:rgba(255,255,255,.6); margin-top:10px; font-size:12px; }
+
+    /* Métricas sociais */
+    .live {
+      text-align:center; margin-top:14px; color:rgba(255,255,255,.7); font-size:13px;
+    }
+
+    /* Grid imagens 3x2 */
+    .gallery { margin-top:32px; display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; }
+    .gallery img { width:100%; height:180px; object-fit:cover; border-radius:12px; filter: blur(3px) saturate(1.05); transform: scale(1.04); transition: transform .35s ease, filter .35s ease; background:#111; }
+    .gallery img:hover { transform: scale(1.07); filter: blur(2px) saturate(1.1); }
+    @media (max-width: 760px) {
+      .gallery { grid-template-columns: 1fr; }
+      .gallery img { height: 220px; }
+    }
+
+    /* Benefícios */
+    .benefits {
+      margin:28px auto 0; max-width:820px; display:grid; grid-template-columns: 1fr 1fr; gap:12px;
+    }
+    .benefit {
+      background: rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); border-radius:12px;
+      padding:12px 14px; font-size:14px; color: rgba(255,255,255,.85);
+    }
+    @media (max-width: 680px) { .benefits { grid-template-columns: 1fr; } }
+
+    /* Testemunhos */
+    .proof { margin:34px 0 8px; text-align:center; }
+    .cards { margin-top:16px; display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; }
+    .card {
+      background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08); border-radius:14px; padding:14px;
+    }
+    .card .who { display:flex; gap:10px; align-items:center; margin-bottom:8px; }
+    .avatar { width:42px; height:42px; border-radius:50%; object-fit:cover; }
+    .stars { color:#ffd248; font-size:14px; }
+    .card p { color:rgba(255,255,255,.85); font-size:14px; line-height:1.4; }
+    .muted { color: rgba(255,255,255,.6); font-size: 12px; }
+    @media (max-width: 880px) { .cards { grid-template-columns: 1fr; } }
+
+    /* Notificação compra */
+    .purchase-notification {
+      position: fixed; bottom: 20px; right: 20px;
+      background: linear-gradient(135deg,#0b4,#083);
+      color: white; padding: 8px 12px; border-radius: 10px;
+      box-shadow: 0 6px 20px rgba(0,0,0,.35);
+      z-index: 9998; transform: translateX(320px);
+      transition: transform .4s ease; max-width: 260px; font-size: 12px; font-weight: 800; line-height: 1.3;
+      border-left: 3px solid #4f8;
+    }
+    .purchase-notification.show { transform: translateX(0); }
+
+    /* Rodapé discreto */
+    .foot { text-align:center; margin: 28px 0 4px; color: rgba(255,255,255,.55); font-size: 12px; }
+
+    /* Pulse do CTA */
+    @keyframes pulse {
+      0% { box-shadow:0 0 0 0 rgba(229,9,20,.6); }
+      70% { box-shadow:0 0 0 16px rgba(229,9,20,0); }
+      100% { box-shadow:0 0 0 0 rgba(229,9,20,0); }
+    }
+    .pulse { animation: pulse 1.6s infinite; }
+  </style>
+
+  <!-- ✅ UTMify Pixel -->
+  <script>
+    window.pixelId = "68eefd737f9bd613fafc7bb2";
+    (function(){
+      var a = document.createElement("script");
+      a.async = true; a.defer = true;
+      a.src = "https://cdn.utmify.com.br/scripts/pixel/pixel.js";
+      document.head.appendChild(a);
+    })();
+  </script>
+  <script src="https://cdn.utmify.com.br/scripts/utms/latest.js" async defer data-utmify-prevent-xcod-sck data-utmify-prevent-subids></script>
+
+  <!-- ✅ Meta Pixel -->
+  <script>
+    !(function(f,b,e,v,n,t,s)
+    { if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)}; if(!f._fbq)f._fbq=n;
+    n.push=n; n.loaded=!0; n.version='2.0'; n.queue=[]; t=b.createElement(e); t.async=!0;
+    t.src=v; s=b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t,s);
+    })(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init','728458327023332');
+    fbq('track','PageView');
+  </script>
+  <noscript>
+    <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=728458327023332&ev=PageView&noscript=1"/>
+  </noscript>
+</head>
+
+<body>
+  <!-- Barra fixa de urgência -->
+  <div class="topbar">
+    ⚠️ Última chance — expira em <span id="top-timer" class="timer">05:00</span>
+    <a href="#cta" style="text-decoration:underline;">Liberar Agora</a>
+  </div>
+
+  <div class="wrap">
+    <!-- HERO -->
+    <section class="hero">
+      <span class="badge">recuperação de oferta</span>
+      <h1>Você recusou a oferta anterior… <br> Esta é a <span style="color:#ff4d57;">SUA ÚLTIMA CHANCE</span> de liberar tudo por <span style="color:#ff4d57;">R$7,90</span>.</h1>
+      <p class="sub">
+        Assim que você sair desta página, não haverá nova tentativa. Desbloqueie agora a coleção completa — digitalizada, rara e com acesso vitalício.
+      </p>
+
+      <div class="pricing" id="cta">
+        <div>
+          <div class="old">De R$97,90</div>
+          <div class="now">Por R$7,90 (só hoje)</div>
+        </div>
+        <a href="https://go.tribopay.com.br/95mtn"
+           class="cta pulse"
+           onclick="try{utmify && utmify.track && utmify.track('click_backredirect_7_90')}catch(e){}; try{fbq('track','InitiateCheckout',{content_name:'BackRedirect 7.90',value:7.90,currency:'BRL'})}catch(e){}">
+          🔥 Liberar tudo por R$ 7,90
+        </a>
+      </div>
+      <div class="trust">Pagamento 100% seguro • Acesso imediato • Garantia de 7 dias</div>
+
+      <div class="live" id="visualizando">👀 42 pessoas estão visualizando agora</div>
+
+      <!-- Grade 3x2 de imagens (ilustrativas/borradas) -->
+      <div class="gallery" aria-label="Previews ilustrativos">
+        <img src="1.jpg" alt="Prévia 1">
+        <img src="2.jpg" alt="Prévia 2">
+        <img src="3.jpg" alt="Prévia 3">
+        <img src="4.jpg" alt="Prévia 4">
+        <img src="5.jpg" alt="Prévia 5">
+        <img src="6.jpg" alt="Prévia 6">
+      </div>
+
+      <!-- Benefícios -->
+      <div class="benefits">
+        <div class="benefit">✅ Coleção completa digitalizada (1975–2015)</div>
+        <div class="benefit">✅ Acesso vitalício + atualizações</div>
+        <div class="benefit">✅ Download seguro e rápido</div>
+        <div class="benefit">✅ Qualidade máxima, material raro</div>
+      </div>
+    </section>
+
+    <!-- Prova Social -->
+    <section class="proof">
+      <h2 style="font-size:22px; font-weight:900; margin: 18px 0 6px;">15.847 colecionadores satisfeitos</h2>
+      <div class="cards">
+        <div class="card">
+          <div class="who">
+            <img class="avatar" src="https://i.postimg.cc/VkzWy7dr/Whats-App-Image-2025-09-08-at-14-32-59.jpg" alt="Avatar João">
+            <div>
+              <div style="font-weight:800;">João — SP</div>
+              <div class="muted">“Última oferta valeu MUITO!”</div>
+            </div>
+          </div>
+          <div class="stars">★★★★★</div>
+          <p>Consegui liberar tudo por 7,90. Acesso na hora e qualidade acima do que eu esperava.</p>
+        </div>
+
+        <div class="card">
+          <div class="who">
+            <img class="avatar" src="https://i.postimg.cc/52pqfwCf/Whats-App-Image-2025-09-08-at-14-32-59-1.jpg" alt="Avatar Maria">
+            <div>
+              <div style="font-weight:800;">Maria — RJ</div>
+              <div class="muted">“Preço relâmpago surreal”</div>
+            </div>
+          </div>
+          <div class="stars">★★★★★</div>
+          <p>Perdi a primeira oferta, mas essa de recuperação é imbatível. Recomendo demais.</p>
+        </div>
+
+        <div class="card">
+          <div class="who">
+            <img class="avatar" src="https://i.postimg.cc/7ZqnvBfC/Whats-App-Image-2025-09-08-at-14-32-59-2.jpg" alt="Avatar Carlos">
+            <div>
+              <div style="font-weight:800;">Carlos — MG</div>
+              <div class="muted">“Compra rápida e segura”</div>
+            </div>
+          </div>
+          <div class="stars">★★★★★</div>
+          <p>Sem enrolação: cliquei, paguei e recebi o link de acesso de imediato. 10/10.</p>
+        </div>
+      </div>
+    </section>
+    <!-- Disclaimer -->
+    <p class="foot">Conteúdo adulto. Acesso somente para maiores de 18 anos.</p>
+  </div> <!-- /wrap -->
+
+  <!-- Notificação de compra (simulada) -->
+  <div class="purchase-notification" id="notif" role="status" aria-live="polite" style="display:none;"></div>
+
+  <!-- Scripts -->
+  <script>
+    // Timer da barra fixa (5 minutos reiniciando)
+    (function(){
+      let t = 5*60;
+      const el = document.getElementById('top-timer');
+      function update(){
+        const m = Math.floor(t/60);
+        const s = t%60;
+        el.textContent = (m<10?'0':'')+m+':' + (s<10?'0':'')+s;
+        t--; if(t<0){ t=5*60; } // reinicia
+      }
+      update();
+      setInterval(update, 1000);
+    })();
+
+    // Pessoas visualizando agora (fake social proof)
+    (function(){
+      const el = document.getElementById('visualizando');
+      function update(){
+        const n = Math.floor(Math.random()*40) + 30;
+        el.textContent = '👀 ' + n + ' pessoas estão visualizando agora';
+      }
+      update();
+      setInterval(update, 15000);
+    })();
+
+    // Notificações de “compra realizada” (simuladas)
+    (function(){
+      const nomes = ['João (SP)','Carlos (RJ)','Pedro (BA)','Rafael (SC)','Lucas (PR)','Diego (MG)','Gabriel (RS)','Thiago (PE)','André (GO)','Felipe (DF)','Bruno (ES)','Rodrigo (PA)'];
+      const notif = document.getElementById('notif');
+      function show(){
+        const nome = nomes[Math.floor(Math.random()*nomes.length)];
+        notif.innerHTML = '<strong>'+nome+'</strong> liberou acesso por <strong>R$7,90</strong> agora mesmo';
+        notif.style.display = 'block';
+        setTimeout(()=>notif.classList.add('show'), 60);
+        setTimeout(()=>{
+          notif.classList.remove('show');
+          setTimeout(()=>{ notif.style.display='none'; }, 450);
+        }, 4500);
+      }
+      setTimeout(show, 1800);
+      setInterval(show, 20000);
+    })();
+
+    // Clique no CTA (garantia de tracking)
+    (function(){
+      const ctas = document.getElementsByClassName('cta');
+      for (var i=0;i<ctas.length;i++){
+        ctas[i].addEventListener('click', function(){
+          try{ utmify && utmify.track && utmify.track('click_backredirect_7_90'); }catch(e){}
+          try{ fbq('track','InitiateCheckout',{content_name:'BackRedirect 7.90', value:7.90, currency:'BRL'}); }catch(e){}
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
