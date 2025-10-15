@@ -301,62 +301,6 @@
     document.querySelectorAll('.reveal, #pacotes').forEach(el=>io.observe(el));
   </script>
 
-  <!-- ✅ Monitoramento via Facebook Pixel (Integrado) -->
-  <script>
-    // Interceptar eventos do Facebook Pixel para monitoramento
-    (function() {
-      if (typeof fbq !== 'undefined') {
-        const originalFbq = window.fbq;
-        window.fbq = function() {
-          // Chamar função original do Facebook
-          originalFbq.apply(this, arguments);
-          
-          // Enviar dados para o dashboard
-          const eventType = arguments[0];
-          const eventData = arguments[1];
-          
-          if (eventType === 'PageView') {
-            // Enviar visita para o servidor
-            fetch('/api/track', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                eventType: 'page_view',
-                sessionId: 'pixel_' + Date.now(),
-                timestamp: Date.now(),
-                url: window.location.href,
-                userAgent: navigator.userAgent,
-                referrer: document.referrer,
-                data: { source: 'facebook_pixel', eventData: eventData }
-              })
-            }).catch(() => {});
-          }
-          
-          if (eventType === 'InitiateCheckout') {
-            // Enviar clique para o servidor
-            fetch('/api/track', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                eventType: 'button_click',
-                sessionId: 'pixel_' + Date.now(),
-                timestamp: Date.now(),
-                url: window.location.href,
-                userAgent: navigator.userAgent,
-                referrer: document.referrer,
-                data: { 
-                  source: 'facebook_pixel', 
-                  eventData: eventData,
-                  packageType: eventData && eventData.value === 10.00 ? 'seducao' : 'premium'
-                }
-              })
-            }).catch(() => {});
-          }
-        };
-      }
-    })();
-  </script>
-
   <!-- Notificações automáticas -->
   <script>
     const nomes=['João','Carlos','Pedro','Rafael','Lucas','Diego','Gabriel','Thiago','André','Felipe','Bruno','Rodrigo','Marcos','Alexandre','Vinícius','Eduardo','Fernando','Ricardo','Paulo','Antônio','José','Roberto','Daniel','Miguel','Henrique','Leonardo','Gustavo','Fábio','Sérgio','Márcio','César','Vitor'];
