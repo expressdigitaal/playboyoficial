@@ -46,24 +46,6 @@
       100% { box-shadow: 0 0 0 0 rgba(229,9,20,0); }
     }
 
-    /* 🎯 Botão fixo mobile */
-    .btn-fixed {
-      position: fixed;
-      bottom: 15px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #E50914;
-      color: #fff;
-      padding: 14px 24px;
-      border-radius: 9999px;
-      font-weight: 800;
-      letter-spacing: .5px;
-      z-index: 1000;
-      text-transform: uppercase;
-      animation: pulse 1.8s infinite;
-      box-shadow: 0 0 20px rgba(229,9,20,0.4);
-    }
-
     /* 🎯 Contador de urgência */
     #contador {
       font-size: 14px;
@@ -121,6 +103,7 @@
     src="https://www.facebook.com/tr?id=728458327023332&ev=PageView&noscript=1"/>
   </noscript>
 </head>
+
 <body class="bg-black text-white antialiased selection:bg-brand-red selection:text-white">
 
   <!-- Header -->
@@ -163,7 +146,7 @@
     </div>
   </section>
 
-    <!-- Galeria -->
+  <!-- Galeria -->
   <section class="border-t border-white/10">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
       <div class="reveal text-center mb-10">
@@ -181,11 +164,9 @@
         <img src="6.jpg" alt="Playboy Edição 6" class="rounded-lg blur-sm scale-105 hover:scale-110 transition duration-500">
       </div>
 
-      <!-- Frase abaixo para reforçar valor -->
       <p class="mt-8 text-center text-white/60 text-sm">Imagens meramente ilustrativas. Acesso completo após liberação do pacote.</p>
     </div>
   </section>
-
   <!-- Prova Social -->
   <section class="border-t border-white/10">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
@@ -242,7 +223,6 @@
   </section>
 
   <!-- Pacotes -->
-   <!-- Pacotes -->
   <section id="pacotes" class="border-t border-white/10">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
 
@@ -310,7 +290,7 @@
     </div>
   </section>
 
-  <!-- Script para o contador no topo -->
+  <!-- Script contador -->
   <script>
     let tempoTopo = 5 * 60;
     const tempoRestante = document.getElementById("tempo-restante");
@@ -362,19 +342,14 @@
     </div>
   </footer>
 
-  <!-- Botão fixo mobile -->
-  <a href="#pacotes" class="btn-fixed">🔥 GARANTIR COLEÇÃO AGORA</a>
-
   <!-- Scripts -->
   <script>
-    // 🎯 Animação reveal + ViewContent
     const io = new IntersectionObserver((entries)=>{
       entries.forEach(e=>{
         if(e.isIntersecting){
           e.target.classList.add('revealed');
           io.unobserve(e.target);
           if(e.target.id === 'pacotes'){
-            console.log('📈 Evento ViewContent disparado');
             fbq('track', 'ViewContent', {content_name:'Pacotes Playboy', value:0, currency:'BRL'});
           }
         }
@@ -383,9 +358,7 @@
     document.querySelectorAll('.reveal, #pacotes').forEach(el=>io.observe(el));
   </script>
 
-
-
-  <!-- 🎯 Pessoas visualizando agora -->
+  <!-- 🎯 Pessoas visualizando -->
   <script>
     const elVisualizando = document.getElementById('visualizando');
     function atualizarVisualizacao() {
@@ -396,7 +369,7 @@
     setInterval(atualizarVisualizacao, 15000);
   </script>
 
-  <!-- 🎯 Notificações automáticas -->
+  <!-- 🎯 Notificações -->
   <script>
     const nomes=['João','Carlos','Pedro','Rafael','Lucas','Diego','Gabriel','Thiago','André','Felipe','Bruno','Rodrigo','Marcos','Alexandre','Vinícius','Eduardo','Fernando','Ricardo','Paulo','Antônio','José','Roberto','Daniel','Miguel','Henrique','Leonardo','Gustavo','Fábio','Sérgio','Márcio','César','Vitor'];
     const pacotes=[{name:'Pacote Sedução',price:'R$10,00'},{name:'Pacote Premium',price:'R$19,90'}];
