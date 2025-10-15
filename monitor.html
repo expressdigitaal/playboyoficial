@@ -3,490 +3,345 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitor Playboy - Tempo Real</title>
+    <title>Dashboard de Monitoramento - Playboy Oficial</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <style>
-        body { background: #0b0b0b; color: white; }
-        .visitor-tab { 
-            background: rgba(255,255,255,0.05); 
-            border: 1px solid rgba(255,255,255,0.1); 
-            transition: all 0.3s ease;
-        }
-        .visitor-tab.active { 
-            background: rgba(229,9,20,0.2); 
-            border-color: #e50914; 
-        }
-        .visitor-tab:hover { 
-            background: rgba(255,255,255,0.1); 
-        }
-        .event-item { 
-            border-left: 3px solid #e50914; 
-            padding-left: 12px; 
-            margin-bottom: 8px; 
-        }
-        .event-click { border-left-color: #10b981; }
-        .event-pageview { border-left-color: #3b82f6; }
-        .event-time { border-left-color: #f59e0b; }
-        .online-indicator { 
-            width: 8px; height: 8px; 
-            background: #10b981; 
-            border-radius: 50%; 
-            animation: pulse 2s infinite; 
+        .pulse-animation {
+            animation: pulse 2s infinite;
         }
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
         }
-        .device-badge { 
-            background: #3b82f6; 
-            color: white; 
-            padding: 2px 8px; 
-            border-radius: 12px; 
-            font-size: 12px; 
+        .live-indicator {
+            background: linear-gradient(45deg, #ff0000, #ff6666, #ff0000);
+            background-size: 200% 200%;
+            animation: gradient 2s ease infinite;
         }
-        .location-badge { 
-            background: #10b981; 
-            color: white; 
-            padding: 2px 8px; 
-            border-radius: 12px; 
-            font-size: 12px; 
-        }
-        .package-badge { 
-            background: #e50914; 
-            color: white; 
-            padding: 2px 8px; 
-            border-radius: 12px; 
-            font-size: 12px; 
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="bg-gray-900 text-white min-h-screen">
     <!-- Header -->
-    <header class="bg-black/70 backdrop-blur border-b border-white/10 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
-                        <span class="text-white font-bold text-sm">P</span>
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-bold">Monitor Playboy</h1>
-                        <p class="text-sm text-gray-400">Monitoramento em Tempo Real</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-4">
-                    <div class="flex items-center gap-2">
-                        <div id="connectionStatus" class="w-3 h-3 bg-green-500 rounded-full"></div>
-                        <span id="connectionText" class="text-sm text-green-400">Conectado</span>
-                    </div>
-                    <div class="text-xs text-gray-400">
-                        <span id="visitorCount">0 visitantes</span>
-                    </div>
-                    <button onclick="refreshData()" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-sm font-medium transition">
-                        🔄 Atualizar
-                    </button>
-                    <button onclick="clearData()" class="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 rounded-md text-sm font-medium transition">
-                        🗑️ Limpar
-                    </button>
-                </div>
+    <header class="bg-gray-800 border-b border-gray-700 p-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-3 h-3 bg-red-500 rounded-full live-indicator"></div>
+                <h1 class="text-2xl font-bold">Dashboard de Monitoramento</h1>
+                <span class="text-sm text-gray-400">Tempo Real</span>
+            </div>
+            <div class="text-sm text-gray-400">
+                Última atualização: <span id="lastUpdate">--:--:--</span>
             </div>
         </div>
     </header>
 
-    <!-- Layout Principal -->
-    <div class="flex h-screen">
-        <!-- Sidebar - Lista de Visitantes -->
-        <div class="w-1/3 bg-gray-900/50 border-r border-white/10 overflow-y-auto">
-            <div class="p-4">
-                <h2 class="text-lg font-semibold mb-4">Visitantes Ativos</h2>
-                <div id="visitorsList" class="space-y-2">
-                    <!-- Visitantes serão inseridos aqui -->
+    <!-- Stats Cards -->
+    <div class="p-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Visitas Hoje -->
+            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">Visitas Hoje</p>
+                        <p class="text-3xl font-bold text-green-400" id="visitsToday">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <span class="text-xs text-gray-400">+<span id="visitsIncrease">0</span> nas últimas 24h</span>
+                </div>
+            </div>
+
+            <!-- Total de Cliques -->
+            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">Total de Cliques</p>
+                        <p class="text-3xl font-bold text-blue-400" id="totalClicks">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <span class="text-xs text-gray-400">Taxa de conversão: <span id="conversionRate">0%</span></span>
+                </div>
+            </div>
+
+            <!-- Pacote Sedução -->
+            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">Pacote Sedução</p>
+                        <p class="text-3xl font-bold text-yellow-400" id="seducaoClicks">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <span class="text-xs text-gray-400">R$ 10,00</span>
+                </div>
+            </div>
+
+            <!-- Pacote Premium -->
+            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">Pacote Premium</p>
+                        <p class="text-3xl font-bold text-red-400" id="premiumClicks">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-red-500/20 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <span class="text-xs text-gray-400">R$ 19,90</span>
                 </div>
             </div>
         </div>
 
-        <!-- Área Principal - Detalhes do Visitante -->
-        <div class="flex-1 flex flex-col">
-            <!-- Abas de Visitantes -->
-            <div id="visitorTabs" class="bg-gray-800/50 border-b border-white/10 p-4 overflow-x-auto">
-                <!-- Abas serão inseridas aqui -->
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Visitas por Hora -->
+            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                <h3 class="text-lg font-semibold mb-4">Visitas por Hora (Últimas 24h)</h3>
+                <canvas id="visitsChart" width="400" height="200"></canvas>
             </div>
 
-            <!-- Conteúdo da Aba Ativa -->
-            <div id="visitorContent" class="flex-1 p-6 overflow-y-auto">
-                <div class="text-center text-gray-400 py-12">
-                    <div class="text-6xl mb-4">👁️</div>
-                    <h3 class="text-xl font-semibold mb-2">Selecione um Visitante</h3>
-                    <p>Escolha um visitante na lista lateral para ver os detalhes</p>
-                </div>
+            <!-- Cliques por Pacote -->
+            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                <h3 class="text-lg font-semibold mb-4">Distribuição de Cliques</h3>
+                <canvas id="clicksChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+        <!-- Atividade em Tempo Real -->
+        <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+            <h3 class="text-lg font-semibold mb-4">Atividade em Tempo Real</h3>
+            <div class="space-y-3 max-h-64 overflow-y-auto" id="realtimeActivity">
+                <div class="text-gray-400 text-center py-4">Aguardando atividade...</div>
             </div>
         </div>
     </div>
 
-    <!-- 🎯 SISTEMA DE MONITORAMENTO CORRIGIDO -->
     <script>
-        class PlayboyMonitor {
-            constructor() {
-                this.visitors = new Map();
-                this.activeVisitor = null;
-                this.visitorCounter = 1;
-                
-                this.init();
-            }
+        // Configuração do Socket.IO para tempo real
+        const socket = io('https://playboyoficial.onrender.com', {
+            transports: ['websocket', 'polling']
+        });
 
-            init() {
-                this.loadInitialData();
-                this.setupEventListeners();
-                this.startRealTimeSync();
-                
-                console.log('🎯 Monitor Playboy iniciado');
-            }
+        // Dados do dashboard
+        let dashboardData = {
+            visitsToday: 0,
+            totalClicks: 0,
+            seducaoClicks: 0,
+            premiumClicks: 0,
+            visitsByHour: Array(24).fill(0),
+            realtimeActivity: []
+        };
 
-            loadInitialData() {
-                try {
-                    const data = localStorage.getItem('playboy_visitor_data');
-                    if (data) {
-                        const allData = JSON.parse(data);
-                        this.processVisitorData(allData);
-                        this.updateInterface();
-                    }
-                } catch (error) {
-                    console.error('Erro ao carregar dados:', error);
-                }
-            }
+        // Atualizar timestamp
+        function updateTimestamp() {
+            const now = new Date();
+            document.getElementById('lastUpdate').textContent = now.toLocaleTimeString('pt-BR');
+        }
 
-            processVisitorData(allData) {
-                this.visitors.clear();
-                
-                // Carregar mapeamento persistente de visitantes
-                const visitorMapping = this.loadVisitorMapping();
-                
-                // Agrupar dados por sessionId
-                const sessions = {};
-                allData.forEach(entry => {
-                    if (!sessions[entry.sessionId]) {
-                        // Verificar se já existe um número para este visitante
-                        let visitorNumber = visitorMapping[entry.sessionId];
-                        if (!visitorNumber) {
-                            visitorNumber = this.getNextVisitorNumber();
-                            visitorMapping[entry.sessionId] = visitorNumber;
-                            this.saveVisitorMapping(visitorMapping);
+        // Atualizar dados do dashboard
+        function updateDashboard() {
+            document.getElementById('visitsToday').textContent = dashboardData.visitsToday;
+            document.getElementById('totalClicks').textContent = dashboardData.totalClicks;
+            document.getElementById('seducaoClicks').textContent = dashboardData.seducaoClicks;
+            document.getElementById('premiumClicks').textContent = dashboardData.premiumClicks;
+            
+            // Calcular taxa de conversão
+            const conversionRate = dashboardData.visitsToday > 0 ? 
+                ((dashboardData.totalClicks / dashboardData.visitsToday) * 100).toFixed(1) : 0;
+            document.getElementById('conversionRate').textContent = conversionRate + '%';
+
+            // Atualizar gráficos
+            updateVisitsChart();
+            updateClicksChart();
+        }
+
+        // Gráfico de visitas por hora
+        let visitsChart;
+        function initVisitsChart() {
+            const ctx = document.getElementById('visitsChart').getContext('2d');
+            visitsChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 24}, (_, i) => i + ':00'),
+                    datasets: [{
+                        label: 'Visitas',
+                        data: dashboardData.visitsByHour,
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#ffffff' }
                         }
-                        
-                        sessions[entry.sessionId] = {
-                            sessionId: entry.sessionId,
-                            visitorNumber: visitorNumber,
-                            firstSeen: entry.timestamp,
-                            lastSeen: entry.timestamp,
-                            totalVisits: 0,
-                            totalClicks: 0,
-                            device: null,
-                            location: null,
-                            events: [],
-                            packageClicks: new Map()
-                        };
+                    },
+                    scales: {
+                        x: { ticks: { color: '#9ca3af' }, grid: { color: '#374151' } },
+                        y: { ticks: { color: '#9ca3af' }, grid: { color: '#374151' } }
                     }
-                    
-                    const visitor = sessions[entry.sessionId];
-                    visitor.lastSeen = entry.timestamp;
-                    visitor.events.push(entry);
-                    
-                    if (entry.type === 'page_view') {
-                        visitor.totalVisits++;
-                    } else if (entry.type === 'button_click') {
-                        visitor.totalClicks++;
-                        const packageName = entry.data.packageName || 'Desconhecido';
-                        visitor.packageClicks.set(packageName, (visitor.packageClicks.get(packageName) || 0) + 1);
-                    } else if (entry.type === 'device_info') {
-                        visitor.device = entry.data.device || 'desktop';
+                }
+            });
+        }
+
+        // Gráfico de cliques por pacote
+        let clicksChart;
+        function initClicksChart() {
+            const ctx = document.getElementById('clicksChart').getContext('2d');
+            clicksChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pacote Sedução', 'Pacote Premium'],
+                    datasets: [{
+                        data: [dashboardData.seducaoClicks, dashboardData.premiumClicks],
+                        backgroundColor: ['#f59e0b', '#ef4444'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#ffffff' }
+                        }
                     }
-                });
-                
-                // Converter para Map
-                Object.values(sessions).forEach(visitor => {
-                    this.visitors.set(visitor.sessionId, visitor);
-                });
-            }
-
-            loadVisitorMapping() {
-                try {
-                    const mapping = localStorage.getItem('playboy_visitor_mapping');
-                    return mapping ? JSON.parse(mapping) : {};
-                } catch (error) {
-                    console.error('Erro ao carregar mapeamento:', error);
-                    return {};
                 }
-            }
+            });
+        }
 
-            saveVisitorMapping(mapping) {
-                try {
-                    localStorage.setItem('playboy_visitor_mapping', JSON.stringify(mapping));
-                } catch (error) {
-                    console.error('Erro ao salvar mapeamento:', error);
-                }
-            }
-
-            getNextVisitorNumber() {
-                try {
-                    const lastNumber = localStorage.getItem('playboy_last_visitor_number');
-                    const nextNumber = lastNumber ? parseInt(lastNumber) + 1 : 1;
-                    localStorage.setItem('playboy_last_visitor_number', nextNumber.toString());
-                    return nextNumber;
-                } catch (error) {
-                    console.error('Erro ao gerar número do visitante:', error);
-                    return this.visitorCounter++;
-                }
-            }
-
-            setupEventListeners() {
-                // Escutar mudanças no localStorage
-                window.addEventListener('storage', (e) => {
-                    if (e.key === 'playboy_visitor_data') {
-                        this.loadInitialData();
-                    }
-                });
-                
-                // Escutar eventos customizados
-                window.addEventListener('playboyDataUpdate', (e) => {
-                    this.loadInitialData();
-                });
-            }
-
-            startRealTimeSync() {
-                // Verificar mudanças a cada 2 segundos
-                setInterval(() => {
-                    this.loadInitialData();
-                }, 2000);
-            }
-
-            updateInterface() {
-                this.renderVisitorsList();
-                this.renderVisitorTabs();
-                this.updateVisitorCount();
-                
-                if (this.activeVisitor) {
-                    this.renderVisitorDetails();
-                }
-            }
-
-            renderVisitorsList() {
-                const container = document.getElementById('visitorsList');
-                const sortedVisitors = Array.from(this.visitors.values())
-                    .sort((a, b) => new Date(b.lastSeen) - new Date(a.lastSeen));
-
-                container.innerHTML = sortedVisitors.map(visitor => {
-                    const isActive = this.activeVisitor === visitor.sessionId;
-                    const isReturning = visitor.totalVisits > 1;
-                    
-                    return `
-                        <div class="visitor-tab ${isActive ? 'active' : ''}" 
-                             onclick="monitor.selectVisitor('${visitor.sessionId}')">
-                            <div class="flex items-center justify-between p-3">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
-                                        <span class="text-white font-bold text-sm">${visitor.visitorNumber}</span>
-                                    </div>
-                                    <div>
-                                        <div class="flex items-center gap-2">
-                                            <span class="font-semibold">Visitante ${visitor.visitorNumber}</span>
-                                            ${isReturning ? '<span class="text-xs bg-yellow-600 text-white px-2 py-1 rounded">Retornou</span>' : ''}
-                                        </div>
-                                        <div class="text-sm text-gray-400">
-                                            ${visitor.device || 'Desktop'} • ${this.formatTime(visitor.lastSeen)}
-                                        </div>
-                                        <div class="text-xs text-gray-500">
-                                            ${visitor.totalVisits} visitas • ${visitor.totalClicks} cliques
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <div class="online-indicator"></div>
-                                    <span class="text-xs text-gray-400">Online</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            }
-
-            renderVisitorTabs() {
-                const container = document.getElementById('visitorTabs');
-                const sortedVisitors = Array.from(this.visitors.values())
-                    .sort((a, b) => new Date(b.lastSeen) - new Date(a.lastSeen));
-
-                container.innerHTML = sortedVisitors.map(visitor => {
-                    const isActive = this.activeVisitor === visitor.sessionId;
-                    
-                    return `
-                        <div class="inline-block mr-2">
-                            <button class="px-4 py-2 rounded-lg text-sm font-medium transition ${isActive ? 'bg-red-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}"
-                                    onclick="monitor.selectVisitor('${visitor.sessionId}')">
-                                Visitante ${visitor.visitorNumber}
-                                ${visitor.totalVisits > 1 ? ' 🔄' : ''}
-                            </button>
-                        </div>
-                    `;
-                }).join('');
-            }
-
-            selectVisitor(sessionId) {
-                this.activeVisitor = sessionId;
-                this.renderVisitorsList();
-                this.renderVisitorTabs();
-                this.renderVisitorDetails();
-            }
-
-            renderVisitorDetails() {
-                if (!this.activeVisitor) {
-                    document.getElementById('visitorContent').innerHTML = `
-                        <div class="text-center text-gray-400 py-12">
-                            <div class="text-6xl mb-4">👁️</div>
-                            <h3 class="text-xl font-semibold mb-2">Selecione um Visitante</h3>
-                            <p>Escolha um visitante na lista lateral para ver os detalhes</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                const visitor = this.visitors.get(this.activeVisitor);
-                if (!visitor) return;
-
-                const events = visitor.events || [];
-                const packageClicks = Array.from(visitor.packageClicks.entries());
-
-                document.getElementById('visitorContent').innerHTML = `
-                    <div class="space-y-6">
-                        <!-- Informações do Visitante -->
-                        <div class="bg-gray-800/50 rounded-lg p-6">
-                            <div class="flex items-center justify-between mb-4">
-                                <h3 class="text-xl font-semibold">Visitante ${visitor.visitorNumber}</h3>
-                                <div class="flex items-center gap-2">
-                                    <div class="online-indicator"></div>
-                                    <span class="text-sm text-green-400">Online</span>
-                                </div>
-                            </div>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                                <div>
-                                    <p class="text-sm text-gray-400">UUID</p>
-                                    <p class="font-mono text-xs">${visitor.sessionId}</p>
-                                </div>
-                                <div>
-                                    <p class="text-sm text-gray-400">Dispositivo</p>
-                                    <span class="device-badge">${visitor.device || 'Desktop'}</span>
-                                </div>
-                                <div>
-                                    <p class="text-sm text-gray-400">Primeira Visita</p>
-                                    <span class="text-sm">${this.formatTime(visitor.firstSeen)}</span>
-                                </div>
-                            </div>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                                <div class="text-center">
-                                    <p class="text-2xl font-bold text-blue-400">${visitor.totalVisits}</p>
-                                    <p class="text-sm text-gray-400">Visitas</p>
-                                </div>
-                                <div class="text-center">
-                                    <p class="text-2xl font-bold text-green-400">${visitor.totalClicks}</p>
-                                    <p class="text-sm text-gray-400">Cliques</p>
-                                </div>
-                                <div class="text-center">
-                                    <p class="text-2xl font-bold text-purple-400">${packageClicks.length}</p>
-                                    <p class="text-sm text-gray-400">Pacotes</p>
-                                </div>
-                                <div class="text-center">
-                                    <p class="text-2xl font-bold text-orange-400">${events.length}</p>
-                                    <p class="text-sm text-gray-400">Eventos</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Cliques por Pacote -->
-                        ${packageClicks.length > 0 ? `
-                        <div class="bg-gray-800/50 rounded-lg p-6">
-                            <h4 class="text-lg font-semibold mb-4">Cliques por Pacote</h4>
-                            <div class="space-y-2">
-                                ${packageClicks.map(([packageName, count]) => `
-                                    <div class="flex items-center justify-between p-3 bg-gray-700/50 rounded-lg">
-                                        <span class="package-badge">${packageName}</span>
-                                        <span class="text-lg font-bold text-green-400">${count}</span>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                        ` : ''}
-
-                        <!-- Timeline de Eventos -->
-                        <div class="bg-gray-800/50 rounded-lg p-6">
-                            <h4 class="text-lg font-semibold mb-4">Timeline de Eventos</h4>
-                            <div class="space-y-3 max-h-96 overflow-y-auto">
-                                ${events.slice(-20).reverse().map(event => `
-                                    <div class="event-item event-${event.type}">
-                                        <div class="flex items-center justify-between">
-                                            <div>
-                                                <span class="font-semibold">${this.getEventLabel(event.type)}</span>
-                                                ${event.data.packageName ? `<span class="package-badge ml-2">${event.data.packageName}</span>` : ''}
-                                            </div>
-                                            <span class="text-xs text-gray-400">${this.formatTime(event.timestamp)}</span>
-                                        </div>
-                                        ${event.data.title ? `<p class="text-sm text-gray-300 mt-1">${event.data.title}</p>` : ''}
-                                        ${event.data.url ? `<p class="text-xs text-gray-500 mt-1">${event.data.url}</p>` : ''}
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            updateVisitorCount() {
-                const count = this.visitors.size;
-                document.getElementById('visitorCount').textContent = `${count} visitante${count !== 1 ? 's' : ''}`;
-            }
-
-            getEventLabel(type) {
-                const labels = {
-                    'page_view': '📄 Página Visualizada',
-                    'button_click': '🛒 Clique em Pacote',
-                    'time_tracking': '⏱️ Tempo na Página',
-                    'device_info': '📱 Informações do Dispositivo'
-                };
-                return labels[type] || type;
-            }
-
-            formatTime(timestamp) {
-                const date = new Date(timestamp);
-                const now = new Date();
-                const diff = now - date;
-                
-                if (diff < 60000) return 'Agora';
-                if (diff < 3600000) return `${Math.floor(diff / 60000)}min atrás`;
-                if (diff < 86400000) return `${Math.floor(diff / 3600000)}h atrás`;
-                return date.toLocaleString('pt-BR');
+        function updateVisitsChart() {
+            if (visitsChart) {
+                visitsChart.data.datasets[0].data = dashboardData.visitsByHour;
+                visitsChart.update();
             }
         }
 
-        // Funções globais
-        function refreshData() {
-            if (window.monitor) {
-                window.monitor.loadInitialData();
-                console.log('🔄 Dados atualizados!');
+        function updateClicksChart() {
+            if (clicksChart) {
+                clicksChart.data.datasets[0].data = [dashboardData.seducaoClicks, dashboardData.premiumClicks];
+                clicksChart.update();
             }
         }
 
-        function clearData() {
-            if (confirm('Tem certeza que deseja limpar todos os dados?')) {
-                localStorage.removeItem('playboy_visitor_data');
-                localStorage.removeItem('playboy_visitor_mapping');
-                localStorage.removeItem('playboy_last_visitor_number');
-                localStorage.removeItem('playboy_visitor_id');
-                location.reload();
+        // Adicionar atividade em tempo real
+        function addRealtimeActivity(message) {
+            const activityContainer = document.getElementById('realtimeActivity');
+            const activityItem = document.createElement('div');
+            activityItem.className = 'flex items-center justify-between p-3 bg-gray-700 rounded-lg';
+            activityItem.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <div class="w-2 h-2 bg-green-400 rounded-full pulse-animation"></div>
+                    <span class="text-sm">${message}</span>
+                </div>
+                <span class="text-xs text-gray-400">${new Date().toLocaleTimeString('pt-BR')}</span>
+            `;
+            
+            activityContainer.insertBefore(activityItem, activityContainer.firstChild);
+            
+            // Manter apenas as últimas 10 atividades
+            while (activityContainer.children.length > 10) {
+                activityContainer.removeChild(activityContainer.lastChild);
             }
         }
 
-        // Inicializar quando DOM estiver pronto
+        // Simular dados em tempo real (para demonstração)
+        function simulateRealtimeData() {
+            setInterval(() => {
+                // Simular nova visita
+                if (Math.random() < 0.3) {
+                    dashboardData.visitsToday++;
+                    const hour = new Date().getHours();
+                    dashboardData.visitsByHour[hour]++;
+                    addRealtimeActivity('Nova visita detectada');
+                    updateDashboard();
+                }
+
+                // Simular cliques nos botões
+                if (Math.random() < 0.1) {
+                    const isPremium = Math.random() < 0.6; // 60% chance de ser premium
+                    if (isPremium) {
+                        dashboardData.premiumClicks++;
+                        dashboardData.totalClicks++;
+                        addRealtimeActivity('Clique no Pacote Premium (R$ 19,90)');
+                    } else {
+                        dashboardData.seducaoClicks++;
+                        dashboardData.totalClicks++;
+                        addRealtimeActivity('Clique no Pacote Sedução (R$ 10,00)');
+                    }
+                    updateDashboard();
+                }
+            }, 3000); // A cada 3 segundos
+        }
+
+        // Event listeners do Socket.IO
+        socket.on('connect', () => {
+            console.log('Conectado ao servidor de monitoramento');
+            addRealtimeActivity('Dashboard conectado ao servidor');
+        });
+
+        socket.on('visit', (data) => {
+            dashboardData.visitsToday++;
+            const hour = new Date().getHours();
+            dashboardData.visitsByHour[hour]++;
+            addRealtimeActivity('Nova visita detectada');
+            updateDashboard();
+        });
+
+        socket.on('button_click', (data) => {
+            dashboardData.totalClicks++;
+            if (data.package === 'seducao') {
+                dashboardData.seducaoClicks++;
+                addRealtimeActivity('Clique no Pacote Sedução (R$ 10,00)');
+            } else if (data.package === 'premium') {
+                dashboardData.premiumClicks++;
+                addRealtimeActivity('Clique no Pacote Premium (R$ 19,90)');
+            }
+            updateDashboard();
+        });
+
+        // Inicialização
         document.addEventListener('DOMContentLoaded', () => {
-            window.monitor = new PlayboyMonitor();
+            updateTimestamp();
+            setInterval(updateTimestamp, 1000);
+            
+            initVisitsChart();
+            initClicksChart();
+            updateDashboard();
+            
+            // Iniciar simulação de dados (remover em produção)
+            simulateRealtimeData();
         });
     </script>
 </body>
