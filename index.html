@@ -340,7 +340,6 @@
 
         init() {
           this.trackPageView();
-          this.trackGeolocation();
           this.trackDeviceInfo();
           this.trackButtonClicks();
           this.trackTimeOnPage();
@@ -368,68 +367,7 @@
           });
         }
 
-        async trackGeolocation() {
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-              (position) => {
-                const lat = position.coords.latitude;
-                const lon = position.coords.longitude;
-                this.getAddressFromCoords(lat, lon);
-              },
-              (error) => {
-                console.log('📍 Geolocalização negada, usando IP');
-                this.getLocationFromIP();
-              }
-            );
-          } else {
-            this.getLocationFromIP();
-          }
-        }
-
-        async getAddressFromCoords(lat, lon) {
-          try {
-            const response = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=pt`);
-            const data = await response.json();
-            
-            this.visitorData.push({
-              sessionId: this.sessionId,
-              timestamp: new Date().toISOString(),
-              type: 'geolocation',
-              data: {
-                latitude: lat,
-                longitude: lon,
-                city: data.city || 'Não identificada',
-                state: data.principalSubdivision || 'Não identificado',
-                country: data.countryName || 'Brasil',
-                address: data.localityInfo?.administrative?.[0]?.name || 'Endereço não disponível'
-              }
-            });
-          } catch (error) {
-            console.log('❌ Erro ao buscar endereço:', error);
-          }
-        }
-
-        async getLocationFromIP() {
-          try {
-            const response = await fetch('https://ipapi.co/json/');
-            const data = await response.json();
-            
-            this.visitorData.push({
-              sessionId: this.sessionId,
-              timestamp: new Date().toISOString(),
-              type: 'ip_location',
-              data: {
-                ip: data.ip,
-                city: data.city || 'Não identificada',
-                state: data.region || 'Não identificado',
-                country: data.country_name || 'Brasil',
-                postal: data.postal || 'CEP não disponível'
-              }
-            });
-          } catch (error) {
-            console.log('❌ Erro ao buscar localização por IP:', error);
-          }
-        }
+        // Geolocalização removida por privacidade
 
         trackDeviceInfo() {
           const deviceInfo = {
