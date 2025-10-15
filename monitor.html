@@ -3,13 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard de Monitoramento - Playboy</title>
+    <title>Monitor Playboy - Tempo Real</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { background: #0b0b0b; color: white; }
-        .card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
-        .stat-card { background: linear-gradient(135deg, #1a1a1a, #2a2a2a); }
+        .visitor-tab { 
+            background: rgba(255,255,255,0.05); 
+            border: 1px solid rgba(255,255,255,0.1); 
+            transition: all 0.3s ease;
+        }
+        .visitor-tab.active { 
+            background: rgba(229,9,20,0.2); 
+            border-color: #e50914; 
+        }
+        .visitor-tab:hover { 
+            background: rgba(255,255,255,0.1); 
+        }
+        .event-item { 
+            border-left: 3px solid #e50914; 
+            padding-left: 12px; 
+            margin-bottom: 8px; 
+        }
+        .event-click { border-left-color: #10b981; }
+        .event-pageview { border-left-color: #3b82f6; }
+        .event-time { border-left-color: #f59e0b; }
         .online-indicator { 
             width: 8px; height: 8px; 
             background: #10b981; 
@@ -20,14 +37,27 @@
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
         }
-        .visitor-card { 
-            background: linear-gradient(135deg, #1e1e1e, #2d2d2d); 
-            border-left: 4px solid #e50914; 
+        .device-badge { 
+            background: #3b82f6; 
+            color: white; 
+            padding: 2px 8px; 
+            border-radius: 12px; 
+            font-size: 12px; 
         }
-        .click-highlight { background: rgba(229, 9, 20, 0.2); }
-        .location-badge { background: #3b82f6; }
-        .age-badge { background: #8b5cf6; }
-        .device-badge { background: #10b981; }
+        .location-badge { 
+            background: #10b981; 
+            color: white; 
+            padding: 2px 8px; 
+            border-radius: 12px; 
+            font-size: 12px; 
+        }
+        .package-badge { 
+            background: #e50914; 
+            color: white; 
+            padding: 2px 8px; 
+            border-radius: 12px; 
+            font-size: 12px; 
+        }
     </style>
 </head>
 <body class="min-h-screen">
@@ -40,24 +70,18 @@
                         <span class="text-white font-bold text-sm">P</span>
                     </div>
                     <div>
-                        <h1 class="text-xl font-bold">Dashboard de Monitoramento</h1>
-                        <p class="text-sm text-gray-400">Playboy - Análise de Visitantes</p>
+                        <h1 class="text-xl font-bold">Monitor Playboy</h1>
+                        <p class="text-sm text-gray-400">Monitoramento em Tempo Real</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-4">
                     <div class="flex items-center gap-2">
-                        <div class="online-indicator"></div>
-                        <span class="text-sm text-green-400" id="systemStatus">Sistema Ativo</span>
+                        <div id="connectionStatus" class="w-3 h-3 bg-green-500 rounded-full"></div>
+                        <span id="connectionText" class="text-sm text-green-400">Conectado</span>
                     </div>
-                    <div class="text-xs text-gray-400" id="lastUpdate">
-                        Última atualização: <span id="updateTime">--:--</span>
+                    <div class="text-xs text-gray-400">
+                        <span id="visitorCount">0 visitantes</span>
                     </div>
-                    <button onclick="connectToMapaSite()" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-md text-sm font-medium transition">
-                        🔗 Conectar Site
-                    </button>
-                    <button onclick="addStableTestData()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-sm font-medium transition">
-                        ➕ Adicionar Dados
-                    </button>
                     <button onclick="refreshData()" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-sm font-medium transition">
                         🔄 Atualizar
                     </button>
@@ -66,873 +90,349 @@
         </div>
     </header>
 
-    <!-- Estatísticas Principais -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <!-- Total de Visitantes -->
-            <div class="stat-card rounded-lg p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm text-gray-400">Total de Visitantes</p>
-                        <p class="text-2xl font-bold text-white" id="totalVisitors">0</p>
-                    </div>
-                    <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
-                        <span class="text-white text-xl">👥</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Cliques em Botões -->
-            <div class="stat-card rounded-lg p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm text-gray-400">Cliques em Botões</p>
-                        <p class="text-2xl font-bold text-white" id="totalClicks">0</p>
-                    </div>
-                    <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center">
-                        <span class="text-white text-xl">🛒</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Conversão -->
-            <div class="stat-card rounded-lg p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm text-gray-400">Taxa de Conversão</p>
-                        <p class="text-2xl font-bold text-white" id="conversionRate">0%</p>
-                    </div>
-                    <div class="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center">
-                        <span class="text-white text-xl">📈</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tempo Médio -->
-            <div class="stat-card rounded-lg p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm text-gray-400">Tempo Médio</p>
-                        <p class="text-2xl font-bold text-white" id="avgTime">0s</p>
-                    </div>
-                    <div class="w-12 h-12 bg-orange-600 rounded-full flex items-center justify-center">
-                        <span class="text-white text-xl">⏱️</span>
-                    </div>
+    <!-- Layout Principal -->
+    <div class="flex h-screen">
+        <!-- Sidebar - Lista de Visitantes -->
+        <div class="w-1/3 bg-gray-900/50 border-r border-white/10 overflow-y-auto">
+            <div class="p-4">
+                <h2 class="text-lg font-semibold mb-4">Visitantes Ativos</h2>
+                <div id="visitorsList" class="space-y-2">
+                    <!-- Visitantes serão inseridos aqui -->
                 </div>
             </div>
         </div>
 
-        <!-- Seção 1: Pessoas que Clicaram nos Botões -->
-        <div class="card rounded-lg p-6 mb-8">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-lg font-semibold flex items-center gap-2">
-                    🛒 Pessoas que Clicaram nos Botões
-                </h3>
-                <div class="flex items-center gap-2">
-                    <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                    <span class="text-sm text-green-400" id="clickersCount">0 pessoas</span>
-                </div>
-            </div>
-            
-            <div class="space-y-4" id="clickersList">
-                <!-- Pessoas que clicaram serão inseridas aqui -->
-            </div>
-        </div>
-
-        <!-- Seção 2: Análise de Dispositivos e Pacotes -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            <!-- Dispositivos -->
-            <div class="card rounded-lg p-6">
-                <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
-                    📱 Dispositivos (Quantidade de Cliques)
-                </h3>
-                <div id="deviceStats" class="space-y-3">
-                    <!-- Estatísticas de dispositivos -->
-                </div>
+        <!-- Área Principal - Detalhes do Visitante -->
+        <div class="flex-1 flex flex-col">
+            <!-- Abas de Visitantes -->
+            <div id="visitorTabs" class="bg-gray-800/50 border-b border-white/10 p-4 overflow-x-auto">
+                <!-- Abas serão inseridas aqui -->
             </div>
 
-            <!-- Pacotes Clicados -->
-            <div class="card rounded-lg p-6">
-                <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
-                    📦 Pacotes Clicados
-                </h3>
-                <div id="packageStats" class="space-y-3">
-                    <!-- Estatísticas de pacotes -->
+            <!-- Conteúdo da Aba Ativa -->
+            <div id="visitorContent" class="flex-1 p-6 overflow-y-auto">
+                <div class="text-center text-gray-400 py-12">
+                    <div class="text-6xl mb-4">👁️</div>
+                    <h3 class="text-xl font-semibold mb-2">Selecione um Visitante</h3>
+                    <p>Escolha um visitante na lista lateral para ver os detalhes</p>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Seção 3: Pessoas Apenas Visitando (Sem Ações) -->
-        <div class="card rounded-lg p-6 mb-8">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-lg font-semibold flex items-center gap-2">
-                    👀 Pessoas Apenas Visitando (Sem Fazer Nada)
-                </h3>
-                <div class="flex items-center gap-2">
-                    <div class="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
-                    <span class="text-sm text-blue-400" id="viewersCount">0 pessoas</span>
-                </div>
-            </div>
-            
-            <div class="space-y-4" id="viewersList">
-                <!-- Pessoas apenas visitando serão inseridas aqui -->
-            </div>
-        </div>
-
-        <!-- Seção 4: Visitantes por Estado -->
-        <div class="max-w-4xl mx-auto mb-8">
-            <div class="card rounded-lg p-6">
-                <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
-                    🗺️ Visitantes por Estado
-                </h3>
-                <div id="locationList" class="space-y-3">
-                    <!-- Lista será preenchida dinamicamente -->
-                </div>
-            </div>
-        </div>
-
-    </section>
-
-    <!-- Scripts -->
+    <!-- 🎯 SISTEMA DE MONITORAMENTO 100% HTML -->
     <script>
-        let trackingData = [];
-        let dashboardInitialized = false;
-
-        // Inicializa o dashboard - VERSÃO TEMPO REAL
-        function initDashboard() {
-            console.log('🚀 Inicializando dashboard em tempo real...');
-            
-            // Carrega dados iniciais
-            loadTrackingData();
-            console.log('📊 Dados carregados:', trackingData.length, 'entradas');
-            console.log('📊 Tipos de dados:', [...new Set(trackingData.map(d => d.type))]);
-            
-            updateStats();
-            updateClickersList();
-            updateViewersList();
-            updateDeviceStats();
-            updatePackageStats();
-            updateLocationList();
-            
-            // Atualização em tempo real a cada 10 segundos (mais estável)
-            setInterval(() => {
-                const hasChanges = loadTrackingData();
-                const cleanedData = cleanOldData();
+        class PlayboyMonitor {
+            constructor() {
+                this.visitors = new Map();
+                this.activeVisitor = null;
+                this.visitorCounter = 1;
                 
-                if (hasChanges || cleanedData) {
-                    console.log('🔄 Dashboard atualizado com novos dados!');
-                    updateAllSections();
-                    updateTimestamp();
-                    showUpdateNotification();
-                } else {
-                    console.log('📊 Verificando dados em tempo real...');
-                    updateTimestamp();
-                }
-            }, 10000);
-        }
-
-        // Carrega dados do sistema de tracking - VERSÃO ESTÁVEL
-        function loadTrackingData() {
-            let newData = [];
-            
-            // Tenta carregar dados do localStorage do site Playboy
-            try {
-                const playboyData = localStorage.getItem('playboy_visitor_data');
-                if (playboyData) {
-                    newData = JSON.parse(playboyData);
-                    console.log('📊 Dados reais carregados do localStorage:', newData.length, 'entradas');
-                } else {
-                    console.log('📊 Nenhum dado real encontrado, usando dados estáticos');
-                    newData = getSampleData();
-                }
-            } catch (error) {
-                console.log('❌ Erro ao carregar dados do localStorage:', error);
-                newData = getSampleData();
+                this.init();
             }
-            
-            // Só atualiza se realmente houver mudanças
-            const hasChanges = JSON.stringify(newData) !== JSON.stringify(trackingData);
-            
-            if (hasChanges) {
-                console.log('🔄 Dados atualizados detectados!');
-                trackingData = newData;
-                return true;
-            } else {
-                console.log('📊 Nenhuma mudança nos dados');
-                return false;
-            }
-        }
 
-        // Dados estáticos para demonstração - SEM ALEATORIEDADE
-        function getSampleData() {
-            // Dados fixos e estáveis
-            const staticData = [
-                {
-                    sessionId: 'playboy_001',
-                    timestamp: new Date(Date.now() - 300000).toISOString(),
-                    type: 'page_view',
-                    data: {
-                        url: 'https://playboyoficial.onrender.com/',
-                        title: 'Playboy – Ensaios Exclusivos',
-                        referrer: 'https://google.com'
-                    }
-                },
-                {
-                    sessionId: 'playboy_001',
-                    timestamp: new Date(Date.now() - 299000).toISOString(),
-                    type: 'device_info',
-                    data: {
-                        userAgent: 'Mozilla/5.0 (Desktop)',
-                        platform: 'Desktop',
-                        language: 'pt-BR',
-                        screenWidth: 1920,
-                        screenHeight: 1080,
-                        city: 'São Paulo',
-                        state: 'SP'
-                    }
-                },
-                {
-                    sessionId: 'playboy_001',
-                    timestamp: new Date(Date.now() - 295000).toISOString(),
-                    type: 'button_click',
-                    data: {
-                        packageName: 'Pacote Premium',
-                        price: 'R$ 19,90',
-                        buttonText: 'LIBERAR PACOTE',
-                        buttonHref: 'https://pay.cakto.com.br/'
-                    }
-                },
-                {
-                    sessionId: 'playboy_002',
-                    timestamp: new Date(Date.now() - 200000).toISOString(),
-                    type: 'page_view',
-                    data: {
-                        url: 'https://playboyoficial.onrender.com/',
-                        title: 'Playboy – Ensaios Exclusivos',
-                        referrer: 'https://facebook.com'
-                    }
-                },
-                {
-                    sessionId: 'playboy_002',
-                    timestamp: new Date(Date.now() - 199000).toISOString(),
-                    type: 'device_info',
-                    data: {
-                        userAgent: 'Mozilla/5.0 (Mobile)',
-                        platform: 'Mobile',
-                        language: 'pt-BR',
-                        screenWidth: 375,
-                        screenHeight: 667,
-                        city: 'Rio de Janeiro',
-                        state: 'RJ'
-                    }
-                },
-                {
-                    sessionId: 'playboy_003',
-                    timestamp: new Date(Date.now() - 100000).toISOString(),
-                    type: 'page_view',
-                    data: {
-                        url: 'https://playboyoficial.onrender.com/',
-                        title: 'Playboy – Ensaios Exclusivos',
-                        referrer: 'https://instagram.com'
-                    }
-                },
-                {
-                    sessionId: 'playboy_003',
-                    timestamp: new Date(Date.now() - 99000).toISOString(),
-                    type: 'device_info',
-                    data: {
-                        userAgent: 'Mozilla/5.0 (Desktop)',
-                        platform: 'Desktop',
-                        language: 'pt-BR',
-                        screenWidth: 1920,
-                        screenHeight: 1080,
-                        city: 'Belo Horizonte',
-                        state: 'MG'
-                    }
-                }
-            ];
-            
-            console.log('📊 Dados estáticos carregados:', staticData.length, 'entradas');
-            console.log('📊 Tipos:', [...new Set(staticData.map(d => d.type))]);
-            
-            return staticData;
-        }
-
-        // Função para conectar com o site mapa.html
-        function connectToMapaSite() {
-            console.log('🔗 Conectando com o site mapa.html...');
-            
-            // Tenta abrir o site em uma nova aba
-            const mapaWindow = window.open('mapa.html', '_blank');
-            
-            if (mapaWindow) {
-                console.log('✅ Site mapa.html aberto em nova aba');
+            init() {
+                this.loadInitialData();
+                this.setupEventListeners();
+                this.startRealTimeSync();
                 
-                // Monitora o localStorage do site
-                const checkForUpdates = () => {
-                    try {
-                        const playboyData = localStorage.getItem('playboy_visitor_data');
-                        if (playboyData) {
-                            const newData = JSON.parse(playboyData);
-                            if (newData.length !== trackingData.length) {
-                                console.log('🔄 Novos dados detectados do site!');
-                                trackingData = newData;
-                                updateAllSections();
-                            }
-                        }
-                    } catch (error) {
-                        console.log('❌ Erro ao verificar dados:', error);
-                    }
-                };
-                
-                // Verifica atualizações a cada 2 segundos
-                setInterval(checkForUpdates, 2000);
-                
-                return true;
-            } else {
-                console.log('❌ Não foi possível abrir o site');
-                return false;
+                console.log('🎯 Monitor Playboy iniciado');
             }
-        }
 
-        // Função de teste para forçar dados
-        function forceTestData() {
-            console.log('🧪 Forçando dados de teste...');
-            trackingData = [
-                {
-                    sessionId: 'test_001',
-                    timestamp: new Date().toISOString(),
-                    type: 'device_info',
-                    data: {
-                        userAgent: 'Desktop',
-                        city: 'São Paulo',
-                        state: 'SP'
+            loadInitialData() {
+                try {
+                    const data = localStorage.getItem('playboy_visitor_data');
+                    if (data) {
+                        const allData = JSON.parse(data);
+                        this.processVisitorData(allData);
+                        this.updateInterface();
                     }
-                },
-                {
-                    sessionId: 'test_001',
-                    timestamp: new Date().toISOString(),
-                    type: 'button_click',
-                    data: {
-                        packageName: 'Pacote Premium',
-                        price: 'R$ 19,90'
-                    }
-                },
-                {
-                    sessionId: 'test_002',
-                    timestamp: new Date().toISOString(),
-                    type: 'device_info',
-                    data: {
-                        userAgent: 'Mobile',
-                        city: 'Rio de Janeiro',
-                        state: 'RJ'
-                    }
+                } catch (error) {
+                    console.error('Erro ao carregar dados:', error);
                 }
-            ];
-            
-            updateAllSections();
-        }
-
-        // Função para atualizar todas as seções
-        function updateAllSections() {
-            updateStats();
-            updateClickersList();
-            updateViewersList();
-            updateDeviceStats();
-            updatePackageStats();
-            updateLocationList();
-        }
-
-        // Função para limpar dados antigos e manter apenas dados recentes
-        function cleanOldData() {
-            const now = Date.now();
-            const oneHourAgo = now - (60 * 60 * 1000); // 1 hora atrás
-            
-            const recentData = trackingData.filter(entry => {
-                const entryTime = new Date(entry.timestamp).getTime();
-                return entryTime > oneHourAgo;
-            });
-            
-            if (recentData.length !== trackingData.length) {
-                console.log('🧹 Limpando dados antigos:', trackingData.length - recentData.length, 'entradas removidas');
-                trackingData = recentData;
-                return true;
             }
-            
-            return false;
-        }
 
-        // Função para adicionar dados de teste estáveis
-        function addStableTestData() {
-            console.log('🧪 Adicionando dados de teste estáveis...');
-            
-            const newEntry = {
-                sessionId: 'test_' + Date.now(),
-                timestamp: new Date().toISOString(),
-                type: 'button_click',
-                data: {
-                    packageName: 'Pacote Premium',
-                    price: 'R$ 19,90',
-                    buttonText: 'LIBERAR PACOTE',
-                    buttonHref: 'https://pay.cakto.com.br/'
-                }
-            };
-            
-            trackingData.push(newEntry);
-            console.log('✅ Dados de teste adicionados');
-            
-            updateAllSections();
-        }
-
-        // Atualiza estatísticas - VERSÃO ESTÁVEL
-        function updateStats() {
-            const visitors = getUniqueVisitors();
-            const clicks = getButtonClicks();
-            const conversionRate = calculateConversionRate();
-            const avgTime = calculateAverageTime();
-            
-            console.log('📊 Estatísticas calculadas:');
-            console.log('- Visitantes únicos:', visitors.length);
-            console.log('- Cliques totais:', clicks.length);
-            console.log('- Taxa de conversão:', conversionRate + '%');
-            console.log('- Tempo médio:', avgTime + 's');
-            
-            // Atualiza com dados reais e estáveis
-            document.getElementById('totalVisitors').textContent = visitors.length;
-            document.getElementById('totalClicks').textContent = clicks.length;
-            document.getElementById('conversionRate').textContent = conversionRate + '%';
-            document.getElementById('avgTime').textContent = avgTime + 's';
-            document.getElementById('activeVisitors').textContent = visitors.length + ' visitantes online';
-            
-            // Adiciona indicador visual de atualização
-            const indicators = document.querySelectorAll('.online-indicator');
-            indicators.forEach(indicator => {
-                indicator.style.animation = 'pulse 1s ease-in-out';
-                setTimeout(() => {
-                    indicator.style.animation = 'pulse 2s infinite';
-                }, 1000);
-            });
-        }
-
-        // Obtém visitantes únicos
-        function getUniqueVisitors() {
-            const sessions = new Set();
-            trackingData.forEach(entry => {
-                sessions.add(entry.sessionId);
-            });
-            return Array.from(sessions);
-        }
-
-        // Obtém cliques em botões
-        function getButtonClicks() {
-            return trackingData.filter(entry => entry.type === 'button_click');
-        }
-
-        // Calcula taxa de conversão
-        function calculateConversionRate() {
-            const visitors = getUniqueVisitors().length;
-            const clicks = getButtonClicks().length;
-            return visitors > 0 ? Math.round((clicks / visitors) * 100) : 0;
-        }
-
-        // Calcula tempo médio
-        function calculateAverageTime() {
-            const timeEntries = trackingData.filter(entry => entry.type === 'time_tracking');
-            if (timeEntries.length === 0) return 0;
-            
-            const totalTime = timeEntries.reduce((sum, entry) => sum + (entry.data.timeOnPage || 0), 0);
-            return Math.round(totalTime / timeEntries.length);
-        }
-
-        // Atualiza lista de pessoas que clicaram nos botões
-        function updateClickersList() {
-            const clickersList = document.getElementById('clickersList');
-            const clickersCount = document.getElementById('clickersCount');
-            if (!clickersList) {
-                console.log('❌ Elemento clickersList não encontrado');
-                return;
-            }
-            
-            console.log('🔄 Atualizando lista de cliques...');
-            console.log('📊 Dados disponíveis:', trackingData.length);
-            
-            const visitors = getUniqueVisitors();
-            console.log('👥 Visitantes únicos:', visitors.length);
-            
-            const clickers = visitors.filter(sessionId => {
-                const visitorData = trackingData.filter(entry => entry.sessionId === sessionId);
-                const hasClicks = visitorData.some(entry => entry.type === 'button_click');
-                console.log(`🔍 Visitante ${sessionId}: ${hasClicks ? 'TEM cliques' : 'SEM cliques'}`);
-                return hasClicks;
-            });
-            
-            console.log('🛒 Pessoas que clicaram:', clickers.length);
-            
-            if (clickersCount) {
-                clickersCount.textContent = `${clickers.length} pessoas`;
-            }
-            
-            if (clickers.length === 0) {
-                clickersList.innerHTML = '<p class="text-gray-400 text-center py-4">Nenhuma pessoa clicou nos botões ainda</p>';
-                return;
-            }
-            
-            clickersList.innerHTML = clickers.slice(0, 8).map(sessionId => {
-                const visitorData = trackingData.filter(entry => entry.sessionId === sessionId);
-                const device = visitorData.find(entry => entry.type === 'device_info');
-                const clicks = visitorData.filter(entry => entry.type === 'button_click');
-                const latestEntry = visitorData[visitorData.length - 1];
+            processVisitorData(allData) {
+                this.visitors.clear();
                 
-                return `
-                    <div class="visitor-card rounded-lg p-4 border-l-4 border-green-500">
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center">
-                                    <span class="text-white font-bold text-sm">C</span>
+                // Agrupar dados por sessionId
+                const sessions = {};
+                allData.forEach(entry => {
+                    if (!sessions[entry.sessionId]) {
+                        sessions[entry.sessionId] = {
+                            sessionId: entry.sessionId,
+                            visitorNumber: this.visitorCounter++,
+                            firstSeen: entry.timestamp,
+                            lastSeen: entry.timestamp,
+                            totalVisits: 0,
+                            totalClicks: 0,
+                            device: null,
+                            location: null,
+                            events: [],
+                            packageClicks: new Map()
+                        };
+                    }
+                    
+                    const visitor = sessions[entry.sessionId];
+                    visitor.lastSeen = entry.timestamp;
+                    visitor.events.push(entry);
+                    
+                    if (entry.type === 'page_view') {
+                        visitor.totalVisits++;
+                    } else if (entry.type === 'button_click') {
+                        visitor.totalClicks++;
+                        const packageName = entry.data.packageName || 'Desconhecido';
+                        visitor.packageClicks.set(packageName, (visitor.packageClicks.get(packageName) || 0) + 1);
+                    } else if (entry.type === 'device_info') {
+                        visitor.device = entry.data.device || 'desktop';
+                    }
+                });
+                
+                // Converter para Map
+                Object.values(sessions).forEach(visitor => {
+                    this.visitors.set(visitor.sessionId, visitor);
+                });
+            }
+
+            setupEventListeners() {
+                // Escutar mudanças no localStorage
+                window.addEventListener('storage', (e) => {
+                    if (e.key === 'playboy_visitor_data') {
+                        this.loadInitialData();
+                    }
+                });
+                
+                // Escutar eventos customizados
+                window.addEventListener('playboyDataUpdate', (e) => {
+                    this.loadInitialData();
+                });
+            }
+
+            startRealTimeSync() {
+                // Verificar mudanças a cada 2 segundos
+                setInterval(() => {
+                    this.loadInitialData();
+                }, 2000);
+            }
+
+            updateInterface() {
+                this.renderVisitorsList();
+                this.renderVisitorTabs();
+                this.updateVisitorCount();
+                
+                if (this.activeVisitor) {
+                    this.renderVisitorDetails();
+                }
+            }
+
+            renderVisitorsList() {
+                const container = document.getElementById('visitorsList');
+                const sortedVisitors = Array.from(this.visitors.values())
+                    .sort((a, b) => new Date(b.lastSeen) - new Date(a.lastSeen));
+
+                container.innerHTML = sortedVisitors.map(visitor => {
+                    const isActive = this.activeVisitor === visitor.sessionId;
+                    const isReturning = visitor.totalVisits > 1;
+                    
+                    return `
+                        <div class="visitor-tab ${isActive ? 'active' : ''}" 
+                             onclick="monitor.selectVisitor('${visitor.sessionId}')">
+                            <div class="flex items-center justify-between p-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
+                                        <span class="text-white font-bold text-sm">${visitor.visitorNumber}</span>
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="font-semibold">Visitante ${visitor.visitorNumber}</span>
+                                            ${isReturning ? '<span class="text-xs bg-yellow-600 text-white px-2 py-1 rounded">Retornou</span>' : ''}
+                                        </div>
+                                        <div class="text-sm text-gray-400">
+                                            ${visitor.device || 'Desktop'} • ${this.formatTime(visitor.lastSeen)}
+                                        </div>
+                                        <div class="text-xs text-gray-500">
+                                            ${visitor.totalVisits} visitas • ${visitor.totalClicks} cliques
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="online-indicator"></div>
+                                    <span class="text-xs text-gray-400">Online</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            renderVisitorTabs() {
+                const container = document.getElementById('visitorTabs');
+                const sortedVisitors = Array.from(this.visitors.values())
+                    .sort((a, b) => new Date(b.lastSeen) - new Date(a.lastSeen));
+
+                container.innerHTML = sortedVisitors.map(visitor => {
+                    const isActive = this.activeVisitor === visitor.sessionId;
+                    
+                    return `
+                        <div class="inline-block mr-2">
+                            <button class="px-4 py-2 rounded-lg text-sm font-medium transition ${isActive ? 'bg-red-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}"
+                                    onclick="monitor.selectVisitor('${visitor.sessionId}')">
+                                Visitante ${visitor.visitorNumber}
+                                ${visitor.totalVisits > 1 ? ' 🔄' : ''}
+                            </button>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            selectVisitor(sessionId) {
+                this.activeVisitor = sessionId;
+                this.renderVisitorsList();
+                this.renderVisitorTabs();
+                this.renderVisitorDetails();
+            }
+
+            renderVisitorDetails() {
+                if (!this.activeVisitor) {
+                    document.getElementById('visitorContent').innerHTML = `
+                        <div class="text-center text-gray-400 py-12">
+                            <div class="text-6xl mb-4">👁️</div>
+                            <h3 class="text-xl font-semibold mb-2">Selecione um Visitante</h3>
+                            <p>Escolha um visitante na lista lateral para ver os detalhes</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const visitor = this.visitors.get(this.activeVisitor);
+                if (!visitor) return;
+
+                const events = visitor.events || [];
+                const packageClicks = Array.from(visitor.packageClicks.entries());
+
+                document.getElementById('visitorContent').innerHTML = `
+                    <div class="space-y-6">
+                        <!-- Informações do Visitante -->
+                        <div class="bg-gray-800/50 rounded-lg p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-xl font-semibold">Visitante ${visitor.visitorNumber}</h3>
+                                <div class="flex items-center gap-2">
+                                    <div class="online-indicator"></div>
+                                    <span class="text-sm text-green-400">Online</span>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                                <div>
+                                    <p class="text-sm text-gray-400">UUID</p>
+                                    <p class="font-mono text-xs">${visitor.sessionId}</p>
                                 </div>
                                 <div>
-                                    <p class="font-semibold">Visitante ${sessionId.slice(-6)}</p>
-                                    <p class="text-sm text-gray-400">${new Date(latestEntry?.timestamp).toLocaleString()}</p>
+                                    <p class="text-sm text-gray-400">Dispositivo</p>
+                                    <span class="device-badge">${visitor.device || 'Desktop'}</span>
                                 </div>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                                <span class="text-sm text-green-400">${clicks.length} cliques</span>
-                            </div>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div>
-                                <p class="text-sm text-gray-400">Dispositivo</p>
-                                <div class="flex items-center gap-2 mt-1">
-                                    <span class="device-badge text-xs px-2 py-1 rounded">${getDeviceType(device?.data?.userAgent)}</span>
+                                <div>
+                                    <p class="text-sm text-gray-400">Primeira Visita</p>
+                                    <span class="text-sm">${this.formatTime(visitor.firstSeen)}</span>
                                 </div>
                             </div>
                             
-                            <div>
-                                <p class="text-sm text-gray-400">Localização</p>
-                                <div class="flex items-center gap-2 mt-1">
-                                    <span class="location-badge text-xs px-2 py-1 rounded">${device?.data?.city || 'Não identificada'}</span>
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                <div class="text-center">
+                                    <p class="text-2xl font-bold text-blue-400">${visitor.totalVisits}</p>
+                                    <p class="text-sm text-gray-400">Visitas</p>
                                 </div>
-                            </div>
-                            
-                            <div>
-                                <p class="text-sm text-gray-400">Último Clique</p>
-                                <div class="flex items-center gap-2 mt-1">
-                                    <span class="text-xs text-green-400">${clicks[clicks.length - 1]?.data?.packageName || 'N/A'}</span>
+                                <div class="text-center">
+                                    <p class="text-2xl font-bold text-green-400">${visitor.totalClicks}</p>
+                                    <p class="text-sm text-gray-400">Cliques</p>
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-2xl font-bold text-purple-400">${packageClicks.length}</p>
+                                    <p class="text-sm text-gray-400">Pacotes</p>
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-2xl font-bold text-orange-400">${events.length}</p>
+                                    <p class="text-sm text-gray-400">Eventos</p>
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="mt-3 pt-3 border-t border-gray-700">
-                            <p class="text-sm text-gray-400 mb-2">Todos os cliques:</p>
-                            <div class="space-y-1">
-                                ${clicks.map(click => `
-                                    <div class="flex items-center justify-between text-sm">
-                                        <span>${click.data.packageName}</span>
-                                        <span class="text-green-400 font-semibold">${click.data.price}</span>
+
+                        <!-- Cliques por Pacote -->
+                        ${packageClicks.length > 0 ? `
+                        <div class="bg-gray-800/50 rounded-lg p-6">
+                            <h4 class="text-lg font-semibold mb-4">Cliques por Pacote</h4>
+                            <div class="space-y-2">
+                                ${packageClicks.map(([packageName, count]) => `
+                                    <div class="flex items-center justify-between p-3 bg-gray-700/50 rounded-lg">
+                                        <span class="package-badge">${packageName}</span>
+                                        <span class="text-lg font-bold text-green-400">${count}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        ` : ''}
+
+                        <!-- Timeline de Eventos -->
+                        <div class="bg-gray-800/50 rounded-lg p-6">
+                            <h4 class="text-lg font-semibold mb-4">Timeline de Eventos</h4>
+                            <div class="space-y-3 max-h-96 overflow-y-auto">
+                                ${events.slice(-20).reverse().map(event => `
+                                    <div class="event-item event-${event.type}">
+                                        <div class="flex items-center justify-between">
+                                            <div>
+                                                <span class="font-semibold">${this.getEventLabel(event.type)}</span>
+                                                ${event.data.packageName ? `<span class="package-badge ml-2">${event.data.packageName}</span>` : ''}
+                                            </div>
+                                            <span class="text-xs text-gray-400">${this.formatTime(event.timestamp)}</span>
+                                        </div>
+                                        ${event.data.title ? `<p class="text-sm text-gray-300 mt-1">${event.data.title}</p>` : ''}
+                                        ${event.data.url ? `<p class="text-xs text-gray-500 mt-1">${event.data.url}</p>` : ''}
                                     </div>
                                 `).join('')}
                             </div>
                         </div>
                     </div>
                 `;
-            }).join('');
-        }
+            }
 
-        // Atualiza lista de pessoas apenas visitando (sem ações)
-        function updateViewersList() {
-            const viewersList = document.getElementById('viewersList');
-            const viewersCount = document.getElementById('viewersCount');
-            if (!viewersList) {
-                console.log('❌ Elemento viewersList não encontrado');
-                return;
+            updateVisitorCount() {
+                const count = this.visitors.size;
+                document.getElementById('visitorCount').textContent = `${count} visitante${count !== 1 ? 's' : ''}`;
             }
-            
-            console.log('🔄 Atualizando lista de visualizadores...');
-            
-            const visitors = getUniqueVisitors();
-            const viewers = visitors.filter(sessionId => {
-                const visitorData = trackingData.filter(entry => entry.sessionId === sessionId);
-                return !visitorData.some(entry => entry.type === 'button_click');
-            });
-            
-            viewersCount.textContent = `${viewers.length} pessoas`;
-            
-            if (viewers.length === 0) {
-                viewersList.innerHTML = '<p class="text-gray-400 text-center py-4">Todas as pessoas estão interagindo com o site</p>';
-                return;
+
+            getEventLabel(type) {
+                const labels = {
+                    'page_view': '📄 Página Visualizada',
+                    'button_click': '🛒 Clique em Pacote',
+                    'time_tracking': '⏱️ Tempo na Página',
+                    'device_info': '📱 Informações do Dispositivo'
+                };
+                return labels[type] || type;
             }
-            
-            viewersList.innerHTML = viewers.slice(0, 6).map(sessionId => {
-                const visitorData = trackingData.filter(entry => entry.sessionId === sessionId);
-                const device = visitorData.find(entry => entry.type === 'device_info');
-                const latestEntry = visitorData[visitorData.length - 1];
+
+            formatTime(timestamp) {
+                const date = new Date(timestamp);
+                const now = new Date();
+                const diff = now - date;
                 
-                return `
-                    <div class="visitor-card rounded-lg p-4 border-l-4 border-blue-500">
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-                                    <span class="text-white font-bold text-sm">V</span>
-                                </div>
-                                <div>
-                                    <p class="font-semibold">Visitante ${sessionId.slice(-6)}</p>
-                                    <p class="text-sm text-gray-400">${new Date(latestEntry?.timestamp).toLocaleString()}</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <div class="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
-                                <span class="text-sm text-blue-400">Apenas visualizando</span>
-                            </div>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <p class="text-sm text-gray-400">Dispositivo</p>
-                                <div class="flex items-center gap-2 mt-1">
-                                    <span class="device-badge text-xs px-2 py-1 rounded">${getDeviceType(device?.data?.userAgent)}</span>
-                                </div>
-                            </div>
-                            
-                            <div>
-                                <p class="text-sm text-gray-400">Localização</p>
-                                <div class="flex items-center gap-2 mt-1">
-                                    <span class="location-badge text-xs px-2 py-1 rounded">${device?.data?.city || 'Não identificada'}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+                if (diff < 60000) return 'Agora';
+                if (diff < 3600000) return `${Math.floor(diff / 60000)}min atrás`;
+                if (diff < 86400000) return `${Math.floor(diff / 3600000)}h atrás`;
+                return date.toLocaleString('pt-BR');
+            }
         }
 
-        // Atualiza estatísticas de dispositivos
-        function updateDeviceStats() {
-            const deviceStats = document.getElementById('deviceStats');
-            if (!deviceStats) {
-                console.log('❌ Elemento deviceStats não encontrado');
-                return;
-            }
-            
-            console.log('🔄 Atualizando estatísticas de dispositivos...');
-            
-            const deviceClicks = {};
-            const deviceTypes = {};
-            
-            trackingData.forEach(entry => {
-                if (entry.type === 'device_info') {
-                    const deviceType = getDeviceType(entry.data.userAgent);
-                    deviceTypes[deviceType] = (deviceTypes[deviceType] || 0) + 1;
-                }
-                if (entry.type === 'button_click') {
-                    const sessionId = entry.sessionId;
-                    const deviceEntry = trackingData.find(d => d.sessionId === sessionId && d.type === 'device_info');
-                    if (deviceEntry) {
-                        const deviceType = getDeviceType(deviceEntry.data.userAgent);
-                        deviceClicks[deviceType] = (deviceClicks[deviceType] || 0) + 1;
-                    }
-                }
-            });
-            
-            const sortedDevices = Object.entries(deviceTypes)
-                .sort(([,a], [,b]) => b - a)
-                .slice(0, 5);
-            
-            deviceStats.innerHTML = sortedDevices.map(([device, count]) => {
-                const clicks = deviceClicks[device] || 0;
-                const clickRate = count > 0 ? Math.round((clicks / count) * 100) : 0;
-                
-                return `
-                    <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                                <span class="text-white font-bold text-xs">${device.slice(0, 1)}</span>
-                            </div>
-                            <div>
-                                <p class="font-semibold">${device}</p>
-                                <p class="text-sm text-gray-400">${count} visitantes</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-lg font-bold text-blue-400">${clicks}</p>
-                            <p class="text-sm text-gray-400">${clickRate}% clicaram</p>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Atualiza estatísticas de pacotes
-        function updatePackageStats() {
-            const packageStats = document.getElementById('packageStats');
-            if (!packageStats) {
-                console.log('❌ Elemento packageStats não encontrado');
-                return;
-            }
-            
-            console.log('🔄 Atualizando estatísticas de pacotes...');
-            
-            const packageClicks = {};
-            
-            trackingData.forEach(entry => {
-                if (entry.type === 'button_click') {
-                    const packageName = entry.data.packageName;
-                    packageClicks[packageName] = (packageClicks[packageName] || 0) + 1;
-                }
-            });
-            
-            const sortedPackages = Object.entries(packageClicks)
-                .sort(([,a], [,b]) => b - a);
-            
-            if (sortedPackages.length === 0) {
-                packageStats.innerHTML = '<p class="text-gray-400 text-center py-4">Nenhum pacote foi clicado ainda</p>';
-                return;
-            }
-            
-            packageStats.innerHTML = sortedPackages.map(([packageName, clicks]) => {
-                const isPremium = packageName.includes('Premium');
-                const color = isPremium ? 'red' : 'green';
-                const icon = isPremium ? '👑' : '💎';
-                
-                return `
-                    <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 bg-${color}-600 rounded-full flex items-center justify-center">
-                                <span class="text-white text-sm">${icon}</span>
-                            </div>
-                            <div>
-                                <p class="font-semibold">${packageName}</p>
-                                <p class="text-sm text-gray-400">${clicks} cliques</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-lg font-bold text-${color}-400">${clicks}</p>
-                            <p class="text-sm text-gray-400">cliques</p>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Determina tipo de dispositivo
-        function getDeviceType(userAgent) {
-            if (!userAgent) return 'Desconhecido';
-            const ua = userAgent.toLowerCase();
-            if (/mobile|android|iphone/.test(ua)) return 'Mobile';
-            if (/tablet|ipad/.test(ua)) return 'Tablet';
-            return 'Desktop';
-        }
-
-        // Gráficos removidos - apenas lista de estados
-
-        // Lista de visitantes por estado - VERSÃO TEMPO REAL
-        function updateLocationList() {
-            const locationList = document.getElementById('locationList');
-            if (!locationList) {
-                console.log('❌ Elemento locationList não encontrado');
-                return;
-            }
-            
-            console.log('🔄 Atualizando lista de estados...');
-            
-            const locations = {};
-            
-            // Processa dados reais de localização
-            trackingData.forEach(entry => {
-                if (entry.type === 'device_info' && entry.data.state) {
-                    const state = entry.data.state;
-                    locations[state] = (locations[state] || 0) + 1;
-                }
-            });
-
-            // Ordena por número de visitantes
-            const sortedLocations = Object.entries(locations)
-                .sort(([,a], [,b]) => b - a)
-                .slice(0, 5);
-
-            const totalVisitors = Object.values(locations).reduce((sum, count) => sum + count, 0);
-
-            if (sortedLocations.length === 0) {
-                locationList.innerHTML = '<p class="text-gray-400 text-center py-4">Nenhum dado de localização disponível</p>';
-                return;
-            }
-
-            locationList.innerHTML = sortedLocations.map(([state, count]) => {
-                const percentage = totalVisitors > 0 ? Math.round((count / totalVisitors) * 100) : 0;
-                
-                return `
-                    <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg hover:bg-gray-700/50 transition">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
-                                <span class="text-white font-bold text-xs">${state.slice(0, 2)}</span>
-                            </div>
-                            <div>
-                                <p class="font-semibold">${state}</p>
-                                <p class="text-sm text-gray-400">${count} visitante${count !== 1 ? 's' : ''}</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-lg font-bold text-red-400">${count}</p>
-                            <p class="text-sm text-gray-400">${percentage}%</p>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Atualiza dados
+        // Funções globais
         function refreshData() {
-            console.log('🔄 Atualizando dados manualmente...');
-            
-            loadTrackingData();
-            updateStats();
-            updateClickersList();
-            updateViewersList();
-            updateDeviceStats();
-            updatePackageStats();
-            updateLocationList();
-            
-            // Mostra notificação
-            const button = event.target;
-            const originalText = button.textContent;
-            button.textContent = '✅ Atualizado!';
-            button.disabled = true;
-            
-            setTimeout(() => {
-                button.textContent = originalText;
-                button.disabled = false;
-            }, 2000);
+            if (window.monitor) {
+                window.monitor.loadInitialData();
+                console.log('🔄 Dados atualizados!');
+            }
         }
 
-        // Atualiza timestamp da última atualização
-        function updateTimestamp() {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('pt-BR', { 
-                hour: '2-digit', 
-                minute: '2-digit',
-                second: '2-digit'
-            });
-            document.getElementById('updateTime').textContent = timeString;
-        }
-
-        // Mostra notificação de atualização
-        function showUpdateNotification() {
-            const status = document.getElementById('systemStatus');
-            const originalText = status.textContent;
-            status.textContent = 'Dados Atualizados!';
-            status.className = 'text-sm text-yellow-400';
-            
-            setTimeout(() => {
-                status.textContent = originalText;
-                status.className = 'text-sm text-green-400';
-            }, 2000);
-        }
-
-        // Inicializa quando a página carrega
-        document.addEventListener('DOMContentLoaded', function() {
-            // Aguarda um pouco para garantir que tudo está carregado
-            setTimeout(initDashboard, 100);
+        // Inicializar quando DOM estiver pronto
+        document.addEventListener('DOMContentLoaded', () => {
+            window.monitor = new PlayboyMonitor();
         });
     </script>
 </body>
