@@ -35,7 +35,59 @@
     html, body { background: #0b0b0b; }
     .reveal { opacity: 0; transform: translateY(16px); }
     .revealed { opacity: 1; transform: translateY(0); transition: opacity .8s ease, transform .8s ease; }
+    .carousel { overflow: hidden; }
+    .carousel-track { display: flex; gap: .75rem; width: 200%; }
+    .carousel-item { flex: 0 0 20%; }
+    @media (max-width: 640px) { .carousel-item { flex-basis: 33.333%; } }
+    @keyframes scroll-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .animate-scroll { animation: scroll-left 25s linear infinite; }
+    .purchase-notification {
+      position: fixed; bottom: 20px; right: 20px;
+      background: linear-gradient(135deg,#006600,#004400);
+      color: white; padding: 6px 10px; border-radius: 6px;
+      box-shadow: 0 2px 10px rgba(0,100,0,0.4);
+      z-index: 1000; transform: translateX(300px);
+      transition: transform 0.4s ease;
+      max-width: 180px; font-size: 11px; font-weight: bold; line-height: 1.2;
+      border-left: 3px solid #00aa00;
+    }
+    .purchase-notification.show { transform: translateX(0); }
   </style>
+
+  <!-- ✅ Novo Pixel UTMify -->
+  <script> 
+    window.pixelId = "68eefd737f9bd613fafc7bb2"; 
+    var a = document.createElement("script"); 
+    a.setAttribute("async", ""); 
+    a.setAttribute("defer", ""); 
+    a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js"); 
+    document.head.appendChild(a); 
+  </script> 
+  <script 
+    src="https://cdn.utmify.com.br/scripts/utms/latest.js" 
+    data-utmify-prevent-xcod-sck 
+    data-utmify-prevent-subids 
+    async 
+    defer>
+  </script>
+
+  <!-- ✅ Meta Pixel -->
+  <script>
+    !(function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)})(window,document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init','728458327023332');
+    fbq('track','PageView');
+  </script>
+  <noscript>
+    <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=728458327023332&ev=PageView&noscript=1"/>
+  </noscript>
 </head>
 <body class="bg-black text-white antialiased selection:bg-brand-red selection:text-white">
   <!-- Header -->
@@ -69,6 +121,81 @@
     </div>
   </section>
 
+  <!-- Galeria -->
+  <section class="border-t border-white/10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+      <div class="reveal text-center mb-10">
+        <h2 class="text-2xl sm:text-4xl font-extrabold">O que você vai receber</h2>
+        <p class="mt-3 text-white/60">Capas, previews borrados e bastidores quentes.</p>
+      </div>
+
+      <div class="reveal carousel">
+        <div class="carousel-track animate-scroll">
+          <div class="carousel-item"><img src="1.jpg" class="rounded-lg blur-sm scale-110" alt=""></div>
+          <div class="carousel-item"><img src="2.jpg" class="rounded-lg blur-sm scale-110" alt=""></div>
+          <div class="carousel-item"><img src="3.jpg" class="rounded-lg blur-sm scale-110" alt=""></div>
+          <div class="carousel-item"><img src="4.jpg" class="rounded-lg blur-sm scale-110" alt=""></div>
+          <div class="carousel-item"><img src="5.jpg" class="rounded-lg blur-sm scale-110" alt=""></div>
+          <div class="carousel-item"><img src="6.jpg" class="rounded-lg blur-sm scale-110" alt=""></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Prova Social -->
+  <section class="border-t border-white/10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+      <div class="reveal text-center mb-10">
+        <h2 class="text-2xl sm:text-4xl font-extrabold">✅ 15.847 colecionadores satisfeitos</h2>
+        <p class="mt-3 text-white/60">Depoimentos reais de quem já adquiriu</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div class="reveal rounded-lg border border-white/10 bg-white/5 p-6">
+          <div class="flex items-center mb-4">
+            <img src="https://i.postimg.cc/VkzWy7dr/Whats-App-Image-2025-09-08-at-14-32-59.jpg" class="w-12 h-12 rounded-full object-cover" />
+            <div class="ml-3">
+              <div class="font-semibold">João Silva</div>
+              <div class="text-sm text-white/60">São Paulo, SP</div>
+            </div>
+          </div>
+          <span class="text-yellow-400">⭐⭐⭐⭐⭐</span>
+          <p class="text-white/80 italic mt-2">"Consegui completar minha coleção! Qualidade incrível, recomendo 100%!"</p>
+        </div>
+
+        <div class="reveal rounded-lg border border-white/10 bg-white/5 p-6">
+          <div class="flex items-center mb-4">
+            <img src="https://i.postimg.cc/52pqfwCf/Whats-App-Image-2025-09-08-at-14-32-59-1.jpg" class="w-12 h-12 rounded-full object-cover" />
+            <div class="ml-3">
+              <div class="font-semibold">Maria Santos</div>
+              <div class="text-sm text-white/60">Rio de Janeiro, RJ</div>
+            </div>
+          </div>
+          <span class="text-yellow-400">⭐⭐⭐⭐⭐</span>
+          <p class="text-white/80 italic mt-2">"Acesso rápido e tudo completo, fiquei impressionada!"</p>
+        </div>
+
+        <div class="reveal rounded-lg border border-white/10 bg-white/5 p-6">
+          <div class="flex items-center mb-4">
+            <img src="https://i.postimg.cc/7ZqnvBfC/Whats-App-Image-2025-09-08-at-14-32-59-2.jpg" class="w-12 h-12 rounded-full object-cover" />
+            <div class="ml-3">
+              <div class="font-semibold">Carlos Oliveira</div>
+              <div class="text-sm text-white/60">Belo Horizonte, MG</div>
+            </div>
+          </div>
+          <span class="text-yellow-400">⭐⭐⭐⭐⭐</span>
+          <p class="text-white/80 italic mt-2">"Coleção rara e organizada. Excelente investimento!"</p>
+        </div>
+      </div>
+
+      <div class="reveal text-center mt-8">
+        <div class="inline-flex items-center gap-2 bg-green-900/20 border border-green-500 rounded-lg px-4 py-2">
+          <span class="text-green-400">✅</span>
+          <span class="text-green-400 font-semibold">Aprovado por 98% dos compradores</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Pacotes -->
   <section id="pacotes" class="border-t border-white/10">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
@@ -90,10 +217,7 @@
             <li>◆ Acesso imediato após pagamento</li>
             <li>◆ 7 Dias de garantia</li>
           </ul>
-          <button 
-            data-pacote="Pacote Sedução"
-            onclick="window.location.href='https://pay.cakto.com.br/pcytvby_607625';" 
-            class="mt-6 inline-flex w-full items-center justify-center rounded-md bg-brand-red hover:bg-brand-redDark px-6 py-3 font-bold uppercase tracking-wide shadow-glow transition">
+          <button onclick="fbq('track', 'InitiateCheckout', {content_name:'Pacote Sedução', value:10.00, currency:'BRL'}); window.location.href='https://pay.cakto.com.br/pcytvby_607625';" class="mt-6 inline-flex w-full items-center justify-center rounded-md bg-brand-red hover:bg-brand-redDark px-6 py-3 font-bold uppercase tracking-wide shadow-glow transition">
             LIBERAR PACOTE
           </button>
         </div>
@@ -113,12 +237,32 @@
             <li>◆ Bastidores nunca vistos com as maiores musas do Brasil</li>
             <li>◆ 7 Dias de garantia total</li>
           </ul>
-          <button 
-            data-pacote="Pacote Premium"
-            onclick="window.location.href='https://pay.cakto.com.br/c2a2g68_607613';" 
-            class="mt-6 inline-flex w-full items-center justify-center rounded-md bg-brand-red hover:bg-brand-redDark px-6 py-3 font-bold uppercase tracking-wide shadow-glow transition">
+          <button onclick="fbq('track', 'InitiateCheckout', {content_name:'Pacote Premium', value:19.90, currency:'BRL'}); window.location.href='https://pay.cakto.com.br/c2a2g68_607613';" class="mt-6 inline-flex w-full items-center justify-center rounded-md bg-brand-red hover:bg-brand-redDark px-6 py-3 font-bold uppercase tracking-wide shadow-glow transition">
             LIBERAR PACOTE
           </button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- FAQ -->
+  <section id="faq" class="border-t border-white/10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+      <div class="reveal text-center mb-10">
+        <h2 class="text-2xl sm:text-4xl font-extrabold">Perguntas Frequentes</h2>
+      </div>
+
+      <div class="grid gap-5">
+        <div class="rounded-lg border border-white/10 bg-white/5 p-5">
+          <h3 class="font-semibold text-lg">Como recebo o acesso?</h3>
+          <p class="mt-2 text-white/70">Após o pagamento, o link é enviado automaticamente ao seu e-mail.</p>
+        </div>
+        <div class="rounded-lg border border-white/10 bg-white/5 p-5">
+          <h3 class="font-semibold text-lg">O pagamento é seguro?</h3>
+          <p class="mt-2 text-white/70">Sim. O checkout da Cakto usa criptografia e gateways certificados.</p>
+        </div>
+        <div class="rounded-lg border border-white/10 bg-white/5 p-5">
+          <h3 class="font-semibold text-lg">Posso pedir reembolso?</h3>
+          <p class="mt-2 text-white/70">Sim. Você tem 7 dias de garantia incondicional.</p>
         </div>
       </div>
     </div>
@@ -146,13 +290,18 @@
         if(e.isIntersecting){
           e.target.classList.add('revealed');
           io.unobserve(e.target);
+          // ✅ Dispara evento de ViewContent quando o visitante vê os pacotes
+          if(e.target.id === 'pacotes'){
+            console.log('📈 Evento ViewContent disparado');
+            fbq('track', 'ViewContent', {content_name:'Pacotes Playboy', value:0, currency:'BRL'});
+          }
         }
       });
     },{threshold:0.15});
     document.querySelectorAll('.reveal, #pacotes').forEach(el=>io.observe(el));
   </script>
 
-  <!-- 🎯 SISTEMA DE MONITORAMENTO CORRIGIDO -->
+  <!-- Sistema de Tracking para Monitoramento -->
   <script>
     (function() {
       'use strict';
@@ -177,18 +326,7 @@
         }
 
         generateSessionId() {
-          // Verificar se já existe um ID persistente
-          let existingId = localStorage.getItem('playboy_visitor_id');
-          if (existingId) {
-            console.log('🔄 Visitante existente encontrado:', existingId);
-            return existingId;
-          }
-          
-          // Gerar novo ID único e persistente
-          const newId = 'playboy_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-          localStorage.setItem('playboy_visitor_id', newId);
-          console.log('🆕 Novo visitante criado:', newId);
-          return newId;
+          return 'playboy_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
         }
 
         loadVisitorData() {
@@ -198,19 +336,6 @@
 
         saveVisitorData() {
           localStorage.setItem('playboy_visitor_data', JSON.stringify(this.visitorData));
-          // Emitir evento para sincronização
-          this.emitUpdateEvent();
-        }
-
-        emitUpdateEvent() {
-          // Emitir evento customizado para sincronização entre abas
-          window.dispatchEvent(new CustomEvent('playboyDataUpdate', {
-            detail: {
-              data: this.visitorData,
-              sessionId: this.sessionId,
-              timestamp: new Date().toISOString()
-            }
-          }));
         }
 
         init() {
@@ -242,6 +367,8 @@
           });
         }
 
+        // Geolocalização removida por privacidade
+
         trackDeviceInfo() {
           const deviceInfo = {
             userAgent: navigator.userAgent,
@@ -253,8 +380,7 @@
             windowHeight: window.innerHeight,
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
             cookieEnabled: navigator.cookieEnabled,
-            onlineStatus: navigator.onLine,
-            device: this.getDeviceType()
+            onlineStatus: navigator.onLine
           };
 
           this.visitorData.push({
@@ -268,6 +394,22 @@
         trackButtonClicks() {
           // Aguarda o DOM estar pronto
           const waitForDOM = () => {
+            // Detecta botões específicos do seu site
+            const seducaoButton = document.querySelector('button[onclick*="Pacote Sedução"]');
+            const premiumButton = document.querySelector('button[onclick*="Pacote Premium"]');
+            
+            if (seducaoButton) {
+              seducaoButton.addEventListener('click', (e) => {
+                this.recordButtonClick('Pacote Sedução', 'R$ 10,00', e.target);
+              });
+            }
+
+            if (premiumButton) {
+              premiumButton.addEventListener('click', (e) => {
+                this.recordButtonClick('Pacote Premium', 'R$ 19,90', e.target);
+              });
+            }
+
             // Detecta todos os botões "LIBERAR PACOTE"
             const allButtons = document.querySelectorAll('button, a');
             allButtons.forEach(button => {
@@ -353,6 +495,16 @@
           }, 30000); // A cada 30 segundos
         }
 
+        getCurrentVisitorData() {
+          return {
+            sessionId: this.sessionId,
+            startTime: this.startTime,
+            pageViews: this.pageViews,
+            buttonClicks: this.buttonClicks,
+            deviceType: this.getDeviceType()
+          };
+        }
+
         getDeviceType() {
           const userAgent = navigator.userAgent.toLowerCase();
           if (/mobile|android|iphone|ipad|tablet/.test(userAgent)) {
@@ -379,6 +531,28 @@
 
       console.log('✅ Playboy Tracker carregado com sucesso!');
     })();
+  </script>
+
+  <!-- Notificações automáticas -->
+  <script>
+    const nomes=['João','Carlos','Pedro','Rafael','Lucas','Diego','Gabriel','Thiago','André','Felipe','Bruno','Rodrigo','Marcos','Alexandre','Vinícius','Eduardo','Fernando','Ricardo','Paulo','Antônio','José','Roberto','Daniel','Miguel','Henrique','Leonardo','Gustavo','Fábio','Sérgio','Márcio','César','Vitor'];
+    const pacotes=[{name:'Pacote Sedução',price:'R$10,00'},{name:'Pacote Premium',price:'R$19,90'}];
+    function mostrarNotificacao(){
+      const existente=document.querySelector('.purchase-notification');
+      if(existente) existente.remove();
+      const nome=nomes[Math.floor(Math.random()*nomes.length)];
+      const pacote=pacotes[Math.floor(Math.random()*pacotes.length)];
+      const n=document.createElement('div');
+      n.className='purchase-notification';
+      n.innerHTML=`<div class="name">${nome}</div><div class="package">acabou de comprar o ${pacote.name}</div><div class="time">há poucos segundos</div>`;
+      document.body.appendChild(n);
+      setTimeout(()=>n.classList.add('show'),100);
+      setTimeout(()=>{n.classList.remove('show'); setTimeout(()=>n.remove(),500);},4000);
+    }
+    document.addEventListener('DOMContentLoaded',()=>{
+      mostrarNotificacao();
+      setInterval(mostrarNotificacao,20000);
+    });
   </script>
 </body>
 </html>
