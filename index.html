@@ -242,8 +242,17 @@
   </section>
 
   <!-- Pacotes -->
+   <!-- Pacotes -->
   <section id="pacotes" class="border-t border-white/10">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+
+      <!-- Contador de urgência -->
+      <div class="text-center mb-6">
+        <p id="contador-topo" class="text-brand-red font-bold text-sm sm:text-base">
+          ⚡ Oferta expira em <span id="tempo-restante">05:00</span>
+        </p>
+      </div>
+
       <div class="reveal text-center mb-10">
         <h2 class="text-2xl sm:text-4xl font-extrabold">Escolha seu pacote</h2>
         <p class="mt-3 text-white/60">Acesso imediato, download seguro e atualizações vitalícias.</p>
@@ -254,7 +263,10 @@
         <div class="reveal rounded-xl border border-white/10 bg-white/5 p-6 hover:bg-white/[.07] transition">
           <div class="flex items-baseline justify-between">
             <h3 class="text-xl font-bold">Pacote Sedução</h3>
-            <span class="text-brand-red text-2xl font-extrabold">R$10,00</span>
+            <div class="text-right">
+              <span class="text-white/50 text-sm line-through block">De R$57,90</span>
+              <span class="text-brand-red text-2xl font-extrabold">Por R$10,00</span>
+            </div>
           </div>
           <ul class="mt-4 text-white/80 space-y-2">
             <li>◆ +200 ensaios exclusivos em alta qualidade</li>
@@ -274,7 +286,10 @@
           <div class="absolute -top-3 left-6 text-[11px] px-2 py-1 rounded bg-brand-red text-white font-extrabold tracking-wider">MAIS POPULAR</div>
           <div class="flex items-baseline justify-between">
             <h3 class="text-xl font-bold">Pacote Premium</h3>
-            <span class="text-brand-red text-2xl font-extrabold">R$19,90</span>
+            <div class="text-right">
+              <span class="text-white/50 text-sm line-through block">De R$97,90</span>
+              <span class="text-brand-red text-2xl font-extrabold">Por R$19,90</span>
+            </div>
           </div>
           <ul class="mt-4 text-white/80 space-y-2">
             <li>◆ Inclui tudo do Pacote Sedução</li>
@@ -294,6 +309,20 @@
       </div>
     </div>
   </section>
+
+  <!-- Script para o contador no topo -->
+  <script>
+    let tempoTopo = 5 * 60;
+    const tempoRestante = document.getElementById("tempo-restante");
+    setInterval(() => {
+      let m = Math.floor(tempoTopo / 60);
+      let s = tempoTopo % 60;
+      tempoRestante.textContent = `${m}:${s < 10 ? '0' + s : s}`;
+      tempoTopo--;
+      if (tempoTopo <= 0) tempoTopo = 5 * 60;
+    }, 1000);
+  </script>
+
   <!-- FAQ -->
   <section id="faq" class="border-t border-white/10">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
