@@ -32,15 +32,47 @@
 
   <style>
     :root { color-scheme: dark; }
-    html, body { background: #0b0b0b; }
+    html, body { background: #0b0b0b; scroll-behavior: smooth; }
     .reveal { opacity: 0; transform: translateY(16px); }
     .revealed { opacity: 1; transform: translateY(0); transition: opacity .8s ease, transform .8s ease; }
-    .carousel { overflow: hidden; }
-    .carousel-track { display: flex; gap: .75rem; width: 200%; }
-    .carousel-item { flex: 0 0 20%; }
-    @media (max-width: 640px) { .carousel-item { flex-basis: 33.333%; } }
-    @keyframes scroll-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-    .animate-scroll { animation: scroll-left 25s linear infinite; }
+
+    /* 🎯 Botão pulsante */
+    .btn-pulse {
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(229,9,20,0.7); }
+      70% { box-shadow: 0 0 0 12px rgba(229,9,20,0); }
+      100% { box-shadow: 0 0 0 0 rgba(229,9,20,0); }
+    }
+
+    /* 🎯 Botão fixo mobile */
+    .btn-fixed {
+      position: fixed;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #E50914;
+      color: #fff;
+      padding: 14px 24px;
+      border-radius: 9999px;
+      font-weight: 800;
+      letter-spacing: .5px;
+      z-index: 1000;
+      text-transform: uppercase;
+      animation: pulse 1.8s infinite;
+      box-shadow: 0 0 20px rgba(229,9,20,0.4);
+    }
+
+    /* 🎯 Contador de urgência */
+    #contador {
+      font-size: 14px;
+      color: #ff4444;
+      margin-top: 8px;
+      font-weight: bold;
+    }
+
+    /* 🎯 Prova social flutuante */
     .purchase-notification {
       position: fixed; bottom: 20px; right: 20px;
       background: linear-gradient(135deg,#006600,#004400);
@@ -90,6 +122,7 @@
   </noscript>
 </head>
 <body class="bg-black text-white antialiased selection:bg-brand-red selection:text-white">
+
   <!-- Header -->
   <header class="sticky top-0 z-40 backdrop-blur bg-black/70 border-b border-white/10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -97,7 +130,7 @@
         <img src="https://i.postimg.cc/htF3JFMC/3-adesivo-playboy-adesivo-coelho-da-playboy-para-carro-moto.webp" class="w-7 h-7 object-contain"/>
         <span class="font-extrabold tracking-widest text-xl">PLAYBOY</span>
       </a>
-      <a href="#pacotes" class="inline-flex items-center gap-2 rounded-md bg-brand-red hover:bg-brand-redDark px-4 py-2 text-sm font-bold uppercase tracking-wider shadow-glow transition">
+      <a href="#pacotes" class="inline-flex items-center gap-2 rounded-md bg-brand-red hover:bg-brand-redDark px-4 py-2 text-sm font-bold uppercase tracking-wider shadow-glow transition btn-pulse">
         LIBERAR PACOTE
       </a>
     </div>
@@ -109,15 +142,24 @@
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 text-center">
       <h1 class="reveal text-3xl sm:text-5xl md:text-6xl font-black leading-tight">
         <span class="text-brand-red">500+ EDIÇÕES RARAS</span><br/>
-        PLAYBOY (1975-2015)<br/>
+        PLAYBOY (1975–2015)<br/>
         <span class="text-white/80 text-2xl sm:text-3xl">que você <strong>NUNCA</strong> mais verá</span>
       </h1>
       <p class="reveal mt-6 text-white/70 max-w-2xl mx-auto text-lg">
-        <strong>Coleção completa digitalizada</strong> - Acesso vitalício + bônus exclusivos + garantia total
+        <strong>Coleção digital completa</strong> – Acesso vitalício, bônus exclusivos e garantia total.<br/>
+        <span class="text-white/60">🔥 Uma viagem pelos maiores ícones da sensualidade – digitalizados em qualidade máxima antes que desapareçam da história.</span>
       </p>
+
+      <!-- Botão CTA + contador -->
       <div class="reveal mt-10 flex flex-wrap items-center justify-center gap-3">
-        <a href="#pacotes" class="rounded-md bg-brand-red hover:bg-brand-redDark px-6 py-3 font-bold uppercase tracking-wide shadow-glow transition">🔥 GARANTIR MINHA COLEÇÃO AGORA</a>
+        <a href="#pacotes" class="rounded-md bg-brand-red hover:bg-brand-redDark px-6 py-3 font-bold uppercase tracking-wide shadow-glow transition btn-pulse">
+          🔥 GARANTIR MINHA COLEÇÃO AGORA
+        </a>
+        <div id="contador"></div>
       </div>
+
+      <!-- Pessoas visualizando -->
+      <p id="visualizando" class="mt-4 text-sm text-white/60"></p>
     </div>
   </section>
 
@@ -146,7 +188,7 @@
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
       <div class="reveal text-center mb-10">
         <h2 class="text-2xl sm:text-4xl font-extrabold">✅ 15.847 colecionadores satisfeitos</h2>
-        <p class="mt-3 text-white/60">Depoimentos reais de quem já adquiriu</p>
+        <p class="mt-3 text-white/60">Depoimentos reais de quem já adquiriu e aprovou</p>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -200,8 +242,8 @@
   <section id="pacotes" class="border-t border-white/10">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
       <div class="reveal text-center mb-10">
-        <h2 class="text-2xl sm:text-4xl font-extrabold">Escolhe teu pacote</h2>
-        <p class="mt-3 text-white/60">Acesso imediato, download seguro e atualizações.</p>
+        <h2 class="text-2xl sm:text-4xl font-extrabold">Escolha seu pacote</h2>
+        <p class="mt-3 text-white/60">Acesso imediato, download seguro e atualizações vitalícias.</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -212,13 +254,15 @@
             <span class="text-brand-red text-2xl font-extrabold">R$10,00</span>
           </div>
           <ul class="mt-4 text-white/80 space-y-2">
-            <li>◆ +200 ensaios exclusivos</li>
-            <li>◆ Imagens raras em alta qualidade</li>
+            <li>◆ +200 ensaios exclusivos em alta qualidade</li>
+            <li>◆ Imagens raras e digitalizadas</li>
             <li>◆ Acesso imediato após pagamento</li>
-            <li>◆ 7 Dias de garantia</li>
+            <li>◆ 7 dias de garantia total</li>
           </ul>
-          <button onclick="fbq('track', 'InitiateCheckout', {content_name:'Pacote Sedução', value:10.00, currency:'BRL'}); window.location.href='https://pay.cakto.com.br/pcytvby_607625';" class="mt-6 inline-flex w-full items-center justify-center rounded-md bg-brand-red hover:bg-brand-redDark px-6 py-3 font-bold uppercase tracking-wide shadow-glow transition">
-            LIBERAR PACOTE
+          <button 
+            onclick="utmify.track('click_pacote_seducao'); fbq('track', 'InitiateCheckout', {content_name:'Pacote Sedução', value:10.00, currency:'BRL'}); window.location.href='https://pay.cakto.com.br/pcytvby_607625';" 
+            class="mt-6 inline-flex w-full items-center justify-center rounded-md bg-brand-red hover:bg-brand-redDark px-6 py-3 font-bold uppercase tracking-wide shadow-glow transition btn-pulse">
+            💋 Quero o Pacote Sedução
           </button>
         </div>
 
@@ -232,13 +276,16 @@
           <ul class="mt-4 text-white/80 space-y-2">
             <li>◆ Inclui tudo do Pacote Sedução</li>
             <li>◆ 500+ edições raras (1975–2015)</li>
+            <li>◆ Bastidores nunca vistos das maiores musas do Brasil</li>
             <li>◆ Acesso imediato após pagamento</li>
-            <li>◆ Alta qualidade, imagens raras</li>
-            <li>◆ Bastidores nunca vistos com as maiores musas do Brasil</li>
-            <li>◆ 7 Dias de garantia total</li>
+            <li>◆ Qualidade máxima, imagens raras e digitalizadas</li>
+            <li>◆ Acesso vitalício + bônus secretos</li>
+            <li>◆ 7 dias de garantia total</li>
           </ul>
-          <button onclick="fbq('track', 'InitiateCheckout', {content_name:'Pacote Premium', value:19.90, currency:'BRL'}); window.location.href='https://pay.cakto.com.br/c2a2g68_607613';" class="mt-6 inline-flex w-full items-center justify-center rounded-md bg-brand-red hover:bg-brand-redDark px-6 py-3 font-bold uppercase tracking-wide shadow-glow transition">
-            LIBERAR PACOTE
+          <button 
+            onclick="utmify.track('click_pacote_premium'); fbq('track', 'InitiateCheckout', {content_name:'Pacote Premium', value:19.90, currency:'BRL'}); window.location.href='https://pay.cakto.com.br/c2a2g68_607613';" 
+            class="mt-6 inline-flex w-full items-center justify-center rounded-md bg-brand-red hover:bg-brand-redDark px-6 py-3 font-bold uppercase tracking-wide shadow-glow transition btn-pulse">
+            🔥 Quero o Pacote Premium
           </button>
         </div>
       </div>
@@ -254,15 +301,15 @@
       <div class="grid gap-5">
         <div class="rounded-lg border border-white/10 bg-white/5 p-5">
           <h3 class="font-semibold text-lg">Como recebo o acesso?</h3>
-          <p class="mt-2 text-white/70">Após o pagamento, o link é enviado automaticamente ao seu e-mail.</p>
+          <p class="mt-2 text-white/70">Após o pagamento, o link é enviado automaticamente ao seu e-mail com acesso vitalício.</p>
         </div>
         <div class="rounded-lg border border-white/10 bg-white/5 p-5">
           <h3 class="font-semibold text-lg">O pagamento é seguro?</h3>
-          <p class="mt-2 text-white/70">Sim. O checkout da Cakto usa criptografia e gateways certificados.</p>
+          <p class="mt-2 text-white/70">Sim. O checkout da Cakto usa criptografia SSL e gateways certificados.</p>
         </div>
         <div class="rounded-lg border border-white/10 bg-white/5 p-5">
           <h3 class="font-semibold text-lg">Posso pedir reembolso?</h3>
-          <p class="mt-2 text-white/70">Sim. Você tem 7 dias de garantia incondicional.</p>
+          <p class="mt-2 text-white/70">Sim, você tem 7 dias de garantia incondicional para testar o material.</p>
         </div>
       </div>
     </div>
@@ -283,14 +330,17 @@
     </div>
   </footer>
 
+  <!-- Botão fixo mobile -->
+  <a href="#pacotes" class="btn-fixed">🔥 GARANTIR COLEÇÃO AGORA</a>
+
   <!-- Scripts -->
   <script>
+    // 🎯 Animação reveal + ViewContent
     const io = new IntersectionObserver((entries)=>{
       entries.forEach(e=>{
         if(e.isIntersecting){
           e.target.classList.add('revealed');
           io.unobserve(e.target);
-          // ✅ Dispara evento de ViewContent quando o visitante vê os pacotes
           if(e.target.id === 'pacotes'){
             console.log('📈 Evento ViewContent disparado');
             fbq('track', 'ViewContent', {content_name:'Pacotes Playboy', value:0, currency:'BRL'});
@@ -301,7 +351,31 @@
     document.querySelectorAll('.reveal, #pacotes').forEach(el=>io.observe(el));
   </script>
 
-  <!-- Notificações automáticas -->
+  <!-- 🎯 Contador regressivo -->
+  <script>
+    let tempo = 5 * 60; // 5 minutos
+    const contador = document.getElementById("contador");
+    setInterval(() => {
+      let m = Math.floor(tempo / 60);
+      let s = tempo % 60;
+      contador.textContent = `⚡ Oferta expira em ${m}:${s < 10 ? '0'+s : s}`;
+      tempo--;
+      if (tempo <= 0) tempo = 5 * 60;
+    }, 1000);
+  </script>
+
+  <!-- 🎯 Pessoas visualizando agora -->
+  <script>
+    const elVisualizando = document.getElementById('visualizando');
+    function atualizarVisualizacao() {
+      const pessoas = Math.floor(Math.random() * 40) + 30;
+      elVisualizando.textContent = `👀 ${pessoas} pessoas estão visualizando agora`;
+    }
+    atualizarVisualizacao();
+    setInterval(atualizarVisualizacao, 15000);
+  </script>
+
+  <!-- 🎯 Notificações automáticas -->
   <script>
     const nomes=['João','Carlos','Pedro','Rafael','Lucas','Diego','Gabriel','Thiago','André','Felipe','Bruno','Rodrigo','Marcos','Alexandre','Vinícius','Eduardo','Fernando','Ricardo','Paulo','Antônio','José','Roberto','Daniel','Miguel','Henrique','Leonardo','Gustavo','Fábio','Sérgio','Márcio','César','Vitor'];
     const pacotes=[{name:'Pacote Sedução',price:'R$10,00'},{name:'Pacote Premium',price:'R$19,90'}];
@@ -322,5 +396,6 @@
       setInterval(mostrarNotificacao,20000);
     });
   </script>
+
 </body>
 </html>
