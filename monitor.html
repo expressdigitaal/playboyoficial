@@ -127,13 +127,11 @@
             </div>
         </div>
 
-        <!-- Charts Section -->
-        <div class="grid grid-cols-1 gap-6 mb-8">
-            <!-- Cliques por Pacote -->
-            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
-                <h3 class="text-lg font-semibold mb-4">Distribuição de Cliques</h3>
-                <canvas id="clicksChart" width="400" height="200"></canvas>
-            </div>
+        <!-- Botão de Limpar Dados -->
+        <div class="flex justify-center mb-8">
+            <button onclick="clearAllData()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                🗑️ Limpar Todos os Dados
+            </button>
         </div>
     </div>
 
@@ -171,42 +169,41 @@
                 ((dashboardData.totalClicks / dashboardData.visitsToday) * 100).toFixed(1) : 0;
             document.getElementById('conversionRate').textContent = conversionRate + '%';
 
-            // Atualizar gráficos
-            updateClicksChart();
+            // Dados atualizados
         }
 
 
-        // Gráfico de cliques por pacote
-        let clicksChart;
-        function initClicksChart() {
-            const ctx = document.getElementById('clicksChart').getContext('2d');
-            clicksChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Pacote Sedução', 'Pacote Premium'],
-                    datasets: [{
-                        data: [dashboardData.seducaoClicks, dashboardData.premiumClicks],
-                        backgroundColor: ['#f59e0b', '#ef4444'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            labels: { color: '#ffffff' }
-                        }
-                    }
-                }
-            });
-        }
-
-
-        function updateClicksChart() {
-            if (clicksChart) {
-                clicksChart.data.datasets[0].data = [dashboardData.seducaoClicks, dashboardData.premiumClicks];
-                clicksChart.update();
+        // Função para limpar todos os dados
+        function clearAllData() {
+            if (confirm('Tem certeza que deseja limpar todos os dados? Esta ação não pode ser desfeita.')) {
+                // Resetar dados locais
+                dashboardData = {
+                    visitsToday: 0,
+                    totalClicks: 0,
+                    seducaoClicks: 0,
+                    premiumClicks: 0,
+                    visitsByHour: Array(24).fill(0),
+                    realtimeActivity: []
+                };
+                
+                // Atualizar interface
+                updateDashboard();
+                
+                // Limpar atividade em tempo real
+                document.getElementById('realtimeActivity').innerHTML = 
+                    '<div class="text-gray-400 text-center py-4">Dados limpos - Aguardando nova atividade...</div>';
+                
+                // Enviar comando para o servidor limpar dados
+                fetch('/api/clear-data', { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Dados limpos no servidor:', data);
+                        addRealtimeActivity('✅ Todos os dados foram limpos');
+                    })
+                    .catch(error => {
+                        console.error('Erro ao limpar dados no servidor:', error);
+                        addRealtimeActivity('⚠️ Dados limpos localmente, mas erro no servidor');
+                    });
             }
         }
 
@@ -291,7 +288,6 @@
             updateTimestamp();
             setInterval(updateTimestamp, 1000);
             
-            initClicksChart();
             updateDashboard();
             
             // Iniciar simulação de dados (remover em produção)
