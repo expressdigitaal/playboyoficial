@@ -85,6 +85,9 @@
                     <button onclick="refreshData()" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-sm font-medium transition">
                         🔄 Atualizar
                     </button>
+                    <button onclick="clearData()" class="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 rounded-md text-sm font-medium transition">
+                        🗑️ Limpar
+                    </button>
                 </div>
             </div>
         </div>
@@ -120,7 +123,7 @@
         </div>
     </div>
 
-    <!-- 🎯 SISTEMA DE MONITORAMENTO 100% HTML -->
+    <!-- 🎯 SISTEMA DE MONITORAMENTO CORRIGIDO -->
     <script>
         class PlayboyMonitor {
             constructor() {
@@ -155,13 +158,24 @@
             processVisitorData(allData) {
                 this.visitors.clear();
                 
+                // Carregar mapeamento persistente de visitantes
+                const visitorMapping = this.loadVisitorMapping();
+                
                 // Agrupar dados por sessionId
                 const sessions = {};
                 allData.forEach(entry => {
                     if (!sessions[entry.sessionId]) {
+                        // Verificar se já existe um número para este visitante
+                        let visitorNumber = visitorMapping[entry.sessionId];
+                        if (!visitorNumber) {
+                            visitorNumber = this.getNextVisitorNumber();
+                            visitorMapping[entry.sessionId] = visitorNumber;
+                            this.saveVisitorMapping(visitorMapping);
+                        }
+                        
                         sessions[entry.sessionId] = {
                             sessionId: entry.sessionId,
-                            visitorNumber: this.visitorCounter++,
+                            visitorNumber: visitorNumber,
                             firstSeen: entry.timestamp,
                             lastSeen: entry.timestamp,
                             totalVisits: 0,
@@ -192,6 +206,36 @@
                 Object.values(sessions).forEach(visitor => {
                     this.visitors.set(visitor.sessionId, visitor);
                 });
+            }
+
+            loadVisitorMapping() {
+                try {
+                    const mapping = localStorage.getItem('playboy_visitor_mapping');
+                    return mapping ? JSON.parse(mapping) : {};
+                } catch (error) {
+                    console.error('Erro ao carregar mapeamento:', error);
+                    return {};
+                }
+            }
+
+            saveVisitorMapping(mapping) {
+                try {
+                    localStorage.setItem('playboy_visitor_mapping', JSON.stringify(mapping));
+                } catch (error) {
+                    console.error('Erro ao salvar mapeamento:', error);
+                }
+            }
+
+            getNextVisitorNumber() {
+                try {
+                    const lastNumber = localStorage.getItem('playboy_last_visitor_number');
+                    const nextNumber = lastNumber ? parseInt(lastNumber) + 1 : 1;
+                    localStorage.setItem('playboy_last_visitor_number', nextNumber.toString());
+                    return nextNumber;
+                } catch (error) {
+                    console.error('Erro ao gerar número do visitante:', error);
+                    return this.visitorCounter++;
+                }
             }
 
             setupEventListeners() {
@@ -427,6 +471,16 @@
             if (window.monitor) {
                 window.monitor.loadInitialData();
                 console.log('🔄 Dados atualizados!');
+            }
+        }
+
+        function clearData() {
+            if (confirm('Tem certeza que deseja limpar todos os dados?')) {
+                localStorage.removeItem('playboy_visitor_data');
+                localStorage.removeItem('playboy_visitor_mapping');
+                localStorage.removeItem('playboy_last_visitor_number');
+                localStorage.removeItem('playboy_visitor_id');
+                location.reload();
             }
         }
 
