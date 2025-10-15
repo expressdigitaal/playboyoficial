@@ -55,8 +55,8 @@
                     <button onclick="connectToMapaSite()" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-md text-sm font-medium transition">
                         🔗 Conectar Site
                     </button>
-                    <button onclick="forceTestData()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-sm font-medium transition">
-                        🧪 Teste
+                    <button onclick="addStableTestData()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-sm font-medium transition">
+                        ➕ Adicionar Dados
                     </button>
                     <button onclick="refreshData()" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-sm font-medium transition">
                         🔄 Atualizar
@@ -214,22 +214,24 @@
             updatePackageStats();
             updateLocationList();
             
-            // Atualização em tempo real a cada 5 segundos
+            // Atualização em tempo real a cada 10 segundos (mais estável)
             setInterval(() => {
                 const hasChanges = loadTrackingData();
-                if (hasChanges) {
+                const cleanedData = cleanOldData();
+                
+                if (hasChanges || cleanedData) {
                     console.log('🔄 Dashboard atualizado com novos dados!');
                     updateAllSections();
                     updateTimestamp();
                     showUpdateNotification();
                 } else {
-                    console.log('🔄 Verificando dados em tempo real...');
+                    console.log('📊 Verificando dados em tempo real...');
                     updateTimestamp();
                 }
-            }, 5000);
+            }, 10000);
         }
 
-        // Carrega dados do sistema de tracking - VERSÃO TEMPO REAL
+        // Carrega dados do sistema de tracking - VERSÃO ESTÁVEL
         function loadTrackingData() {
             let newData = [];
             
@@ -238,9 +240,9 @@
                 const playboyData = localStorage.getItem('playboy_visitor_data');
                 if (playboyData) {
                     newData = JSON.parse(playboyData);
-                    console.log('📊 Dados carregados do localStorage Playboy:', newData.length, 'entradas');
+                    console.log('📊 Dados reais carregados do localStorage:', newData.length, 'entradas');
                 } else {
-                    console.log('📊 Nenhum dado encontrado no localStorage');
+                    console.log('📊 Nenhum dado real encontrado, usando dados estáticos');
                     newData = getSampleData();
                 }
             } catch (error) {
@@ -248,106 +250,112 @@
                 newData = getSampleData();
             }
             
-            // Detecta mudanças nos dados
-            if (newData.length !== trackingData.length) {
-                console.log('🔄 Novos dados detectados!', newData.length - trackingData.length, 'novas entradas');
+            // Só atualiza se realmente houver mudanças
+            const hasChanges = JSON.stringify(newData) !== JSON.stringify(trackingData);
+            
+            if (hasChanges) {
+                console.log('🔄 Dados atualizados detectados!');
                 trackingData = newData;
-                return true; // Indica que houve mudanças
+                return true;
+            } else {
+                console.log('📊 Nenhuma mudança nos dados');
+                return false;
             }
-            
-            // Verifica se há dados novos por timestamp
-            if (newData.length > 0 && trackingData.length > 0) {
-                const latestTimestamp = Math.max(...newData.map(entry => new Date(entry.timestamp).getTime()));
-                const currentLatestTimestamp = Math.max(...trackingData.map(entry => new Date(entry.timestamp).getTime()));
-                
-                if (latestTimestamp > currentLatestTimestamp) {
-                    console.log('🔄 Dados atualizados detectados!');
-                    trackingData = newData;
-                    return true; // Indica que houve mudanças
-                }
-            }
-            
-            return false; // Nenhuma mudança detectada
         }
 
-        // Dados de exemplo para demonstração - VERSÃO TEMPO REAL
+        // Dados estáticos para demonstração - SEM ALEATORIEDADE
         function getSampleData() {
-            const now = Date.now();
-            const cities = ['São Paulo', 'Rio de Janeiro', 'Belo Horizonte', 'Salvador', 'Brasília', 'Fortaleza', 'Manaus', 'Curitiba'];
-            const states = ['SP', 'RJ', 'MG', 'BA', 'DF', 'CE', 'AM', 'PR'];
-            const packages = [
-                { name: 'Pacote Premium', price: 'R$ 19,90' },
-                { name: 'Pacote Sedução', price: 'R$ 10,00' }
-            ];
-            
-            const data = [];
-            
-            // Gera dados simulados com timestamps recentes
-            for (let i = 0; i < 3 + Math.floor(Math.random() * 5); i++) {
-                const sessionId = 'playboy_' + (now - Math.random() * 3600000) + '_' + Math.random().toString(36).substr(2, 6);
-                const cityIndex = Math.floor(Math.random() * cities.length);
-                const packageIndex = Math.floor(Math.random() * packages.length);
-                const timeOffset = Math.random() * 300000; // Últimos 5 minutos
-                
-                // Dados de página visualizada
-                data.push({
-                    sessionId: sessionId,
-                    timestamp: new Date(now - timeOffset).toISOString(),
+            // Dados fixos e estáveis
+            const staticData = [
+                {
+                    sessionId: 'playboy_001',
+                    timestamp: new Date(Date.now() - 300000).toISOString(),
                     type: 'page_view',
                     data: {
                         url: 'https://playboyoficial.onrender.com/',
                         title: 'Playboy – Ensaios Exclusivos',
                         referrer: 'https://google.com'
                     }
-                });
-                
-                // Dados de dispositivo
-                data.push({
-                    sessionId: sessionId,
-                    timestamp: new Date(now - timeOffset + 1000).toISOString(),
+                },
+                {
+                    sessionId: 'playboy_001',
+                    timestamp: new Date(Date.now() - 299000).toISOString(),
                     type: 'device_info',
                     data: {
-                        userAgent: Math.random() > 0.5 ? 'Mozilla/5.0 (Mobile)' : 'Mozilla/5.0 (Desktop)',
-                        platform: Math.random() > 0.5 ? 'Mobile' : 'Desktop',
+                        userAgent: 'Mozilla/5.0 (Desktop)',
+                        platform: 'Desktop',
                         language: 'pt-BR',
-                        screenWidth: Math.random() > 0.5 ? 375 : 1920,
-                        screenHeight: Math.random() > 0.5 ? 667 : 1080,
-                        city: cities[cityIndex],
-                        state: states[cityIndex]
+                        screenWidth: 1920,
+                        screenHeight: 1080,
+                        city: 'São Paulo',
+                        state: 'SP'
                     }
-                });
-                
-                // Dados de clique (60% de chance)
-                if (Math.random() > 0.4) {
-                    data.push({
-                        sessionId: sessionId,
-                        timestamp: new Date(now - timeOffset + 5000).toISOString(),
-                        type: 'button_click',
-                        data: {
-                            packageName: packages[packageIndex].name,
-                            price: packages[packageIndex].price,
-                            buttonText: 'LIBERAR PACOTE',
-                            buttonHref: 'https://pay.cakto.com.br/'
-                        }
-                    });
-                }
-                
-                // Dados de tempo na página
-                data.push({
-                    sessionId: sessionId,
-                    timestamp: new Date(now - timeOffset + 30000).toISOString(),
-                    type: 'time_tracking',
+                },
+                {
+                    sessionId: 'playboy_001',
+                    timestamp: new Date(Date.now() - 295000).toISOString(),
+                    type: 'button_click',
                     data: {
-                        timeOnPage: Math.floor(Math.random() * 300) + 30,
-                        pageViews: 1
+                        packageName: 'Pacote Premium',
+                        price: 'R$ 19,90',
+                        buttonText: 'LIBERAR PACOTE',
+                        buttonHref: 'https://pay.cakto.com.br/'
                     }
-                });
-            }
+                },
+                {
+                    sessionId: 'playboy_002',
+                    timestamp: new Date(Date.now() - 200000).toISOString(),
+                    type: 'page_view',
+                    data: {
+                        url: 'https://playboyoficial.onrender.com/',
+                        title: 'Playboy – Ensaios Exclusivos',
+                        referrer: 'https://facebook.com'
+                    }
+                },
+                {
+                    sessionId: 'playboy_002',
+                    timestamp: new Date(Date.now() - 199000).toISOString(),
+                    type: 'device_info',
+                    data: {
+                        userAgent: 'Mozilla/5.0 (Mobile)',
+                        platform: 'Mobile',
+                        language: 'pt-BR',
+                        screenWidth: 375,
+                        screenHeight: 667,
+                        city: 'Rio de Janeiro',
+                        state: 'RJ'
+                    }
+                },
+                {
+                    sessionId: 'playboy_003',
+                    timestamp: new Date(Date.now() - 100000).toISOString(),
+                    type: 'page_view',
+                    data: {
+                        url: 'https://playboyoficial.onrender.com/',
+                        title: 'Playboy – Ensaios Exclusivos',
+                        referrer: 'https://instagram.com'
+                    }
+                },
+                {
+                    sessionId: 'playboy_003',
+                    timestamp: new Date(Date.now() - 99000).toISOString(),
+                    type: 'device_info',
+                    data: {
+                        userAgent: 'Mozilla/5.0 (Desktop)',
+                        platform: 'Desktop',
+                        language: 'pt-BR',
+                        screenWidth: 1920,
+                        screenHeight: 1080,
+                        city: 'Belo Horizonte',
+                        state: 'MG'
+                    }
+                }
+            ];
             
-            console.log('📊 Dados de exemplo gerados:', data.length, 'entradas');
-            console.log('📊 Tipos gerados:', [...new Set(data.map(d => d.type))]);
+            console.log('📊 Dados estáticos carregados:', staticData.length, 'entradas');
+            console.log('📊 Tipos:', [...new Set(staticData.map(d => d.type))]);
             
-            return data;
+            return staticData;
         }
 
         // Função para conectar com o site mapa.html
@@ -435,14 +443,61 @@
             updateLocationList();
         }
 
-        // Atualiza estatísticas - VERSÃO TEMPO REAL
+        // Função para limpar dados antigos e manter apenas dados recentes
+        function cleanOldData() {
+            const now = Date.now();
+            const oneHourAgo = now - (60 * 60 * 1000); // 1 hora atrás
+            
+            const recentData = trackingData.filter(entry => {
+                const entryTime = new Date(entry.timestamp).getTime();
+                return entryTime > oneHourAgo;
+            });
+            
+            if (recentData.length !== trackingData.length) {
+                console.log('🧹 Limpando dados antigos:', trackingData.length - recentData.length, 'entradas removidas');
+                trackingData = recentData;
+                return true;
+            }
+            
+            return false;
+        }
+
+        // Função para adicionar dados de teste estáveis
+        function addStableTestData() {
+            console.log('🧪 Adicionando dados de teste estáveis...');
+            
+            const newEntry = {
+                sessionId: 'test_' + Date.now(),
+                timestamp: new Date().toISOString(),
+                type: 'button_click',
+                data: {
+                    packageName: 'Pacote Premium',
+                    price: 'R$ 19,90',
+                    buttonText: 'LIBERAR PACOTE',
+                    buttonHref: 'https://pay.cakto.com.br/'
+                }
+            };
+            
+            trackingData.push(newEntry);
+            console.log('✅ Dados de teste adicionados');
+            
+            updateAllSections();
+        }
+
+        // Atualiza estatísticas - VERSÃO ESTÁVEL
         function updateStats() {
             const visitors = getUniqueVisitors();
             const clicks = getButtonClicks();
             const conversionRate = calculateConversionRate();
             const avgTime = calculateAverageTime();
             
-            // Atualiza com dados reais
+            console.log('📊 Estatísticas calculadas:');
+            console.log('- Visitantes únicos:', visitors.length);
+            console.log('- Cliques totais:', clicks.length);
+            console.log('- Taxa de conversão:', conversionRate + '%');
+            console.log('- Tempo médio:', avgTime + 's');
+            
+            // Atualiza com dados reais e estáveis
             document.getElementById('totalVisitors').textContent = visitors.length;
             document.getElementById('totalClicks').textContent = clicks.length;
             document.getElementById('conversionRate').textContent = conversionRate + '%';
