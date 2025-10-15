@@ -1,152 +1,9 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Playboy – Ensaios Exclusivos</title>
-  <meta name="description" content="+ de 500 ensaios exclusivos. Escolhe, compra e curte. Playboy – pacotes digitais premium." />
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/webp" href="https://i.postimg.cc/htF3JFMC/3-adesivo-playboy-adesivo-coelho-da-playboy-para-carro-moto.webp">
-  <link rel="shortcut icon" type="image/webp" href="https://i.postimg.cc/htF3JFMC/3-adesivo-playboy-adesivo-coelho-da-playboy-para-carro-moto.webp">
-  <link rel="apple-touch-icon" href="https://i.postimg.cc/htF3JFMC/3-adesivo-playboy-adesivo-coelho-da-playboy-para-carro-moto.webp">
-
-  <!-- Fontes -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
-
-  <!-- Tailwind -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: { sans: ["Inter", "ui-sans-serif", "system-ui"] },
-          colors: { brand: { red: "#E50914", redDark: "#B20710" } },
-          boxShadow: { glow: "0 0 40px rgba(229,9,20,0.35)" },
-        },
-      },
-    };
-  </script>
-
-  <style>
-    :root { color-scheme: dark; }
-    html, body { background: #0b0b0b; }
-    .reveal { opacity: 0; transform: translateY(16px); }
-    .revealed { opacity: 1; transform: translateY(0); transition: opacity .8s ease, transform .8s ease; }
-    .carousel { overflow: hidden; }
-    .carousel-track { display: flex; gap: .75rem; width: 200%; }
-    .carousel-item { flex: 0 0 20%; }
-    @media (max-width: 640px) { .carousel-item { flex-basis: 33.333%; } }
-    @keyframes scroll-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-    .animate-scroll { animation: scroll-left 25s linear infinite; }
-    .purchase-notification {
-      position: fixed; bottom: 20px; right: 20px;
-      background: linear-gradient(135deg,#006600,#004400);
-      color: white; padding: 6px 10px; border-radius: 6px;
-      box-shadow: 0 2px 10px rgba(0,100,0,0.4);
-      z-index: 1000; transform: translateX(300px);
-      transition: transform 0.4s ease;
-      max-width: 180px; font-size: 11px; font-weight: bold; line-height: 1.2;
-      border-left: 3px solid #00aa00;
-    }
-    .purchase-notification.show { transform: translateX(0); }
-  </style>
-
-  <!-- ✅ Novo Pixel UTMify -->
-  <script> 
-    window.pixelId = "68eefd737f9bd613fafc7bb2"; 
-    var a = document.createElement("script"); 
-    a.setAttribute("async", ""); 
-    a.setAttribute("defer", ""); 
-    a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js"); 
-    document.head.appendChild(a); 
-  </script> 
-  <script 
-    src="https://cdn.utmify.com.br/scripts/utms/latest.js" 
-    data-utmify-prevent-xcod-sck 
-    data-utmify-prevent-subids 
-    async 
-    defer>
-  </script>
-
-  <!-- ✅ Meta Pixel -->
-  <script>
-    !(function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)})(window,document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init','728458327023332');
-    fbq('track','PageView');
-  </script>
-  <noscript>
-    <img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=728458327023332&ev=PageView&noscript=1"/>
-  </noscript>
-</head>
-<body class="bg-black text-white antialiased selection:bg-brand-red selection:text-white">
-  <!-- Header -->
-  <header class="sticky top-0 z-40 backdrop-blur bg-black/70 border-b border-white/10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <a href="#" class="flex items-center gap-3 group">
-        <img src="https://i.postimg.cc/htF3JFMC/3-adesivo-playboy-adesivo-coelho-da-playboy-para-carro-moto.webp" class="w-7 h-7 object-contain"/>
-        <span class="font-extrabold tracking-widest text-xl">PLAYBOY</span>
-      </a>
-      <a href="#pacotes" class="inline-flex items-center gap-2 rounded-md bg-brand-red hover:bg-brand-redDark px-4 py-2 text-sm font-bold uppercase tracking-wider shadow-glow transition">
-        LIBERAR PACOTE
-      </a>
-    </div>
-  </header>
-
-  <!-- Hero -->
-  <section class="relative overflow-hidden">
-    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(229,9,20,.18),transparent_55%)]"></div>
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 text-center">
-      <h1 class="reveal text-3xl sm:text-5xl md:text-6xl font-black leading-tight">
-        <span class="text-brand-red">500+ EDIÇÕES RARAS</span><br/>
-        PLAYBOY (1975-2015)<br/>
-        <span class="text-white/80 text-2xl sm:text-3xl">que você <strong>NUNCA</strong> mais verá</span>
-      </h1>
-      <p class="reveal mt-6 text-white/70 max-w-2xl mx-auto text-lg">
-        <strong>Coleção completa digitalizada</strong> - Acesso vitalício + bônus exclusivos + garantia total
-      </p>
-      <div class="reveal mt-10 flex flex-wrap items-center justify-center gap-3">
-        <a href="#pacotes" class="rounded-md bg-brand-red hover:bg-brand-redDark px-6 py-3 font-bold uppercase tracking-wide shadow-glow transition">🔥 GARANTIR MINHA COLEÇÃO AGORA</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Galeria -->
-  <section class="border-t border-white/10">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
-      <div class="reveal text-center mb-10">
-        <h2 class="text-2xl sm:text-4xl font-extrabold">O que você vai receber</h2>
-        <p class="mt-3 text-white/60">Capas, previews borrados e bastidores quentes.</p>
-      </div>
-
-      <div class="reveal carousel">
-        <div class="carousel-track animate-scroll">
-          <div class="carousel-item"><img src="1.jpg" class="rounded-lg blur-sm scale-110" alt=""></div>
-          <div class="carousel-item"><img src="2.jpg" class="rounded-lg blur-sm scale-110" alt=""></div>
-          <div class="carousel-item"><img src="3.jpg" class="rounded-lg blur-sm scale-110" alt=""></div>
-          <div class="carousel-item"><img src="4.jpg" class="rounded-lg blur-sm scale-110" alt=""></div>
-          <div class="carousel-item"><img src="5.jpg" class="rounded-lg blur-sm scale-110" alt=""></div>
-          <div class="carousel-item"><img src="6.jpg" class="rounded-lg blur-sm scale-110" alt=""></div>
-        </div>
-      </div>
-    </div>
-  </section>
   <!-- Prova Social -->
   <section class="border-t border-white/10">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
       <div class="reveal text-center mb-10">
         <h2 class="text-2xl sm:text-4xl font-extrabold">✅ 15.847 colecionadores satisfeitos</h2>
-        <p class="mt-3 text-white/60">Depoimentos reais de quem já adquiriu</p>
+        <p class="mt-3 text-white/60">Depoimentos reais de quem já adquiriu e aprovou</p>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -199,9 +56,16 @@
   <!-- Pacotes -->
   <section id="pacotes" class="border-t border-white/10">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+
+      <div class="text-center mb-6">
+        <p id="contador-topo" class="text-brand-red font-bold text-sm sm:text-base">
+          ⚡ Oferta expira em <span id="tempo-restante">05:00</span>
+        </p>
+      </div>
+
       <div class="reveal text-center mb-10">
-        <h2 class="text-2xl sm:text-4xl font-extrabold">Escolhe teu pacote</h2>
-        <p class="mt-3 text-white/60">Acesso imediato, download seguro e atualizações.</p>
+        <h2 class="text-2xl sm:text-4xl font-extrabold">Escolha seu pacote</h2>
+        <p class="mt-3 text-white/60">Acesso imediato, download seguro e atualizações vitalícias.</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -209,16 +73,21 @@
         <div class="reveal rounded-xl border border-white/10 bg-white/5 p-6 hover:bg-white/[.07] transition">
           <div class="flex items-baseline justify-between">
             <h3 class="text-xl font-bold">Pacote Sedução</h3>
-            <span class="text-brand-red text-2xl font-extrabold">R$10,00</span>
+            <div class="text-right">
+              <span class="text-white/50 text-sm line-through block">De R$57,90</span>
+              <span class="text-brand-red text-2xl font-extrabold">Por R$10,00</span>
+            </div>
           </div>
           <ul class="mt-4 text-white/80 space-y-2">
-            <li>◆ +200 ensaios exclusivos</li>
-            <li>◆ Imagens raras em alta qualidade</li>
+            <li>◆ +200 ensaios exclusivos em alta qualidade</li>
+            <li>◆ Imagens raras e digitalizadas</li>
             <li>◆ Acesso imediato após pagamento</li>
-            <li>◆ 7 Dias de garantia</li>
+            <li>◆ 7 dias de garantia total</li>
           </ul>
-          <button onclick="fbq('track', 'InitiateCheckout', {content_name:'Pacote Sedução', value:10.00, currency:'BRL'}); window.location.href='https://pay.cakto.com.br/pcytvby_607625';" class="mt-6 inline-flex w-full items-center justify-center rounded-md bg-brand-red hover:bg-brand-redDark px-6 py-3 font-bold uppercase tracking-wide shadow-glow transition">
-            LIBERAR PACOTE
+          <button 
+            onclick="utmify.track('click_pacote_seducao'); fbq('track', 'InitiateCheckout', {content_name:'Pacote Sedução', value:10.00, currency:'BRL'}); setTimeout(()=>{window.location.href='https://go.tribopay.com.br/iforf';},300);"
+            class="mt-6 inline-flex w-full items-center justify-center rounded-md bg-brand-red hover:bg-brand-redDark px-6 py-3 font-bold uppercase tracking-wide shadow-glow transition btn-pulse">
+            💋 Quero o Pacote Sedução
           </button>
         </div>
 
@@ -227,23 +96,43 @@
           <div class="absolute -top-3 left-6 text-[11px] px-2 py-1 rounded bg-brand-red text-white font-extrabold tracking-wider">MAIS POPULAR</div>
           <div class="flex items-baseline justify-between">
             <h3 class="text-xl font-bold">Pacote Premium</h3>
-            <span class="text-brand-red text-2xl font-extrabold">R$19,90</span>
+            <div class="text-right">
+              <span class="text-white/50 text-sm line-through block">De R$97,90</span>
+              <span class="text-brand-red text-2xl font-extrabold">Por R$19,90</span>
+            </div>
           </div>
           <ul class="mt-4 text-white/80 space-y-2">
             <li>◆ Inclui tudo do Pacote Sedução</li>
             <li>◆ 500+ edições raras (1975–2015)</li>
+            <li>◆ Bastidores nunca vistos das maiores musas do Brasil</li>
             <li>◆ Acesso imediato após pagamento</li>
-            <li>◆ Alta qualidade, imagens raras</li>
-            <li>◆ Bastidores nunca vistos com as maiores musas do Brasil</li>
-            <li>◆ 7 Dias de garantia total</li>
+            <li>◆ Qualidade máxima, imagens raras e digitalizadas</li>
+            <li>◆ Acesso vitalício + bônus secretos</li>
+            <li>◆ 7 dias de garantia total</li>
           </ul>
-          <button onclick="fbq('track', 'InitiateCheckout', {content_name:'Pacote Premium', value:19.90, currency:'BRL'}); window.location.href='https://pay.cakto.com.br/c2a2g68_607613';" class="mt-6 inline-flex w-full items-center justify-center rounded-md bg-brand-red hover:bg-brand-redDark px-6 py-3 font-bold uppercase tracking-wide shadow-glow transition">
-            LIBERAR PACOTE
+          <button 
+            onclick="utmify.track('click_pacote_premium'); fbq('track', 'InitiateCheckout', {content_name:'Pacote Premium', value:19.90, currency:'BRL'}); setTimeout(()=>{window.location.href='https://go.tribopay.com.br/kprtimrqsv';},300);"
+            class="mt-6 inline-flex w-full items-center justify-center rounded-md bg-brand-red hover:bg-brand-redDark px-6 py-3 font-bold uppercase tracking-wide shadow-glow transition btn-pulse">
+            🔥 Quero o Pacote Premium
           </button>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- Contador -->
+  <script>
+    let tempoTopo = 5 * 60;
+    const tempoRestante = document.getElementById("tempo-restante");
+    setInterval(() => {
+      let m = Math.floor(tempoTopo / 60);
+      let s = tempoTopo % 60;
+      tempoRestante.textContent = `${m}:${s < 10 ? '0' + s : s}`;
+      tempoTopo--;
+      if (tempoTopo <= 0) tempoTopo = 5 * 60;
+    }, 1000);
+  </script>
+
   <!-- FAQ -->
   <section id="faq" class="border-t border-white/10">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
@@ -254,15 +143,15 @@
       <div class="grid gap-5">
         <div class="rounded-lg border border-white/10 bg-white/5 p-5">
           <h3 class="font-semibold text-lg">Como recebo o acesso?</h3>
-          <p class="mt-2 text-white/70">Após o pagamento, o link é enviado automaticamente ao seu e-mail.</p>
+          <p class="mt-2 text-white/70">Após o pagamento, o link é enviado automaticamente ao seu e-mail com acesso vitalício.</p>
         </div>
         <div class="rounded-lg border border-white/10 bg-white/5 p-5">
           <h3 class="font-semibold text-lg">O pagamento é seguro?</h3>
-          <p class="mt-2 text-white/70">Sim. O checkout da Cakto usa criptografia e gateways certificados.</p>
+          <p class="mt-2 text-white/70">Sim. O checkout da Cakto usa criptografia SSL e gateways certificados.</p>
         </div>
         <div class="rounded-lg border border-white/10 bg-white/5 p-5">
           <h3 class="font-semibold text-lg">Posso pedir reembolso?</h3>
-          <p class="mt-2 text-white/70">Sim. Você tem 7 dias de garantia incondicional.</p>
+          <p class="mt-2 text-white/70">Sim, você tem 7 dias de garantia incondicional para testar o material.</p>
         </div>
       </div>
     </div>
@@ -283,16 +172,13 @@
     </div>
   </footer>
 
-  <!-- Scripts -->
   <script>
     const io = new IntersectionObserver((entries)=>{
       entries.forEach(e=>{
         if(e.isIntersecting){
           e.target.classList.add('revealed');
           io.unobserve(e.target);
-          // ✅ Dispara evento de ViewContent quando o visitante vê os pacotes
           if(e.target.id === 'pacotes'){
-            console.log('📈 Evento ViewContent disparado');
             fbq('track', 'ViewContent', {content_name:'Pacotes Playboy', value:0, currency:'BRL'});
           }
         }
@@ -301,7 +187,16 @@
     document.querySelectorAll('.reveal, #pacotes').forEach(el=>io.observe(el));
   </script>
 
-  <!-- Notificações automáticas -->
+  <script>
+    const elVisualizando = document.getElementById('visualizando');
+    function atualizarVisualizacao() {
+      const pessoas = Math.floor(Math.random() * 40) + 30;
+      elVisualizando.textContent = `👀 ${pessoas} pessoas estão visualizando agora`;
+    }
+    atualizarVisualizacao();
+    setInterval(atualizarVisualizacao, 15000);
+  </script>
+
   <script>
     const nomes=['João','Carlos','Pedro','Rafael','Lucas','Diego','Gabriel','Thiago','André','Felipe','Bruno','Rodrigo','Marcos','Alexandre','Vinícius','Eduardo','Fernando','Ricardo','Paulo','Antônio','José','Roberto','Daniel','Miguel','Henrique','Leonardo','Gustavo','Fábio','Sérgio','Márcio','César','Vitor'];
     const pacotes=[{name:'Pacote Sedução',price:'R$10,00'},{name:'Pacote Premium',price:'R$19,90'}];
@@ -321,6 +216,43 @@
       mostrarNotificacao();
       setInterval(mostrarNotificacao,20000);
     });
+  </script>
+
+  <script>
+  const backRedirectURL = "https://playboyoficial.onrender.com/desconto";
+  (function() {
+    let hasRedirected = false;
+    const redirectUser = () => {
+      if (!hasRedirected) {
+        hasRedirected = true;
+        window.location.href = backRedirectURL;
+      }
+    };
+    history.pushState(null, null, location.href);
+    window.onpopstate = function() {
+      history.pushState(null, null, location.href);
+      redirectUser();
+    };
+    window.addEventListener("beforeunload", function() {
+      if (!hasRedirected) redirectUser();
+    });
+    document.addEventListener("visibilitychange", function() {
+      if (document.hidden && !hasRedirected) redirectUser();
+    });
+    document.addEventListener("touchstart", function(e) {
+      if (e.touches.length > 1) return;
+      this._touchStartX = e.touches[0].clientX;
+    });
+    document.addEventListener("touchend", function(e) {
+      if (typeof this._touchStartX === "undefined") return;
+      const touchEndX = e.changedTouches[0].clientX;
+      if (this._touchStartX - touchEndX > 120 || touchEndX - this._touchStartX > 120) {
+        redirectUser();
+      }
+      this._touchStartX = undefined;
+    });
+    window.addEventListener("pagehide", function() { redirectUser(); });
+  })();
   </script>
 </body>
 </html>
