@@ -52,6 +52,9 @@
                     <div class="text-xs text-gray-400" id="lastUpdate">
                         Última atualização: <span id="updateTime">--:--</span>
                     </div>
+                    <button onclick="connectToMapaSite()" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-md text-sm font-medium transition">
+                        🔗 Conectar Site
+                    </button>
                     <button onclick="forceTestData()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-sm font-medium transition">
                         🧪 Teste
                     </button>
@@ -211,41 +214,38 @@
             updatePackageStats();
             updateLocationList();
             
-            // Atualização em tempo real a cada 10 segundos (mais estável)
+            // Atualização em tempo real a cada 5 segundos
             setInterval(() => {
                 const hasChanges = loadTrackingData();
-                updateStats();
-                updateClickersList();
-                updateViewersList();
-                updateDeviceStats();
-                updatePackageStats();
-                updateLocationList();
-                updateTimestamp();
-                
                 if (hasChanges) {
                     console.log('🔄 Dashboard atualizado com novos dados!');
+                    updateAllSections();
+                    updateTimestamp();
                     showUpdateNotification();
                 } else {
-                    console.log('🔄 Dashboard atualizado em tempo real');
+                    console.log('🔄 Verificando dados em tempo real...');
+                    updateTimestamp();
                 }
-            }, 10000);
+            }, 5000);
         }
 
         // Carrega dados do sistema de tracking - VERSÃO TEMPO REAL
         function loadTrackingData() {
             let newData = [];
             
-            // Tenta carregar dados do site Playboy
-            if (typeof getPlayboyTrackingData === 'function') {
-                newData = getPlayboyTrackingData();
-                console.log('📊 Dados carregados do site Playboy:', newData.length, 'entradas');
-            } else if (typeof getTrackingData === 'function') {
-                newData = getTrackingData();
-                console.log('📊 Dados carregados do sistema local:', newData.length, 'entradas');
-            } else {
-                // Dados de exemplo para demonstração
+            // Tenta carregar dados do localStorage do site Playboy
+            try {
+                const playboyData = localStorage.getItem('playboy_visitor_data');
+                if (playboyData) {
+                    newData = JSON.parse(playboyData);
+                    console.log('📊 Dados carregados do localStorage Playboy:', newData.length, 'entradas');
+                } else {
+                    console.log('📊 Nenhum dado encontrado no localStorage');
+                    newData = getSampleData();
+                }
+            } catch (error) {
+                console.log('❌ Erro ao carregar dados do localStorage:', error);
                 newData = getSampleData();
-                console.log('📊 Usando dados de exemplo:', newData.length, 'entradas');
             }
             
             // Detecta mudanças nos dados
@@ -256,13 +256,15 @@
             }
             
             // Verifica se há dados novos por timestamp
-            const latestTimestamp = Math.max(...newData.map(entry => new Date(entry.timestamp).getTime()));
-            const currentLatestTimestamp = Math.max(...trackingData.map(entry => new Date(entry.timestamp).getTime()));
-            
-            if (latestTimestamp > currentLatestTimestamp) {
-                console.log('🔄 Dados atualizados detectados!');
-                trackingData = newData;
-                return true; // Indica que houve mudanças
+            if (newData.length > 0 && trackingData.length > 0) {
+                const latestTimestamp = Math.max(...newData.map(entry => new Date(entry.timestamp).getTime()));
+                const currentLatestTimestamp = Math.max(...trackingData.map(entry => new Date(entry.timestamp).getTime()));
+                
+                if (latestTimestamp > currentLatestTimestamp) {
+                    console.log('🔄 Dados atualizados detectados!');
+                    trackingData = newData;
+                    return true; // Indica que houve mudanças
+                }
             }
             
             return false; // Nenhuma mudança detectada
@@ -281,42 +283,108 @@
             const data = [];
             
             // Gera dados simulados com timestamps recentes
-            for (let i = 0; i < 5 + Math.floor(Math.random() * 10); i++) {
+            for (let i = 0; i < 3 + Math.floor(Math.random() * 5); i++) {
                 const sessionId = 'playboy_' + (now - Math.random() * 3600000) + '_' + Math.random().toString(36).substr(2, 6);
                 const cityIndex = Math.floor(Math.random() * cities.length);
                 const packageIndex = Math.floor(Math.random() * packages.length);
                 const timeOffset = Math.random() * 300000; // Últimos 5 minutos
                 
-                // Dados de dispositivo
+                // Dados de página visualizada
                 data.push({
                     sessionId: sessionId,
                     timestamp: new Date(now - timeOffset).toISOString(),
+                    type: 'page_view',
+                    data: {
+                        url: 'https://playboyoficial.onrender.com/',
+                        title: 'Playboy – Ensaios Exclusivos',
+                        referrer: 'https://google.com'
+                    }
+                });
+                
+                // Dados de dispositivo
+                data.push({
+                    sessionId: sessionId,
+                    timestamp: new Date(now - timeOffset + 1000).toISOString(),
                     type: 'device_info',
                     data: {
-                        userAgent: Math.random() > 0.5 ? 'Mobile' : 'Desktop',
+                        userAgent: Math.random() > 0.5 ? 'Mozilla/5.0 (Mobile)' : 'Mozilla/5.0 (Desktop)',
+                        platform: Math.random() > 0.5 ? 'Mobile' : 'Desktop',
+                        language: 'pt-BR',
+                        screenWidth: Math.random() > 0.5 ? 375 : 1920,
+                        screenHeight: Math.random() > 0.5 ? 667 : 1080,
                         city: cities[cityIndex],
                         state: states[cityIndex]
                     }
                 });
                 
-                // Dados de clique (70% de chance)
-                if (Math.random() > 0.3) {
+                // Dados de clique (60% de chance)
+                if (Math.random() > 0.4) {
                     data.push({
                         sessionId: sessionId,
-                        timestamp: new Date(now - timeOffset + 10000).toISOString(),
+                        timestamp: new Date(now - timeOffset + 5000).toISOString(),
                         type: 'button_click',
                         data: {
                             packageName: packages[packageIndex].name,
-                            price: packages[packageIndex].price
+                            price: packages[packageIndex].price,
+                            buttonText: 'LIBERAR PACOTE',
+                            buttonHref: 'https://pay.cakto.com.br/'
                         }
                     });
                 }
+                
+                // Dados de tempo na página
+                data.push({
+                    sessionId: sessionId,
+                    timestamp: new Date(now - timeOffset + 30000).toISOString(),
+                    type: 'time_tracking',
+                    data: {
+                        timeOnPage: Math.floor(Math.random() * 300) + 30,
+                        pageViews: 1
+                    }
+                });
             }
             
             console.log('📊 Dados de exemplo gerados:', data.length, 'entradas');
             console.log('📊 Tipos gerados:', [...new Set(data.map(d => d.type))]);
             
             return data;
+        }
+
+        // Função para conectar com o site mapa.html
+        function connectToMapaSite() {
+            console.log('🔗 Conectando com o site mapa.html...');
+            
+            // Tenta abrir o site em uma nova aba
+            const mapaWindow = window.open('mapa.html', '_blank');
+            
+            if (mapaWindow) {
+                console.log('✅ Site mapa.html aberto em nova aba');
+                
+                // Monitora o localStorage do site
+                const checkForUpdates = () => {
+                    try {
+                        const playboyData = localStorage.getItem('playboy_visitor_data');
+                        if (playboyData) {
+                            const newData = JSON.parse(playboyData);
+                            if (newData.length !== trackingData.length) {
+                                console.log('🔄 Novos dados detectados do site!');
+                                trackingData = newData;
+                                updateAllSections();
+                            }
+                        }
+                    } catch (error) {
+                        console.log('❌ Erro ao verificar dados:', error);
+                    }
+                };
+                
+                // Verifica atualizações a cada 2 segundos
+                setInterval(checkForUpdates, 2000);
+                
+                return true;
+            } else {
+                console.log('❌ Não foi possível abrir o site');
+                return false;
+            }
         }
 
         // Função de teste para forçar dados
@@ -354,6 +422,11 @@
                 }
             ];
             
+            updateAllSections();
+        }
+
+        // Função para atualizar todas as seções
+        function updateAllSections() {
             updateStats();
             updateClickersList();
             updateViewersList();
