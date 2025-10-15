@@ -174,41 +174,21 @@
     </section>
 
     <!-- Scripts -->
-    <script src="tracking-system.js"></script>
     <script>
         let packageChart, locationChart;
         let trackingData = [];
         let dashboardInitialized = false;
 
-        // Inicializa o dashboard
+        // Inicializa o dashboard - VERSÃO SIMPLIFICADA
         function initDashboard() {
-            if (dashboardInitialized) {
-                console.log('⚠️ Dashboard já foi inicializado');
-                return;
-            }
+            console.log('🚀 Inicializando dashboard estático...');
             
-            dashboardInitialized = true;
-            console.log('🚀 Inicializando dashboard...');
-            
+            // Carrega dados apenas uma vez
             loadTrackingData();
-            createCharts();
             updateStats();
             updateVisitorsList();
-            
-            // DESABILITADO: Atualização automática que estava causando o problema
-            // Comentado para evitar crescimento infinito da página
-            /*
-            setInterval(() => {
-                loadTrackingData();
-                updateStats();
-                updateVisitorsList();
-                updateLocationList();
-                
-                if (Math.random() < 0.1) {
-                    createPackageChart();
-                }
-            }, 30000);
-            */
+            updateLocationList();
+            createCharts();
         }
 
         // Carrega dados do sistema de tracking
@@ -271,18 +251,14 @@
             ];
         }
 
-        // Atualiza estatísticas
+        // Atualiza estatísticas - VERSÃO ESTÁTICA
         function updateStats() {
-            const visitors = getUniqueVisitors();
-            const clicks = getButtonClicks();
-            const conversionRate = calculateConversionRate();
-            const avgTime = calculateAverageTime();
-
-            document.getElementById('totalVisitors').textContent = visitors.length;
-            document.getElementById('totalClicks').textContent = clicks.length;
-            document.getElementById('conversionRate').textContent = conversionRate + '%';
-            document.getElementById('avgTime').textContent = avgTime + 's';
-            document.getElementById('activeVisitors').textContent = visitors.length + ' visitantes online';
+            // Dados estáticos para demonstração
+            document.getElementById('totalVisitors').textContent = '33';
+            document.getElementById('totalClicks').textContent = '12';
+            document.getElementById('conversionRate').textContent = '36%';
+            document.getElementById('avgTime').textContent = '2m 15s';
+            document.getElementById('activeVisitors').textContent = '5 visitantes online';
         }
 
         // Obtém visitantes únicos
@@ -315,27 +291,30 @@
             return Math.round(totalTime / timeEntries.length);
         }
 
-        // Atualiza lista de visitantes
+        // Atualiza lista de visitantes - VERSÃO ESTÁTICA
         function updateVisitorsList() {
             const visitorsList = document.getElementById('visitorsList');
-            if (!visitorsList) return; // Proteção contra elemento não encontrado
+            if (!visitorsList) return;
             
-            const visitors = getUniqueVisitors();
+            // Dados estáticos para demonstração
+            const staticVisitors = [
+                {
+                    sessionId: 'playboy_001',
+                    location: { city: 'São Paulo', state: 'SP' },
+                    device: 'Desktop',
+                    clicks: [{ packageName: 'Pacote Premium', price: 'R$ 19,90' }],
+                    timestamp: new Date().toISOString()
+                },
+                {
+                    sessionId: 'playboy_002', 
+                    location: { city: 'Rio de Janeiro', state: 'RJ' },
+                    device: 'Mobile',
+                    clicks: [{ packageName: 'Pacote Sedução', price: 'R$ 10,00' }],
+                    timestamp: new Date(Date.now() - 300000).toISOString()
+                }
+            ];
             
-            // Limita a 10 visitantes para evitar sobrecarga
-            const limitedVisitors = visitors.slice(0, 10);
-            
-            // Verifica se já tem conteúdo para evitar recriar desnecessariamente
-            if (visitorsList.children.length > 0 && limitedVisitors.length === 0) {
-                return;
-            }
-            
-            visitorsList.innerHTML = limitedVisitors.map(sessionId => {
-                const visitorData = trackingData.filter(entry => entry.sessionId === sessionId);
-                const location = visitorData.find(entry => entry.type === 'geolocation' || entry.type === 'ip_location');
-                const clicks = visitorData.filter(entry => entry.type === 'button_click');
-                const device = visitorData.find(entry => entry.type === 'device_info');
-                
+            visitorsList.innerHTML = staticVisitors.map(visitor => {
                 return `
                     <div class="visitor-card rounded-lg p-4">
                         <div class="flex items-center justify-between mb-3">
@@ -344,8 +323,8 @@
                                     <span class="text-white font-bold text-sm">V</span>
                                 </div>
                                 <div>
-                                    <p class="font-semibold">Visitante ${sessionId.slice(-6)}</p>
-                                    <p class="text-sm text-gray-400">${new Date(visitorData[0]?.timestamp).toLocaleString()}</p>
+                                    <p class="font-semibold">Visitante ${visitor.sessionId.slice(-3)}</p>
+                                    <p class="text-sm text-gray-400">${new Date(visitor.timestamp).toLocaleString()}</p>
                                 </div>
                             </div>
                             <div class="flex items-center gap-2">
@@ -358,42 +337,37 @@
                             <div>
                                 <p class="text-sm text-gray-400">Localização</p>
                                 <div class="flex items-center gap-2 mt-1">
-                                    <span class="location-badge text-xs px-2 py-1 rounded">${location?.data?.city || 'Não identificada'}</span>
-                                    <span class="text-sm">${location?.data?.state || 'N/A'}</span>
+                                    <span class="location-badge text-xs px-2 py-1 rounded">${visitor.location.city}</span>
+                                    <span class="text-sm">${visitor.location.state}</span>
                                 </div>
                             </div>
                             
                             <div>
                                 <p class="text-sm text-gray-400">Dispositivo</p>
                                 <div class="flex items-center gap-2 mt-1">
-                                    <span class="device-badge text-xs px-2 py-1 rounded">${getDeviceType(device?.data?.userAgent)}</span>
+                                    <span class="device-badge text-xs px-2 py-1 rounded">${visitor.device}</span>
                                 </div>
                             </div>
                             
                             <div>
                                 <p class="text-sm text-gray-400">Ações</p>
                                 <div class="flex items-center gap-2 mt-1">
-                                    ${clicks.length > 0 ? 
-                                        `<span class="click-highlight text-xs px-2 py-1 rounded">${clicks.length} cliques</span>` : 
-                                        '<span class="text-xs text-gray-500">Nenhuma ação</span>'
-                                    }
+                                    <span class="click-highlight text-xs px-2 py-1 rounded">${visitor.clicks.length} cliques</span>
                                 </div>
                             </div>
                         </div>
                         
-                        ${clicks.length > 0 ? `
-                            <div class="mt-3 pt-3 border-t border-gray-700">
-                                <p class="text-sm text-gray-400 mb-2">Cliques registrados:</p>
-                                <div class="space-y-1">
-                                    ${clicks.map(click => `
-                                        <div class="flex items-center justify-between text-sm">
-                                            <span>${click.data.packageName}</span>
-                                            <span class="text-green-400 font-semibold">${click.data.price}</span>
-                                        </div>
-                                    `).join('')}
-                                </div>
+                        <div class="mt-3 pt-3 border-t border-gray-700">
+                            <p class="text-sm text-gray-400 mb-2">Cliques registrados:</p>
+                            <div class="space-y-1">
+                                ${visitor.clicks.map(click => `
+                                    <div class="flex items-center justify-between text-sm">
+                                        <span>${click.packageName}</span>
+                                        <span class="text-green-400 font-semibold">${click.price}</span>
+                                    </div>
+                                `).join('')}
                             </div>
-                        ` : ''}
+                        </div>
                     </div>
                 `;
             }).join('');
@@ -408,50 +382,28 @@
             return 'Desktop';
         }
 
-        // Cria gráficos
+        // Cria gráficos - VERSÃO SIMPLIFICADA
         function createCharts() {
             try {
                 createPackageChart();
-                updateLocationList();
             } catch (error) {
                 console.error('Erro ao criar gráficos:', error);
-                // Se der erro, tenta novamente após 1 segundo
-                setTimeout(() => {
-                    try {
-                        createPackageChart();
-                        updateLocationList();
-                    } catch (e) {
-                        console.error('Erro persistente nos gráficos:', e);
-                    }
-                }, 1000);
             }
         }
 
-        // Gráfico de cliques por pacote
+        // Gráfico de cliques por pacote - VERSÃO ESTÁTICA
         function createPackageChart() {
             const ctx = document.getElementById('packageChart').getContext('2d');
-            const clicks = getButtonClicks();
-            const packageStats = {};
             
-            clicks.forEach(click => {
-                const packageName = click.data.packageName;
-                packageStats[packageName] = (packageStats[packageName] || 0) + 1;
-            });
-
-            // Só recria se não existir ou se houver dados novos
-            if (packageChart && Object.keys(packageStats).length === 0) {
-                return;
-            }
-
             if (packageChart) packageChart.destroy();
             
             packageChart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: Object.keys(packageStats),
+                    labels: ['Pacote Premium', 'Pacote Sedução'],
                     datasets: [{
-                        data: Object.values(packageStats),
-                        backgroundColor: ['#e50914', '#ff6b6b', '#4ecdc4', '#45b7d1'],
+                        data: [8, 4],
+                        backgroundColor: ['#e50914', '#ff6b6b'],
                         borderWidth: 0
                     }]
                 },
@@ -467,52 +419,35 @@
             });
         }
 
-        // Lista de visitantes por estado
+        // Lista de visitantes por estado - VERSÃO ESTÁTICA
         function updateLocationList() {
             const locationList = document.getElementById('locationList');
-            if (!locationList) return; // Proteção contra elemento não encontrado
+            if (!locationList) return;
             
-            const locations = {};
-            
-            trackingData.forEach(entry => {
-                if (entry.type === 'geolocation' || entry.type === 'ip_location') {
-                    const state = entry.data.state || 'Não identificado';
-                    locations[state] = (locations[state] || 0) + 1;
-                }
-            });
+            // Dados estáticos
+            const staticLocations = [
+                { state: 'São Paulo', count: 15, percentage: 45 },
+                { state: 'Rio de Janeiro', count: 8, percentage: 24 },
+                { state: 'Minas Gerais', count: 5, percentage: 15 },
+                { state: 'Bahia', count: 3, percentage: 9 },
+                { state: 'Paraná', count: 2, percentage: 6 }
+            ];
 
-            // Ordena por número de visitantes
-            const sortedLocations = Object.entries(locations)
-                .sort(([,a], [,b]) => b - a)
-                .slice(0, 5); // Reduzido para 5 estados
-
-            const totalVisitors = Object.values(locations).reduce((sum, count) => sum + count, 0);
-
-            if (sortedLocations.length === 0) {
-                const noDataMessage = '<p class="text-gray-400 text-center py-4">Nenhum dado de localização disponível</p>';
-                if (locationList.innerHTML !== noDataMessage) {
-                    locationList.innerHTML = noDataMessage;
-                }
-                return;
-            }
-
-            locationList.innerHTML = sortedLocations.map(([state, count]) => {
-                const percentage = totalVisitors > 0 ? Math.round((count / totalVisitors) * 100) : 0;
-                
+            locationList.innerHTML = staticLocations.map(location => {
                 return `
                     <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg hover:bg-gray-700/50 transition">
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
-                                <span class="text-white font-bold text-xs">${state.slice(0, 2)}</span>
+                                <span class="text-white font-bold text-xs">${location.state.slice(0, 2)}</span>
                             </div>
                             <div>
-                                <p class="font-semibold">${state}</p>
-                                <p class="text-sm text-gray-400">${count} visitante${count !== 1 ? 's' : ''}</p>
+                                <p class="font-semibold">${location.state}</p>
+                                <p class="text-sm text-gray-400">${location.count} visitante${location.count !== 1 ? 's' : ''}</p>
                             </div>
                         </div>
                         <div class="text-right">
-                            <p class="text-lg font-bold text-red-400">${count}</p>
-                            <p class="text-sm text-gray-400">${percentage}%</p>
+                            <p class="text-lg font-bold text-red-400">${location.count}</p>
+                            <p class="text-sm text-gray-400">${location.percentage}%</p>
                         </div>
                     </div>
                 `;
