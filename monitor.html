@@ -228,33 +228,80 @@
             }
         }
 
-        // Simular dados em tempo real (para demonstração)
-        function simulateRealtimeData() {
-            setInterval(() => {
-                // Simular nova visita
-                if (Math.random() < 0.3) {
-                    dashboardData.visitsToday++;
-                    const hour = new Date().getHours();
-                    dashboardData.visitsByHour[hour]++;
-                    addRealtimeActivity('Nova visita detectada');
-                    updateDashboard();
-                }
-
-                // Simular cliques nos botões
-                if (Math.random() < 0.1) {
-                    const isPremium = Math.random() < 0.6; // 60% chance de ser premium
-                    if (isPremium) {
-                        dashboardData.premiumClicks++;
-                        dashboardData.totalClicks++;
-                        addRealtimeActivity('Clique no Pacote Premium (R$ 19,90)');
-                    } else {
-                        dashboardData.seducaoClicks++;
-                        dashboardData.totalClicks++;
-                        addRealtimeActivity('Clique no Pacote Sedução (R$ 10,00)');
+        // Integração com Facebook Pixel
+        function setupFacebookPixelIntegration() {
+            // Aguardar o Facebook Pixel carregar
+            if (typeof fbq !== 'undefined') {
+                // Interceptar eventos do Facebook Pixel
+                const originalFbq = window.fbq;
+                window.fbq = function() {
+                    // Chamar função original
+                    originalFbq.apply(this, arguments);
+                    
+                    // Interceptar eventos específicos
+                    const eventType = arguments[0];
+                    const eventData = arguments[1];
+                    
+                    if (eventType === 'PageView') {
+                        dashboardData.visitsToday++;
+                        const hour = new Date().getHours();
+                        dashboardData.visitsByHour[hour]++;
+                        addRealtimeActivity('Nova visita detectada via Facebook Pixel');
+                        updateDashboard();
+                        
+                        // Enviar para servidor
+                        sendDataToServer('page_view', {
+                            source: 'facebook_pixel',
+                            eventData: eventData
+                        });
                     }
-                    updateDashboard();
-                }
-            }, 3000); // A cada 3 segundos
+                    
+                    if (eventType === 'InitiateCheckout') {
+                        dashboardData.totalClicks++;
+                        
+                        // Determinar tipo do pacote baseado no valor
+                        if (eventData && eventData.value === 10.00) {
+                            dashboardData.seducaoClicks++;
+                            addRealtimeActivity('Clique no Pacote Sedução (R$ 10,00) via Facebook Pixel');
+                        } else if (eventData && eventData.value === 19.90) {
+                            dashboardData.premiumClicks++;
+                            addRealtimeActivity('Clique no Pacote Premium (R$ 19,90) via Facebook Pixel');
+                        }
+                        
+                        updateDashboard();
+                        
+                        // Enviar para servidor
+                        sendDataToServer('button_click', {
+                            source: 'facebook_pixel',
+                            eventData: eventData
+                        });
+                    }
+                };
+            } else {
+                // Se Facebook Pixel não estiver disponível, aguardar
+                setTimeout(setupFacebookPixelIntegration, 1000);
+            }
+        }
+        
+        // Função para enviar dados para o servidor
+        function sendDataToServer(eventType, data) {
+            fetch('/api/track', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    eventType: eventType,
+                    sessionId: 'pixel_' + Date.now(),
+                    timestamp: Date.now(),
+                    url: window.location.href,
+                    userAgent: navigator.userAgent,
+                    referrer: document.referrer,
+                    data: data
+                })
+            }).catch(error => {
+                console.log('Erro ao enviar dados para servidor:', error);
+            });
         }
 
         // Event listeners do Socket.IO
@@ -290,8 +337,8 @@
             
             updateDashboard();
             
-            // Iniciar simulação de dados (remover em produção)
-            simulateRealtimeData();
+            // Integrar com Facebook Pixel para dados reais
+            setupFacebookPixelIntegration();
         });
     </script>
 </body>
