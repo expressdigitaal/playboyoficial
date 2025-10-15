@@ -202,11 +202,17 @@
 
         // Carrega dados do sistema de tracking
         function loadTrackingData() {
-            if (typeof getTrackingData === 'function') {
+            // Tenta carregar dados do site Playboy
+            if (typeof getPlayboyTrackingData === 'function') {
+                trackingData = getPlayboyTrackingData();
+                console.log('📊 Dados carregados do site Playboy:', trackingData.length, 'entradas');
+            } else if (typeof getTrackingData === 'function') {
                 trackingData = getTrackingData();
+                console.log('📊 Dados carregados do sistema local:', trackingData.length, 'entradas');
             } else {
                 // Dados de exemplo para demonstração
                 trackingData = getSampleData();
+                console.log('📊 Usando dados de exemplo:', trackingData.length, 'entradas');
             }
         }
 
