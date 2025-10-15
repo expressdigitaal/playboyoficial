@@ -121,10 +121,12 @@
                 <canvas id="packageChart" width="400" height="200"></canvas>
             </div>
 
-            <!-- Gráfico de Localização -->
+            <!-- Lista de Visitantes por Estado -->
             <div class="card rounded-lg p-6">
                 <h3 class="text-lg font-semibold mb-4">Visitantes por Estado</h3>
-                <canvas id="locationChart" width="400" height="200"></canvas>
+                <div id="locationList" class="space-y-3">
+                    <!-- Lista será preenchida dinamicamente -->
+                </div>
             </div>
         </div>
 
@@ -189,10 +191,11 @@
                 loadTrackingData();
                 updateStats();
                 updateVisitorsList();
+                updateLocationList();
                 
                 // Só atualiza gráficos a cada 30 segundos para evitar sobrecarga
                 if (Math.random() < 0.3) { // 30% de chance de atualizar gráficos
-                    createCharts();
+                    createPackageChart();
                 }
             }, 10000);
         }
@@ -382,14 +385,14 @@
         function createCharts() {
             try {
                 createPackageChart();
-                createLocationChart();
+                updateLocationList();
             } catch (error) {
                 console.error('Erro ao criar gráficos:', error);
                 // Se der erro, tenta novamente após 1 segundo
                 setTimeout(() => {
                     try {
                         createPackageChart();
-                        createLocationChart();
+                        updateLocationList();
                     } catch (e) {
                         console.error('Erro persistente nos gráficos:', e);
                     }
@@ -432,9 +435,9 @@
             });
         }
 
-        // Gráfico de localização
-        function createLocationChart() {
-            const ctx = document.getElementById('locationChart').getContext('2d');
+        // Lista de visitantes por estado
+        function updateLocationList() {
+            const locationList = document.getElementById('locationList');
             const locations = {};
             
             trackingData.forEach(entry => {
@@ -444,56 +447,39 @@
                 }
             });
 
-            // Limita a 10 estados mais visitados para evitar sobrecarga
+            // Ordena por número de visitantes
             const sortedLocations = Object.entries(locations)
                 .sort(([,a], [,b]) => b - a)
                 .slice(0, 10);
 
-            if (locationChart) locationChart.destroy();
-            
-            locationChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: sortedLocations.map(([state]) => state),
-                    datasets: [{
-                        label: 'Visitantes',
-                        data: sortedLocations.map(([,count]) => count),
-                        backgroundColor: '#e50914',
-                        borderColor: '#b20710',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            labels: { color: 'white' }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { 
-                                color: 'white',
-                                maxTicksLimit: 5
-                            },
-                            grid: { color: 'rgba(255,255,255,0.1)' }
-                        },
-                        x: {
-                            ticks: { 
-                                color: 'white',
-                                maxRotation: 45,
-                                minRotation: 0
-                            },
-                            grid: { color: 'rgba(255,255,255,0.1)' }
-                        }
-                    },
-                    animation: {
-                        duration: 0 // Desabilita animação para melhor performance
-                    }
-                }
-            });
+            const totalVisitors = Object.values(locations).reduce((sum, count) => sum + count, 0);
+
+            if (sortedLocations.length === 0) {
+                locationList.innerHTML = '<p class="text-gray-400 text-center py-4">Nenhum dado de localização disponível</p>';
+                return;
+            }
+
+            locationList.innerHTML = sortedLocations.map(([state, count]) => {
+                const percentage = totalVisitors > 0 ? Math.round((count / totalVisitors) * 100) : 0;
+                
+                return `
+                    <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg hover:bg-gray-700/50 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
+                                <span class="text-white font-bold text-xs">${state.slice(0, 2)}</span>
+                            </div>
+                            <div>
+                                <p class="font-semibold">${state}</p>
+                                <p class="text-sm text-gray-400">${count} visitante${count !== 1 ? 's' : ''}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-lg font-bold text-red-400">${count}</p>
+                            <p class="text-sm text-gray-400">${percentage}%</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
 
         // Atualiza dados
@@ -501,10 +487,11 @@
             loadTrackingData();
             updateStats();
             updateVisitorsList();
+            updateLocationList();
             
             // Só recria gráficos se necessário
             if (trackingData.length > 0) {
-                createCharts();
+                createPackageChart();
             }
             
             // Mostra notificação
