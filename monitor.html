@@ -52,6 +52,9 @@
                     <div class="text-xs text-gray-400" id="lastUpdate">
                         Última atualização: <span id="updateTime">--:--</span>
                     </div>
+                    <button onclick="forceTestData()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-sm font-medium transition">
+                        🧪 Teste
+                    </button>
                     <button onclick="refreshData()" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-sm font-medium transition">
                         🔄 Atualizar
                     </button>
@@ -198,6 +201,9 @@
             
             // Carrega dados iniciais
             loadTrackingData();
+            console.log('📊 Dados carregados:', trackingData.length, 'entradas');
+            console.log('📊 Tipos de dados:', [...new Set(trackingData.map(d => d.type))]);
+            
             updateStats();
             updateClickersList();
             updateViewersList();
@@ -307,7 +313,53 @@
                 }
             }
             
+            console.log('📊 Dados de exemplo gerados:', data.length, 'entradas');
+            console.log('📊 Tipos gerados:', [...new Set(data.map(d => d.type))]);
+            
             return data;
+        }
+
+        // Função de teste para forçar dados
+        function forceTestData() {
+            console.log('🧪 Forçando dados de teste...');
+            trackingData = [
+                {
+                    sessionId: 'test_001',
+                    timestamp: new Date().toISOString(),
+                    type: 'device_info',
+                    data: {
+                        userAgent: 'Desktop',
+                        city: 'São Paulo',
+                        state: 'SP'
+                    }
+                },
+                {
+                    sessionId: 'test_001',
+                    timestamp: new Date().toISOString(),
+                    type: 'button_click',
+                    data: {
+                        packageName: 'Pacote Premium',
+                        price: 'R$ 19,90'
+                    }
+                },
+                {
+                    sessionId: 'test_002',
+                    timestamp: new Date().toISOString(),
+                    type: 'device_info',
+                    data: {
+                        userAgent: 'Mobile',
+                        city: 'Rio de Janeiro',
+                        state: 'RJ'
+                    }
+                }
+            ];
+            
+            updateStats();
+            updateClickersList();
+            updateViewersList();
+            updateDeviceStats();
+            updatePackageStats();
+            updateLocationList();
         }
 
         // Atualiza estatísticas - VERSÃO TEMPO REAL
@@ -368,15 +420,29 @@
         function updateClickersList() {
             const clickersList = document.getElementById('clickersList');
             const clickersCount = document.getElementById('clickersCount');
-            if (!clickersList) return;
+            if (!clickersList) {
+                console.log('❌ Elemento clickersList não encontrado');
+                return;
+            }
+            
+            console.log('🔄 Atualizando lista de cliques...');
+            console.log('📊 Dados disponíveis:', trackingData.length);
             
             const visitors = getUniqueVisitors();
+            console.log('👥 Visitantes únicos:', visitors.length);
+            
             const clickers = visitors.filter(sessionId => {
                 const visitorData = trackingData.filter(entry => entry.sessionId === sessionId);
-                return visitorData.some(entry => entry.type === 'button_click');
+                const hasClicks = visitorData.some(entry => entry.type === 'button_click');
+                console.log(`🔍 Visitante ${sessionId}: ${hasClicks ? 'TEM cliques' : 'SEM cliques'}`);
+                return hasClicks;
             });
             
-            clickersCount.textContent = `${clickers.length} pessoas`;
+            console.log('🛒 Pessoas que clicaram:', clickers.length);
+            
+            if (clickersCount) {
+                clickersCount.textContent = `${clickers.length} pessoas`;
+            }
             
             if (clickers.length === 0) {
                 clickersList.innerHTML = '<p class="text-gray-400 text-center py-4">Nenhuma pessoa clicou nos botões ainda</p>';
@@ -450,7 +516,12 @@
         function updateViewersList() {
             const viewersList = document.getElementById('viewersList');
             const viewersCount = document.getElementById('viewersCount');
-            if (!viewersList) return;
+            if (!viewersList) {
+                console.log('❌ Elemento viewersList não encontrado');
+                return;
+            }
+            
+            console.log('🔄 Atualizando lista de visualizadores...');
             
             const visitors = getUniqueVisitors();
             const viewers = visitors.filter(sessionId => {
@@ -511,7 +582,12 @@
         // Atualiza estatísticas de dispositivos
         function updateDeviceStats() {
             const deviceStats = document.getElementById('deviceStats');
-            if (!deviceStats) return;
+            if (!deviceStats) {
+                console.log('❌ Elemento deviceStats não encontrado');
+                return;
+            }
+            
+            console.log('🔄 Atualizando estatísticas de dispositivos...');
             
             const deviceClicks = {};
             const deviceTypes = {};
@@ -562,7 +638,12 @@
         // Atualiza estatísticas de pacotes
         function updatePackageStats() {
             const packageStats = document.getElementById('packageStats');
-            if (!packageStats) return;
+            if (!packageStats) {
+                console.log('❌ Elemento packageStats não encontrado');
+                return;
+            }
+            
+            console.log('🔄 Atualizando estatísticas de pacotes...');
             
             const packageClicks = {};
             
@@ -620,7 +701,12 @@
         // Lista de visitantes por estado - VERSÃO TEMPO REAL
         function updateLocationList() {
             const locationList = document.getElementById('locationList');
-            if (!locationList) return;
+            if (!locationList) {
+                console.log('❌ Elemento locationList não encontrado');
+                return;
+            }
+            
+            console.log('🔄 Atualizando lista de estados...');
             
             const locations = {};
             
