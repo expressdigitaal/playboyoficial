@@ -11,6 +11,33 @@
   <link rel="shortcut icon" type="image/webp" href="https://i.postimg.cc/htF3JFMC/3-adesivo-playboy-adesivo-coelho-da-playboy-para-carro-moto.webp">
   <link rel="apple-touch-icon" href="https://i.postimg.cc/htF3JFMC/3-adesivo-playboy-adesivo-coelho-da-playboy-para-carro-moto.webp">
 
+  <!-- ✅ Pixel UTMify com PageView automático -->
+  <script>
+    window.pixelId = "68eefd737f9bd613fafc7bb2";
+    var a = document.createElement("script");
+    a.setAttribute("async", "");
+    a.setAttribute("defer", "");
+    a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+    document.head.appendChild(a);
+
+    // Dispara PageView assim que o pixel carregar
+    a.onload = function() {
+      console.log("✅ UTMify carregado com sucesso");
+      try { window.utmify && utmify.track("PageView"); } catch (e) { console.warn("⚠️ Erro no PageView:", e); }
+    };
+    a.onerror = function() {
+      console.error("❌ Erro ao carregar o script da UTMify");
+    };
+  </script>
+
+  <script
+    src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+    data-utmify-prevent-xcod-sck
+    data-utmify-prevent-subids
+    async
+    defer
+  ></script>
+
   <!-- Fontes -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -85,7 +112,6 @@
         <span class="text-white/60">🔥 Uma viagem pelos maiores ícones da sensualidade – digitalizados em qualidade máxima antes que desapareçam da história.</span>
       </p>
 
-      <!-- Botão CTA + contador -->
       <div class="reveal mt-10 flex flex-wrap items-center justify-center gap-3">
         <div id="contador"></div>
       </div>
