@@ -30,43 +30,81 @@
     };
   </script>
 
-<script>
-  window.pixelId = "68eefd737f9bd613fafc7bb2";
-  var a = document.createElement("script");
-  a.setAttribute("async", "");
-  a.setAttribute("defer", "");
-  a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
-  document.head.appendChild(a);
-</script>
-<script
-  src="https://cdn.utmify.com.br/scripts/utms/latest.js"
-  data-utmify-prevent-xcod-sck
-  data-utmify-prevent-subids
-  async
-  defer
-></script>
+  <!-- ✅ Correção do Pixel UTMify -->
+  <script>
+    (function() {
+      window.pixelId = "68eefd737f9bd613fafc7bb2";
+      var script = document.createElement("script");
+      script.async = true;
+      script.defer = true;
+      script.src = "https://cdn.utmify.com.br/scripts/pixel/pixel.js";
+      document.head.appendChild(script);
+      script.onload = function() {
+        console.log("✅ UTMify carregado");
+        try { window.utmify && utmify.track("PageView"); } catch (e) {}
+      };
+      script.onerror = function() {
+        console.error("❌ Erro ao carregar UTMify");
+      };
+    })();
+  </script>
 
+  <script
+    src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+    data-utmify-prevent-xcod-sck
+    data-utmify-prevent-subids
+    async defer>
+  </script>
 
+  <!-- ✅ Correção do Meta Pixel -->
+  <script>
+    !(function(f,b,e,v,n,t,s){
+      if(f.fbq)return; n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n; n.push=n; n.loaded=!0; n.version='2.0';
+      n.queue=[]; t=b.createElement(e); t.async=!0;
+      t.src=v; s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)
+    })(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
 
-  
+    fbq('init','728458327023332');
+    fbq('track','PageView');
+
+    document.addEventListener("DOMContentLoaded", function() {
+      try {
+        document.querySelectorAll('button[onclick*="utmify.track"]').forEach(btn => {
+          btn.addEventListener('click', function() {
+            fbq('track', 'InitiateCheckout');
+          });
+        });
+        if (window.location.href.includes('sucesso') || window.location.href.includes('obrigado')) {
+          fbq('track', 'Purchase', { value: 19.90, currency: 'BRL' });
+          utmify && utmify.track('purchase');
+        }
+      } catch (err) {
+        console.warn("⚠️ Erro ao vincular eventos:", err);
+      }
+    });
+  </script>
+  <noscript>
+    <img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=728458327023332&ev=PageView&noscript=1"/>
+  </noscript>
+
   <style>
     :root { color-scheme: dark; }
     html, body { background: #0b0b0b; scroll-behavior: smooth; }
     .reveal { opacity: 0; transform: translateY(16px); }
     .revealed { opacity: 1; transform: translateY(0); transition: opacity .8s ease, transform .8s ease; }
 
-    /* 🎯 Botão pulsante */
     .btn-pulse { animation: pulse 1.5s infinite; }
     @keyframes pulse {
       0% { box-shadow: 0 0 0 0 rgba(229,9,20,0.7); }
       70% { box-shadow: 0 0 0 12px rgba(229,9,20,0); }
       100% { box-shadow: 0 0 0 0 rgba(229,9,20,0); }
     }
-
-    /* 🎯 Contador de urgência */
     #contador { font-size: 14px; color: #ff4444; margin-top: 8px; font-weight: bold; }
 
-    /* 🎯 Prova social flutuante */
     .purchase-notification{
       position: fixed; bottom: 20px; right: 20px;
       background: linear-gradient(135deg,#006600,#004400);
@@ -77,34 +115,6 @@
     }
     .purchase-notification.show{ transform:translateX(0); }
   </style>
-
-  <!-- ✅ Novo Pixel UTMify -->
-  <script>
-    window.pixelId = "68eefd737f9bd613fafc7bb2";
-    var a = document.createElement("script");
-    a.setAttribute("async", "");
-    a.setAttribute("defer", "");
-    a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
-    document.head.appendChild(a);
-  </script>
-  <script
-    src="https://cdn.utmify.com.br/scripts/utms/latest.js"
-    data-utmify-prevent-xcod-sck
-    data-utmify-prevent-subids
-    async defer>
-  </script>
-
-  <!-- ✅ Meta Pixel -->
-  <script>
-    !(function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)})(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init','728458327023332'); fbq('track','PageView');
-  </script>
-  <noscript>
-    <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=728458327023332&ev=PageView&noscript=1"/>
-  </noscript>
 </head>
 
 <body class="bg-black text-white antialiased selection:bg-brand-red selection:text-white">
@@ -164,6 +174,7 @@
       <p class="mt-8 text-center text-white/60 text-sm">Imagens meramente ilustrativas. Acesso completo após liberação do pacote.</p>
     </div>
   </section>
+
   <!-- Prova Social -->
   <section class="border-t border-white/10">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
@@ -228,7 +239,6 @@
           ⚡ Oferta expira em <span id="tempo-restante">05:00</span>
         </p>
       </div>
-
       <div class="reveal text-center mb-10">
         <h2 class="text-2xl sm:text-4xl font-extrabold">Escolha seu pacote</h2>
         <p class="mt-3 text-white/60">Acesso imediato, download seguro e atualizações vitalícias.</p>
@@ -285,6 +295,7 @@
       </div>
     </div>
   </section>
+
   <!-- Scripts de contador -->
   <script>
     let tempoTopo = 5 * 60;
